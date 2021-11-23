@@ -18,8 +18,6 @@ export function AgentsTab(props) {
   const [dialogType, setDialogType] = React.useState("");
 
   const handleParamTypeChange = (e) => {
-    console.log(e.target.value)
-    console.log(typeof(e.target.value))
     setDialogType(e.target.value)
     setOpen(true);
   };

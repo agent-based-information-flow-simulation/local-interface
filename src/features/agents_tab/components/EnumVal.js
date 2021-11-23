@@ -13,7 +13,7 @@ import RemoveIcon from "@mui/icons-material/Remove";
 
 const EnumVal = (props) => {
 
-  const {enumState, enumVals, name, setPercentage, removeEnumVal} = props
+  const {enumState, enumVals, name, setPercentage, removeEnumVal, error} = props
 
   return (
     <ListItem disablePadding>
@@ -27,6 +27,7 @@ const EnumVal = (props) => {
             startAdornment: <InputAdornment position="start">%</InputAdornment>,
             inputProps: {step: 0.1, min: 0, max: 100}
           }}
+          error={error}
           sx={{ width: 90 }}
           id={props.name + "_percentage"}
         />
@@ -50,6 +51,7 @@ EnumVal.propTypes = {
   name: PropTypes.string.isRequired,
   setPercentage: PropTypes.func.isRequired,
   removeEnumVal: PropTypes.func.isRequired,
+  error: PropTypes.bool.isRequired,
 }
 
 export default EnumVal;
