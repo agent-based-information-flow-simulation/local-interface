@@ -5,21 +5,22 @@ import {
   setCurrentParamData
 } from "../agentsTabSlice";
 
+export const distributionsDict = {
+  normal: {
+    name: "Normal",
+    arg_count: 2,
+    param_names: ["miu", "sigma"],
+  },
+  exp: {
+    name: "Exponential",
+    arg_count: 1,
+    param_names: ["lambda"],
+  },
+};
+
 export const FloatParam = () => {
   const dispatch = useDispatch();
 
-  const distributionsDict = {
-    normal: {
-      name: "Normal",
-      arg_count: 2,
-      param_names: ["miu", "sigma"],
-    },
-    exp: {
-      name: "Exponential",
-      arg_count: 1,
-      param_names: ["lambda"],
-    },
-  };
   const [floatType, setFloatType] = useState("initVal");
   const [initVal, setInitVal] = useState(0);
   const [distribution, setDistribution] = useState(
@@ -48,7 +49,6 @@ export const FloatParam = () => {
   };
 
   const handleInitValChange = (value) => {
-    console.log("Changing initVal for no reason!")
     setInitVal(value);
     updateParamData();
   }

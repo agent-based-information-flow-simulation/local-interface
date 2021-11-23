@@ -9,20 +9,30 @@ import Stack from "@mui/material/Stack";
 import Divider from "@mui/material/Divider";
 import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
+import Button from "@mui/material/Button"
 import InputLabel from "@mui/material/InputLabel";
 import { FormControl } from "@mui/material";
 import ParamsDialog from "./ParamsDialog";
+import {useSelector} from "react-redux"
+
+import {
+  selectParameters
+} from "./agentsTabSlice";
 
 export function AgentsTab(props) {
   const [open, setOpen] = React.useState(false);
   const [dialogType, setDialogType] = React.useState("");
+  const [notifyError, setNotifyError] = React.useState(false);
+
+  const params = useSelector(selectParameters);
 
   const handleParamTypeChange = (e) => {
     setDialogType(e.target.value)
     setOpen(true);
   };
 
-  const handleClose = () => {
+  const handleClose = (error) => {
+    setNotifyError(error)
     setOpen(false);
   };
 
@@ -38,6 +48,7 @@ export function AgentsTab(props) {
       }
       spacing={2}
     >
+      <Button onClick={(e) => console.log(params)}>XDDDD</Button>
       <ParamsDialog open={open} onClose={handleClose} type={dialogType} />
 
       <Box
@@ -111,12 +122,12 @@ export function AgentsTab(props) {
                     overflow: "auto",
                   }}
                 >
-                  {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14].map(
+                  {[].map(
                     (number) => {
                       return (
                         <ListItem disablePadding>
                           <ListItemButton>
-                            <ListItemText primary={"Param " + number} />
+                            <ListItemText primary={"Param " + params[number].name} />
                           </ListItemButton>
                         </ListItem>
                       );
