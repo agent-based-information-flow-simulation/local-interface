@@ -13,7 +13,7 @@ import {
   Button,
 } from "@mui/material";
 
-import {} from "../agentsTabSlice";
+import {} from "../agents_tab/agentsTabSlice";
 
 import NewEnumVal from "./NewEnumVal";
 import EnumVal from "./EnumVal";

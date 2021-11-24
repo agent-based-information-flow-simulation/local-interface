@@ -19,7 +19,7 @@ import {
   DialogContent,
   DialogContentText,
 } from "@mui/material";
-import ParamsDialog from "./ParamsDialog";
+import ParamsDialog from "../components/ParamsDialog";
 import { useSelector } from "react-redux";
 
 import { selectParameters } from "./agentsTabSlice";

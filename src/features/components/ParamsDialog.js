@@ -4,14 +4,14 @@ import DialogTitle from "@mui/material/DialogTitle";
 import Dialog from "@mui/material/Dialog";
 import { Container } from "@mui/material";
 
-import FloatParam, {distributionsDict} from "./components/FloatParam";
-import EnumParam from "./components/EnumParam";
-import ListParam from "./components/ListParam";
+import FloatParam, {distributionsDict} from "./FloatParam";
+import EnumParam from "./EnumParam";
+import ListParam from "./ListParam";
 import {useDispatch} from "react-redux"
 
 import {
   addParam,
-} from "./agentsTabSlice"
+} from "../agents_tab/agentsTabSlice"
 
 function ParamsDialog(props) {
   const dispatch = useDispatch()
