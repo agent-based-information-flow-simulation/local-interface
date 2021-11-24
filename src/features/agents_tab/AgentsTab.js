@@ -9,15 +9,20 @@ import Stack from "@mui/material/Stack";
 import Divider from "@mui/material/Divider";
 import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
-import Button from "@mui/material/Button"
 import InputLabel from "@mui/material/InputLabel";
-import { FormControl } from "@mui/material";
-import ParamsDialog from "./ParamsDialog";
-import {useSelector} from "react-redux"
-
 import {
-  selectParameters
-} from "./agentsTabSlice";
+  DialogActions,
+  FormControl,
+  DialogTitle,
+  Button,
+  Dialog,
+  DialogContent,
+  DialogContentText,
+} from "@mui/material";
+import ParamsDialog from "./ParamsDialog";
+import { useSelector } from "react-redux";
+
+import { selectParameters } from "./agentsTabSlice";
 
 export function AgentsTab(props) {
   const [open, setOpen] = React.useState(false);
@@ -27,13 +32,18 @@ export function AgentsTab(props) {
   const params = useSelector(selectParameters);
 
   const handleParamTypeChange = (e) => {
-    setDialogType(e.target.value)
+    setDialogType(e.target.value);
     setOpen(true);
   };
 
   const handleClose = (error) => {
-    setNotifyError(error)
+    console.log("Dialog closed, params is now: ", params);
+    setNotifyError(error);
     setOpen(false);
+  };
+
+  const handleNotifyClose = () => {
+    setNotifyError(false);
   };
 
   return (
@@ -48,8 +58,19 @@ export function AgentsTab(props) {
       }
       spacing={2}
     >
-      <Button onClick={(e) => console.log(params)}>XDDDD</Button>
       <ParamsDialog open={open} onClose={handleClose} type={dialogType} />
+      <Dialog open={notifyError} onClose={handleNotifyClose}>
+        <DialogTitle> Error while saving </DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            An error occured while attempting to save your data. This may be a
+            result of incorrectly filling out the form.
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleNotifyClose}>Ok</Button>
+        </DialogActions>
+      </Dialog>
 
       <Box
         sx={{
@@ -122,17 +143,15 @@ export function AgentsTab(props) {
                     overflow: "auto",
                   }}
                 >
-                  {[].map(
-                    (number) => {
-                      return (
-                        <ListItem disablePadding>
-                          <ListItemButton>
-                            <ListItemText primary={"Param " + params[number].name} />
-                          </ListItemButton>
-                        </ListItem>
-                      );
-                    }
-                  )}
+                  {params.map((param) => {
+                    return (
+                      <ListItem disablePadding>
+                        <ListItemButton>
+                          <ListItemText primary={"Param " + param.name} />
+                        </ListItemButton>
+                      </ListItem>
+                    );
+                  })}
                 </List>
                 <FormControl fullWidth sx={{ marginTop: 2 }}>
                   <InputLabel> Select type </InputLabel>

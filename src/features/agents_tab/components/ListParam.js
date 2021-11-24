@@ -1,29 +1,41 @@
 import React, { useState } from "react";
-import {useDispatch} from "react-redux"
-import { FormControl, Select, MenuItem } from "@mui/material"
+import { FormControl, Select, MenuItem, TextField, Button } from "@mui/material"
+import PropTypes from "prop-types"
 
-import {
-  setCurrentParamData
-} from "../agentsTabSlice";
-
-
-export const ListParam = () => {
+export const ListParam = (props) => {
+  const {save} = props
   const [listType, setListType] = useState("conns");
-  const dispatch = useDispatch()
+  const [paramName, setParamName] = useState();
+  const [paramData, setParamData] = useState({})
 
   const handleTypeChange = (value) => {
     setListType(value);
     updateParamData();
 
   }
+
+  const handleNameChange = (value) => {
+    setParamName(value);
+    updateParamData();
+  }
+
   const updateParamData = () => {
-    let paramData = {};
-    paramData.type = listType;
-    dispatch(setCurrentParamData(paramData))
+    let newParamData = {};
+    newParamData.type = listType;
+    newParamData.name = paramName;
+    setParamData(newParamData);
   }
 
   return (
+    <>
     <FormControl fullWidth xd={{ marginTop: 2}}>
+        <TextField
+          variant="outlined"
+          label="Name"
+          id="param_name"
+          value={paramName}
+          onChange={(e) => handleNameChange(e.target.value)}
+        />
       <Select
         value={listType}
         onChange={(e) => handleTypeChange(e.target.value)}
@@ -32,7 +44,13 @@ export const ListParam = () => {
         <MenuItem value={"msgs"}> Messages </MenuItem>
       </Select>
     </FormControl>
+    <Button onClick={(e) => save(paramData)}> Add parameter </Button>
+    </>
   );
 }
+
+ListParam.propTypes = {
+  save: PropTypes.func.isRequired,
+};
 
 export default ListParam;

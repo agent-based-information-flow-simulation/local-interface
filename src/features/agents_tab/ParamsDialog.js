@@ -1,10 +1,8 @@
-import React, { useState } from "react";
-import {useSelector} from "react-redux";
+import React from "react";
 import PropTypes from "prop-types";
 import DialogTitle from "@mui/material/DialogTitle";
 import Dialog from "@mui/material/Dialog";
-import TextField from "@mui/material/TextField";
-import { Container, Button } from "@mui/material";
+import { Container } from "@mui/material";
 
 import FloatParam, {distributionsDict} from "./components/FloatParam";
 import EnumParam from "./components/EnumParam";
@@ -12,24 +10,21 @@ import ListParam from "./components/ListParam";
 import {useDispatch} from "react-redux"
 
 import {
-  selectParamData,
-  addParam
+  addParam,
 } from "./agentsTabSlice"
 
 function ParamsDialog(props) {
   const dispatch = useDispatch()
-  const paramData = useSelector(selectParamData)
   const { onClose, open, type } = props;
 
-  const [paramName, setParamName] = useState();
 
-  const handleClose = () => {
+  const handleClose = (event, reason) => {
     onClose(false);
   };
 
-  const createParam = () => {
+  const createParam = (paramData) => {
     let param = {};
-    param.name = paramName;
+    param.name = paramData.name;
     switch(paramData.type){
       case "initVal":
         param.type = "float_init";
@@ -88,15 +83,18 @@ function ParamsDialog(props) {
     }
   }
 
-  const save = () => {
-    console.log("CLIECKED:")
-    let paramCandidate = createParam();
+  const save = (paramData) => {
+    let paramCandidate = createParam(paramData);
     console.log(paramCandidate)
     if(paramCandidate == null){
+      console.log("not dispatching new param")
       onClose(true)
 
     }else{
+      console.log("dispatching new param")
+      console.log(paramCandidate)
       dispatch(addParam(paramCandidate))
+
       onClose(false)
     }
   }
@@ -104,11 +102,11 @@ function ParamsDialog(props) {
   const ModeDisplay = () => {
     switch (type) {
       case "float":
-        return <FloatParam />;
+        return <FloatParam save={save}/>;
       case "enum":
-        return <EnumParam />;
+        return <EnumParam save={save}/>;
       case "list":
-        return <ListParam />;
+        return <ListParam save={save}/>;
       default:
         return <></>;
     }
@@ -123,15 +121,7 @@ function ParamsDialog(props) {
     >
       <Container sx={{ padding: 3 }}>
         <DialogTitle> New parameter </DialogTitle>
-        <TextField
-          variant="outlined"
-          label="Name"
-          id="param_name"
-          value={paramName}
-          onChange={(e) => setParamName(e.target.value)}
-        />
         <ModeDisplay />
-        <Button onClick={save}> Add parameter </Button>
       </Container>
     </Dialog>
   );

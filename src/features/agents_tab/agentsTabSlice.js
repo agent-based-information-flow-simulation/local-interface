@@ -18,14 +18,15 @@ export const agentsTabSlice = createSlice({
       state.agents.push(action.payload);
     },
     setCurrentParamData: (state, action) => {
-      console.log("Setting param data");
-      console.log(action.payload);
       state.current_param_data = action.payload;
-      console.log(state.current_param_data);
     },
     addParam: (state, action) => {
+      console.log("Adding new param... ", action.payload)
       state.param_count += 1;
-      state.parameters.push(action.payload);
+      let newArr = JSON.parse(JSON.stringify(state.parameters))
+      newArr.push(action.payload);
+      state.parameters = newArr;
+      console.log("State params is now: ", state.parameters);
     }
   }
 });
@@ -39,11 +40,12 @@ export const selectCurrentAgents = (state) => {
 }
 
 export const selectParamData = (state) => {
-  console.log("now we in the selector")
-  console.log(state.current_param_data)
-  return state.current_param_data;
+  return state.agentsTab.current_param_data;
 }
 
-export const selectParameters = (state) => state.parameters;
-
+export const selectParameters = (state) => {
+  console.log("Selecting from state: ", state)
+  console.log("Selected params: ", state.agentsTab.parameters)
+  return state.agentsTab.parameters;
+}
 export default agentsTabSlice.reducer;

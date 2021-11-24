@@ -1,9 +1,6 @@
 import React, { useState } from "react";
-import { FormControl, Select, MenuItem, TextField } from "@mui/material";
-import { useDispatch } from "react-redux";
-import {
-  setCurrentParamData
-} from "../agentsTabSlice";
+import { FormControl, Select, MenuItem, TextField, Button } from "@mui/material";
+import PropTypes from "prop-types"
 
 export const distributionsDict = {
   normal: {
@@ -18,8 +15,9 @@ export const distributionsDict = {
   },
 };
 
-export const FloatParam = () => {
-  const dispatch = useDispatch();
+export const FloatParam = (props) => {
+
+  const {save} = props
 
   const [floatType, setFloatType] = useState("initVal");
   const [initVal, setInitVal] = useState(0);
@@ -27,6 +25,8 @@ export const FloatParam = () => {
     Object.keys(distributionsDict)[0]
   );
   const [distributionArgs, setDistributionArgs] = useState([]);
+  const [paramName, setParamName] = useState();
+  const [paramData, setParamData] = useState({})
 
   const handleDistributionChange = (distribution) => {
     let arg_count = distributionsDict[distribution].arg_count;
@@ -54,25 +54,38 @@ export const FloatParam = () => {
   }
 
   const updateParamData = () => {
-    let paramData = {};
-    paramData.type = floatType;
+    let newParamData = {};
+    newParamData.name = paramName;
+    newParamData.type = floatType;
     switch (floatType) {
       case "initVal":
-        paramData.initVal = initVal;
+        newParamData.initVal = initVal;
         break;
       case "distribution":
-        paramData.distribution = distribution;
-        paramData.distribution_args = distributionArgs;
+        newParamData.distribution = distribution;
+        newParamData.distribution_args = distributionArgs;
         break;
       default:
         break;
     }
-    dispatch(setCurrentParamData(paramData))
+    setParamData(newParamData);
   };
+
+  const handleNameChange = (value) => {
+    setParamName(value);
+    updateParamData();
+  }
 
   return (
     <>
       <FormControl fullWidth sx={{ marginTop: 2 }}>
+        <TextField
+          variant="outlined"
+          label="Name"
+          id="param_name"
+          value={paramName}
+          onChange={(e) => handleNameChange(e.target.value)}
+        />
         <Select
           value={floatType}
           onChange={(e) => setFloatType(e.target.value)}
@@ -125,8 +138,13 @@ export const FloatParam = () => {
           <></>
         )}
       </FormControl>
+      <Button onClick={(e) => save(paramData)}> Add parameter </Button>
     </>
   );
+};
+
+FloatParam.propTypes = {
+  save: PropTypes.func.isRequired,
 };
 
 export default FloatParam;
