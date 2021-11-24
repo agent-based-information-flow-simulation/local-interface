@@ -15,7 +15,7 @@ const NewEnumVal = (props) => {
           onChangeField(e.target.value);
         }}
         error={error}
-        helperText={error ? "Enum values must be unique" : ""}
+        helperText={error ? "Enum values must be non-empty and unique" : ""}
         id="new_enum_val_name"
       />
       <IconButton color="primary" sx={{ p: "10px" }} onClick={addEnumVal}>

@@ -51,6 +51,9 @@ function ParamsDialog(props) {
             param.type = "enum_new_init"
             param.values = paramData.enumVals;
             let val = parseFloat(paramData.selectedInit);
+            if(param.values.length < 2){
+              return null;
+            }
             if(val < 0 || val >= param.values.length){
               return null;
             }

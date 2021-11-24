@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { FormControl, Select, MenuItem, TextField, Button } from "@mui/material";
 import PropTypes from "prop-types"
 
@@ -70,11 +70,11 @@ export const FloatParam = (props) => {
     }
     setParamData(newParamData);
   };
-
-  const handleNameChange = (value) => {
-    setParamName(value);
-    updateParamData();
-  }
+  // I have no idea why this works
+  useEffect(()=>{
+    updateParamData()
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [paramName]);
 
   return (
     <>
@@ -84,7 +84,7 @@ export const FloatParam = (props) => {
           label="Name"
           id="param_name"
           value={paramName}
-          onChange={(e) => handleNameChange(e.target.value)}
+          onChange={(e) => setParamName(e.target.value)}
         />
         <Select
           value={floatType}

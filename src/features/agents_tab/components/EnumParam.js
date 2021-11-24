@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types"
 
 import {
@@ -32,7 +32,7 @@ const EnumParam = (props) => {
   const [paramData, setParamData] = useState({});
 
   const addEnumVal = () => {
-    if (enumVals.some((el) => el.name === enumValName)) {
+    if (enumVals.some((el) => el.name === enumValName) || enumValName === "") {
       setEnumValNameError(true);
     } else {
       const newVal = {
@@ -82,11 +82,6 @@ const EnumParam = (props) => {
     updateParamData();
   };
 
-  const handleNameChange = (value) => {
-    setParamName(value);
-    updateParamData();
-  }
-
   const updateParamData = () => {
     let newParamData = {};
     newParamData.type = enumType;
@@ -113,16 +108,22 @@ const EnumParam = (props) => {
     setParamData(newParamData);
   };
 
+  // I have no idea why this works
+  useEffect(()=>{
+    updateParamData()
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [paramName]);
+
   return (
     <>
     <FormControl fullWidth sx={{ marginTop: 2 }}>
-      {enumState === "existing" ? (
+      {enumState === "init" ? (
         <TextField
           variant="outlined"
           label="Name"
           id="param_name"
           value={paramName}
-          onChange={(e) => handleNameChange(e.target.value)}
+          onChange={(e) => setParamName(e.target.value)}
         />
       ) : (
         <></>
@@ -148,7 +149,7 @@ const EnumParam = (props) => {
               label="Percentages"
             />
           </RadioGroup>
-          {enumState === "init" && enumVals.length > 1 ? (
+          {enumState === "init" && enumVals.length > 0 ? (
             <>
               <Select
                 value={selectedIndex}
