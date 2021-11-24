@@ -31,6 +31,7 @@ const EnumParam = (props) => {
   const [paramName, setParamName] = useState();
   const [paramData, setParamData] = useState({});
 
+
   const addEnumVal = () => {
     if (enumVals.some((el) => el.name === enumValName) || enumValName === "") {
       setEnumValNameError(true);
@@ -42,6 +43,7 @@ const EnumParam = (props) => {
       setEnumVals((enumVals) => [...enumVals, newVal]);
       setEnumValName("");
     }
+    updateParamData();
   };
 
   const onEnumValFieldChange = (value) => {
@@ -51,6 +53,7 @@ const EnumParam = (props) => {
 
   const removeEnumVal = (name) => {
     setEnumVals(enumVals.filter((item) => item.name !== name));
+    updateParamData();
   };
 
   const setPercentage = (name, percentage) => {
@@ -98,6 +101,7 @@ const EnumParam = (props) => {
           default:
             break;
         }
+        console.log(enumVals);
         newParamData.enumVals = enumVals;
         break;
       case "existing":
@@ -112,7 +116,7 @@ const EnumParam = (props) => {
   useEffect(()=>{
     updateParamData()
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [paramName]);
+  }, [paramName, enumVals]);
 
   return (
     <>
