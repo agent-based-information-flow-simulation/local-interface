@@ -85,14 +85,10 @@ function ParamsDialog(props) {
 
   const save = (paramData) => {
     let paramCandidate = createParam(paramData);
-    console.log(paramCandidate)
     if(paramCandidate == null){
-      console.log("not dispatching new param")
       onClose(true)
 
     }else{
-      console.log("dispatching new param")
-      console.log(paramCandidate)
       dispatch(addParam(paramCandidate))
 
       onClose(false)

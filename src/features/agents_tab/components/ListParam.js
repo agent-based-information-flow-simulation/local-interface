@@ -1,21 +1,15 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { FormControl, Select, MenuItem, TextField, Button } from "@mui/material"
 import PropTypes from "prop-types"
 
 export const ListParam = (props) => {
   const {save} = props
   const [listType, setListType] = useState("conns");
-  const [paramName, setParamName] = useState();
+  const [paramName, setParamName] = useState("");
   const [paramData, setParamData] = useState({})
 
   const handleTypeChange = (value) => {
     setListType(value);
-    updateParamData();
-
-  }
-
-  const handleNameChange = (value) => {
-    setParamName(value);
     updateParamData();
   }
 
@@ -26,6 +20,12 @@ export const ListParam = (props) => {
     setParamData(newParamData);
   }
 
+  // I have no idea why this works
+  useEffect(()=>{
+    updateParamData()
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [paramName]);
+
   return (
     <>
     <FormControl fullWidth xd={{ marginTop: 2}}>
@@ -34,7 +34,7 @@ export const ListParam = (props) => {
           label="Name"
           id="param_name"
           value={paramName}
-          onChange={(e) => handleNameChange(e.target.value)}
+          onChange={(e) => setParamName(e.target.value)}
         />
       <Select
         value={listType}

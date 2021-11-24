@@ -32,7 +32,7 @@ export function AgentsTab(props) {
   const params = useSelector(selectParameters);
 
   const handleParamTypeChange = (e) => {
-    setDialogType(e.target.dataset.value);
+    setDialogType(e.target.value);
     setOpen(true);
   };
 
@@ -80,8 +80,8 @@ export function AgentsTab(props) {
           display: "inline-block",
         }}
       >
-        <nav aria-label="main agents">
-          <h2> Created Agents </h2>
+        <nav aria-label="main messages">
+          <h2> Created Messages </h2>
           <List
             sx={{
               minHeight: 550,
@@ -95,7 +95,7 @@ export function AgentsTab(props) {
               return (
                 <ListItem disablePadding>
                   <ListItemButton>
-                    <ListItemText primary={"Agent " + number} />
+                    <ListItemText primary={"Message " + number} />
                   </ListItemButton>
                 </ListItem>
               );
@@ -118,8 +118,8 @@ export function AgentsTab(props) {
           <Box sx={{ textAlign: "left" }}>
             <TextField
               variant="outlined"
-              label="Agent Type Name"
-              id="agent_type_input"
+              label="Message Type Name"
+              id="message_type_input"
             />
           </Box>
           <Stack direction="row">
@@ -154,56 +154,13 @@ export function AgentsTab(props) {
                 </List>
                 <FormControl fullWidth sx={{ marginTop: 2 }}>
                   <InputLabel> Select type </InputLabel>
-                  <Select label="Select type">
-                    <MenuItem value={"float"} onClick={handleParamTypeChange}> Float </MenuItem>
-                    <MenuItem value={"enum"} onClick={handleParamTypeChange}> Enumerable </MenuItem>
-                    <MenuItem value={"list"} onClick={handleParamTypeChange}>
+                  <Select label="Select type" onChange={handleParamTypeChange}>
+                    <MenuItem value={"float"}> Float </MenuItem>
+                    <MenuItem value={"enum"}> Enumerable </MenuItem>
+                    <MenuItem value={"list"}>
                       {" "}
                       Connections/Messages List{" "}
                     </MenuItem>
-                  </Select>
-                </FormControl>
-              </nav>
-            </Box>
-            <Box
-              sx={{
-                minHeight: 600,
-                maxHeight: 600,
-                maxWidth: 360,
-                minWidth: 360,
-                bgcolor: "background.paper",
-                overflow: "auto",
-                display: "inline-block",
-              }}
-            >
-              <nav aria-label="main behaviours">
-                <h2> Behaviours </h2>
-                <List
-                  sx={{
-                    minHeight: 422,
-                    maxHeight: 422,
-                    border: "solid",
-                    borderColor: "black",
-                    overflow: "auto",
-                  }}
-                >
-                  {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14].map(
-                    (number) => {
-                      return (
-                        <ListItem disablePadding>
-                          <ListItemButton>
-                            <ListItemText primary={"Behav " + number} />
-                          </ListItemButton>
-                        </ListItem>
-                      );
-                    }
-                  )}
-                </List>
-                <FormControl fullWidth sx={{ marginTop: 2 }}>
-                  <InputLabel id="behavSelect"> Select type </InputLabel>
-                  <Select label="Select type" labelId="behavSelect">
-                    <MenuItem value={"onSetup"}> Setup </MenuItem>
-                    <MenuItem value={"onEvent"}> OneTime/OnEvent </MenuItem>
                   </Select>
                 </FormControl>
               </nav>
