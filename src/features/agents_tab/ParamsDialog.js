@@ -25,6 +25,7 @@ function ParamsDialog(props) {
   const createParam = (paramData) => {
     let param = {};
     param.name = paramData.name;
+    if(param.name === "") return null;
     switch(paramData.type){
       case "initVal":
         param.type = "float_init";

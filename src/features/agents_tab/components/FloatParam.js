@@ -25,7 +25,7 @@ export const FloatParam = (props) => {
     Object.keys(distributionsDict)[0]
   );
   const [distributionArgs, setDistributionArgs] = useState([]);
-  const [paramName, setParamName] = useState();
+  const [paramName, setParamName] = useState("");
   const [paramData, setParamData] = useState({})
 
   const handleDistributionChange = (distribution) => {
