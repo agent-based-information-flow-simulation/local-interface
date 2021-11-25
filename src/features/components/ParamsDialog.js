@@ -9,13 +9,10 @@ import EnumParam from "./EnumParam";
 import ListParam from "./ListParam";
 import {useDispatch} from "react-redux"
 
-import {
-  addParam,
-} from "../agents_tab/agentsTabSlice"
 
 function ParamsDialog(props) {
   const dispatch = useDispatch()
-  const { onClose, open, type } = props;
+  const { onClose, open, type, addParam} = props;
 
 
   const handleClose = (event, reason) => {
@@ -129,6 +126,7 @@ function ParamsDialog(props) {
 
 ParamsDialog.propTypes = {
   onClose: PropTypes.func.isRequired,
+  addParam: PropTypes.func.isRequired,
   open: PropTypes.bool.isRequired,
   type: PropTypes.string.isRequired,
 };

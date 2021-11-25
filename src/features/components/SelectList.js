@@ -13,7 +13,7 @@ import {
 } from "@mui/material"
 
 export const SelectList = (props) => {
-  const {name, collection, options, handleParamTypeChange} = props
+  const {name, collection, options, handleParamTypeChange, collectionItemClick} = props
   return (
     <Box
       sx={{
@@ -34,10 +34,10 @@ export const SelectList = (props) => {
             overflow: "auto",
           }}
         >
-          {collection.map((item) => {
+          {collection.map((item, index) => {
             return (
-              <ListItem disablePadding>
-                <ListItemButton>
+              <ListItem key={index} disablePadding onClick={(e)=>collectionItemClick(index)}>
+                <ListItemButton >
                   <ListItemText primary={item.name} />
                 </ListItemButton>
               </ListItem>
@@ -75,6 +75,7 @@ SelectList.propTypes = {
       display: PropTypes.string.isRequired,
     })).isRequired,
   handleParamTypeChange: PropTypes.func.isRequired,
+  collectionItemClick: PropTypes.func.isRequired,
 }
 
 export default SelectList;

@@ -26,6 +26,10 @@ import { useSelector } from "react-redux";
 
 import { selectParameters } from "./agentsTabSlice";
 
+import {
+  addParam,
+} from "../agents_tab/agentsTabSlice"
+
 export function AgentsTab(props) {
   const paramListOptions = [
     { value: "float", display: "Float" },
@@ -55,7 +59,7 @@ export function AgentsTab(props) {
 
   return (
     <>
-      <ParamsDialog open={open} onClose={handleClose} type={dialogType} />
+      <ParamsDialog open={open} onClose={handleClose} type={dialogType} addParam={addParam} />
       <Dialog open={notifyError} onClose={handleNotifyClose}>
         <DialogTitle> Error while saving </DialogTitle>
         <DialogContent>

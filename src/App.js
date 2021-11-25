@@ -3,9 +3,9 @@ import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import Box from "@mui/material/Box";
 import "./App.css";
-import {TabPanel, a11yProps} from "./features/tab_panel/TabPanel";
-import {AgentsTab} from "./features/agents_tab/AgentsTab";
-
+import { TabPanel, a11yProps } from "./features/tab_panel/TabPanel";
+import { AgentsTab } from "./features/agents_tab/AgentsTab";
+import { MessageTab } from "./features/message_tab/MessageTab";
 
 function App() {
   const [value, setValue] = React.useState(0);
@@ -29,10 +29,10 @@ function App() {
         </Tabs>
       </Box>
       <TabPanel value={value} index={0}>
-         <AgentsTab/>
+        <AgentsTab />
       </TabPanel>
       <TabPanel value={value} index={1}>
-        Item Two
+        <MessageTab />
       </TabPanel>
       <TabPanel value={value} index={2}>
         Item Three
