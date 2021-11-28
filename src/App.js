@@ -6,6 +6,7 @@ import "./App.css";
 import { TabPanel, a11yProps } from "./features/tab_panel/TabPanel";
 import { AgentsTab } from "./features/agents_tab/AgentsTab";
 import { MessageTab } from "./features/message_tab/MessageTab";
+import { VisualizationTab } from "./features/visualization_tab/VisualizationTab";
 
 function App() {
   const [value, setValue] = React.useState(0);
@@ -38,7 +39,7 @@ function App() {
         Item Three
       </TabPanel>
       <TabPanel value={value} index={3}>
-        Item Four
+        <VisualizationTab />
       </TabPanel>
     </div>
   );
