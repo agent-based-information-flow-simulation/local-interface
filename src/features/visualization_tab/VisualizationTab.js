@@ -18,10 +18,6 @@ export function VisualizationTab() {
     runningSimulationsWebsocket.onclose = () => {
       console.debug("closing running simulations websocket");
     }
-    // return () => {
-    //   console.log("closing running sims websocket");
-    //   runningSimulationsWebsocket.close();
-    // }
   }, []);
 
   const getSimulationOutput = (simulationId) => {
