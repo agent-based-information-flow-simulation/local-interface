@@ -38,6 +38,21 @@ const EnumInit = (props) => {
   )
 }
 
+const EnumPercentages = (props) => {
+  return (
+    <>
+    <h2>Values: </h2>
+    {
+      props.values.map((val, index) => {
+        return (
+          <div> {val.name} : {val.percentage}% </div>
+        );
+      })
+    }
+    </>
+  )
+}
+
 const renderParam = (param) => {
   switch (param.type) {
     case "float_init":
@@ -45,7 +60,11 @@ const renderParam = (param) => {
     case "float_distribution":
       return <FloatDistribution distribution={param.distribution} distribution_args={param.distribution_args}/>
     case "enum_new_init":
+    case "enum_existing_init":
       return <EnumInit values={param.values} selectedIndex={param.selectedInit} />
+    case "enum_new_percentages":
+    case "enum_existing_percentages":
+      return <EnumPercentages values={param.values}/>
     default:
       return (<></>);
   }

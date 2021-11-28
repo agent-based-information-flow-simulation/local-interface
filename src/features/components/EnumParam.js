@@ -89,7 +89,6 @@ const EnumParam = (props) => {
   const updateParamData = () => {
     let newParamData = {};
     newParamData.type = enumType;
-    console.log(enumType);
     newParamData.name = paramName;
     switch (enumType) {
       case "new":
@@ -118,7 +117,7 @@ const EnumParam = (props) => {
   useEffect(()=>{
     updateParamData()
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [paramName, enumType]);
+  }, [paramName, enumType, enumVals]);
 
   return (
     <>
