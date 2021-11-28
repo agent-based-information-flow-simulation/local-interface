@@ -63,7 +63,7 @@ export function VisualizationTab() {
     <div>
       <Stack direction="row" spacing={2}>
         <Stack direction="column" spacing={2}>
-          <DisplayList name="Running simulations" collection={runningSimulations} />
+          <DisplayList name="Running simulations" collection={runningSimulations} onItemClick={setSelectedSimulationId} />
           <Button onClick={startNewSimulation}>Start new simulation</Button>
           <Button onClick={() => deleteSimulation(selectedSimulationId)}>Delete selected simulation</Button>
         </Stack>
