@@ -50,10 +50,7 @@ export function MessageTab() {
   };
 
   const paramClick = (index) => {
-    console.log(index)
     dispatch(setCurrentParam(index))
-    console.log(curParam)
-    console.log(params[index])
   }
 
   return (

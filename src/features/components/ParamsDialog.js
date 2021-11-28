@@ -8,6 +8,7 @@ import FloatParam, {distributionsDict} from "./FloatParam";
 import EnumParam from "./EnumParam";
 import ListParam from "./ListParam";
 import {useDispatch} from "react-redux"
+import {addEnum} from "./enumSlice";
 
 
 function ParamsDialog(props) {
@@ -22,7 +23,7 @@ function ParamsDialog(props) {
   const createParam = (paramData) => {
     let param = {};
     param.name = paramData.name;
-    if(param.name === "") return null;
+    if(param.name === "" && paramData.type !== "existing") return null;
     switch(paramData.type){
       case "initVal":
         param.type = "float_init";
@@ -43,6 +44,7 @@ function ParamsDialog(props) {
         param.distribution_args = paramData.distribution_args;
         return param;
       case "new":
+        param.state = paramData.state;
         switch(paramData.state){
           case "init":
             param.type = "enum_new_init"
@@ -71,8 +73,19 @@ function ParamsDialog(props) {
             return null;
         }
       case "existing":
-        //none exist yet, lmaoo
-        break;
+        param.name = paramData.oldEnumData.name;
+        switch(paramData.oldEnumData.state){
+          case "init":
+            param.type = "enum_existing_init";
+            param.values = paramData.oldEnumData.values;
+            param.selectedInit = paramData.oldEnumData.selectedInit;
+            return param;
+          case "percentages":
+            param.type = "enum_existing_percentages"
+            param.values = paramData.oldEnumData.values;
+            return param;
+          default: return null;
+        }
       case "conns":
         param.type = "list_conns"
         return param;
@@ -91,6 +104,9 @@ function ParamsDialog(props) {
 
     }else{
       dispatch(addParam(paramCandidate))
+      if(paramData.type === "new"){
+        dispatch(addEnum(paramCandidate))
+      }
 
       onClose(false)
     }

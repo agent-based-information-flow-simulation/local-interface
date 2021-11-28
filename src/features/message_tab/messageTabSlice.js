@@ -23,8 +23,6 @@ export const messageTabSlice = createSlice({
       state.parameters = newArr;
     },
     setCurrentParam: (state, action) => {
-      console.log("ACTION")
-      console.log(action.payload)
       state.current_selected = action.payload;
     }
   }
@@ -37,10 +35,7 @@ export const selectParameters = (state) => {
 }
 
 export const selectCurrentParam = (state) => {
-  console.log("SELECTOR")
-  console.log(state.messageTab.current_selected)
-  console.log(state.messageTab.param_count)
-  if(state.messageTab.current_selected > 0 && state.messageTab.current_selected < state.messageTab.param_count)
+  if(state.messageTab.current_selected >= 0 && state.messageTab.current_selected < state.messageTab.param_count)
     return state.messageTab.parameters[state.messageTab.current_selected];
   else
     return null;

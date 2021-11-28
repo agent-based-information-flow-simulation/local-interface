@@ -22,12 +22,30 @@ const FloatDistribution = (props) => {
   );
 };
 
+const EnumInit = (props) => {
+  return (
+    <>
+    <div> Initial Value: {props.values[props.selectedIndex].name} </div>
+    <h2>Values: </h2>
+    {
+      props.values.map((val, index) => {
+        return (
+          <div> {val.name} </div>
+        );
+      })
+    }
+    </>
+  )
+}
+
 const renderParam = (param) => {
   switch (param.type) {
     case "float_init":
       return <FloatInit value={param.value} />;
     case "float_distribution":
       return <FloatDistribution distribution={param.distribution} distribution_args={param.distribution_args}/>
+    case "enum_new_init":
+      return <EnumInit values={param.values} selectedIndex={param.selectedInit} />
     default:
       return (<></>);
   }
