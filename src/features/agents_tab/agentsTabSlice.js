@@ -6,6 +6,7 @@ const initialState = {
   current_selected: -1,
   parameters: [],
   param_count: 0,
+  behaviours: []
 }
 
 export const agentsTabSlice = createSlice({
@@ -21,11 +22,14 @@ export const agentsTabSlice = createSlice({
       let newArr = JSON.parse(JSON.stringify(state.parameters))
       newArr.push(action.payload);
       state.parameters = newArr;
+    },
+    addBehav: (state, action) => {
+      state.behaviours.push(action.payload)
     }
   }
 });
 
-export const {addAgent, addParam} = agentsTabSlice.actions;
+export const {addAgent, addParam, addBehav} = agentsTabSlice.actions;
 
 export const selectCurrentAgents = (state) => {
   if (state.current_selected !== -1)
@@ -36,4 +40,10 @@ export const selectCurrentAgents = (state) => {
 export const selectParameters = (state) => {
   return state.agentsTab.parameters;
 }
+
+export const selectBehaviours = (state) => {
+  return state.agentsTab.behaviours;
+}
+
+
 export default agentsTabSlice.reducer;

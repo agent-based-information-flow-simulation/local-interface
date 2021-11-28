@@ -1,18 +1,10 @@
 import React from "react";
 import Box from "@mui/material/Box";
-import List from "@mui/material/List";
-import ListItem from "@mui/material/ListItem";
-import ListItemButton from "@mui/material/ListItemButton";
-import ListItemText from "@mui/material/ListItemText";
 import TextField from "@mui/material/TextField";
 import Stack from "@mui/material/Stack";
 import Divider from "@mui/material/Divider";
-import Select from "@mui/material/Select";
-import MenuItem from "@mui/material/MenuItem";
-import InputLabel from "@mui/material/InputLabel";
 import {
   DialogActions,
-  FormControl,
   DialogTitle,
   Button,
   Dialog,
@@ -20,15 +12,13 @@ import {
   DialogContentText,
 } from "@mui/material";
 import ParamsDialog from "../components/ParamsDialog";
+import BehavDialog from "./BehavDialog";
 import SelectList from "../components/SelectList";
 import DisplayList from "../components/DisplayList";
 import { useSelector } from "react-redux";
 
-import { selectParameters } from "./agentsTabSlice";
-
-import {
-  addParam,
-} from "../agents_tab/agentsTabSlice"
+import { selectParameters, addParam, selectBehaviours } from "./agentsTabSlice";
+import { selectMessageTypes } from "../simulationSlice"
 
 export function AgentsTab(props) {
   const paramListOptions = [
@@ -37,20 +27,39 @@ export function AgentsTab(props) {
     { value: "list", display: "Connections/Messages" },
   ];
 
-  const [open, setOpen] = React.useState(false);
-  const [dialogType, setDialogType] = React.useState("");
+  const behavListOptions = [
+    { value: "onSetup", display: "Setup"},
+    { value: "onEvent", display: "OneTime/OnEvent"},
+  ];
+
+  const [paramDialogOpen, setParamDialogOpen] = React.useState(false);
+  const [behavDialogOpen, setBehavDialogOpen] = React.useState(false);
+  const [paramDialogType, setParamDialogType] = React.useState("");
+  const [behavDialogType, setBehavDialogType] = React.useState("");
   const [notifyError, setNotifyError] = React.useState(false);
 
   const params = useSelector(selectParameters);
+  const behavs = useSelector(selectBehaviours);
+  const messages = useSelector(selectMessageTypes);
 
   const handleParamTypeChange = (e) => {
-    setDialogType(e.target.dataset.value);
-    setOpen(true);
+    setParamDialogType(e.target.dataset.value);
+    setParamDialogOpen(true);
   };
 
-  const handleClose = (error) => {
+  const handleBehavTypeChange = (e) => {
+    setBehavDialogType(e.target.dataset.value);
+    setBehavDialogOpen(true);
+  }
+
+  const handleBehavClose = (error) => {
     setNotifyError(error);
-    setOpen(false);
+    setBehavDialogOpen(false);
+  }
+
+  const handleParamClose = (error) => {
+    setNotifyError(error);
+    setParamDialogOpen(false);
   };
 
   const handleNotifyClose = () => {
@@ -59,7 +68,8 @@ export function AgentsTab(props) {
 
   return (
     <>
-      <ParamsDialog open={open} onClose={handleClose} type={dialogType} addParam={addParam} />
+      <ParamsDialog open={paramDialogOpen} onClose={handleParamClose} type={paramDialogType} addParam={addParam} />
+      <BehavDialog open={behavDialogOpen} onClose={handleBehavClose} type={behavDialogType} />
       <Dialog open={notifyError} onClose={handleNotifyClose}>
         <DialogTitle> Error while saving </DialogTitle>
         <DialogContent>
@@ -114,50 +124,12 @@ export function AgentsTab(props) {
                 options={paramListOptions}
                 handleParamTypeChange={handleParamTypeChange}
               />
-              {/* TODO change to SelectList */}
-              <Box
-                sx={{
-                  minHeight: 600,
-                  maxHeight: 600,
-                  maxWidth: 360,
-                  minWidth: 360,
-                  bgcolor: "background.paper",
-                  overflow: "auto",
-                  display: "inline-block",
-                }}
-              >
-                <nav aria-label="main behaviours">
-                  <h2> Behaviours </h2>
-                  <List
-                    sx={{
-                      minHeight: 422,
-                      maxHeight: 422,
-                      border: "solid",
-                      borderColor: "black",
-                      overflow: "auto",
-                    }}
-                  >
-                    {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14].map(
-                      (number) => {
-                        return (
-                          <ListItem disablePadding>
-                            <ListItemButton>
-                              <ListItemText primary={"Behav " + number} />
-                            </ListItemButton>
-                          </ListItem>
-                        );
-                      }
-                    )}
-                  </List>
-                  <FormControl fullWidth sx={{ marginTop: 2 }}>
-                    <InputLabel id="behavSelect"> Select type </InputLabel>
-                    <Select label="Select type" labelId="behavSelect">
-                      <MenuItem value={"onSetup"}> Setup </MenuItem>
-                      <MenuItem value={"onEvent"}> OneTime/OnEvent </MenuItem>
-                    </Select>
-                  </FormControl>
-                </nav>
-              </Box>
+              <SelectList
+                name="Behaviours"
+                collection={behavs}
+                options={behavListOptions}
+                handleParamTypeChange={handleBehavTypeChange}
+              />
             </Stack>
           </Stack>
         </Box>
