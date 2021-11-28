@@ -19,12 +19,24 @@ import {
   DialogContent,
   DialogContentText,
 } from "@mui/material";
-import ParamsDialog from "./ParamsDialog";
+import ParamsDialog from "../components/ParamsDialog";
+import SelectList from "../components/SelectList";
+import DisplayList from "../components/DisplayList";
 import { useSelector } from "react-redux";
 
 import { selectParameters } from "./agentsTabSlice";
 
+import {
+  addParam,
+} from "../agents_tab/agentsTabSlice"
+
 export function AgentsTab(props) {
+  const paramListOptions = [
+    { value: "float", display: "Float" },
+    { value: "enum", display: "Enumerable" },
+    { value: "list", display: "Connections/Messages" },
+  ];
+
   const [open, setOpen] = React.useState(false);
   const [dialogType, setDialogType] = React.useState("");
   const [notifyError, setNotifyError] = React.useState(false);
@@ -46,18 +58,8 @@ export function AgentsTab(props) {
   };
 
   return (
-    <Stack
-      direction="row"
-      divider={
-        <Divider
-          orientation="vertical"
-          flexItem
-          sx={{ color: "black", borderColor: "black", borderWidth: 1 }}
-        />
-      }
-      spacing={2}
-    >
-      <ParamsDialog open={open} onClose={handleClose} type={dialogType} />
+    <>
+      <ParamsDialog open={open} onClose={handleClose} type={dialogType} addParam={addParam} />
       <Dialog open={notifyError} onClose={handleNotifyClose}>
         <DialogTitle> Error while saving </DialogTitle>
         <DialogContent>
@@ -71,146 +73,95 @@ export function AgentsTab(props) {
         </DialogActions>
       </Dialog>
 
-      <Box
-        sx={{
-          width: "100%",
-          height: 600,
-          maxWidth: 360,
-          bgcolor: "background.paper",
-          display: "inline-block",
-        }}
+      <Stack
+        direction="row"
+        divider={
+          <Divider
+            orientation="vertical"
+            flexItem
+            sx={{ color: "black", borderColor: "black", borderWidth: 1 }}
+          />
+        }
+        spacing={2}
       >
-        <nav aria-label="main agents">
-          <h2> Created Agents </h2>
-          <List
-            sx={{
-              minHeight: 550,
-              maxHeight: 550,
-              overflow: "auto",
-              border: "solid",
-              borderColor: "black",
-            }}
-          >
-            {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14].map((number) => {
-              return (
-                <ListItem disablePadding>
-                  <ListItemButton>
-                    <ListItemText primary={"Agent " + number} />
-                  </ListItemButton>
-                </ListItem>
-              );
-            })}
-          </List>
-        </nav>
-      </Box>
-      <Box
-        sx={{
-          width: "100%",
-          height: 700,
-          maxWidth: 800,
-          bgcolor: "background.paper",
-          display: "inline-block",
-          paddingTop: 9,
-          marginLeft: 10,
-        }}
-      >
-        <Stack>
-          <Box sx={{ textAlign: "left" }}>
-            <TextField
-              variant="outlined"
-              label="Agent Type Name"
-              id="agent_type_input"
-            />
-          </Box>
-          <Stack direction="row">
-            <Box
-              sx={{
-                maxWidth: 360,
-                minWidth: 360,
-                bgcolor: "background.paper",
-                display: "inline-block",
-              }}
-            >
-              <nav aria-label="main parameters">
-                <h2> Parameters </h2>
-                <List
-                  sx={{
-                    minHeight: 422,
-                    maxHeight: 422,
-                    border: "solid",
-                    borderColor: "black",
-                    overflow: "auto",
-                  }}
-                >
-                  {params.map((param) => {
-                    return (
-                      <ListItem disablePadding>
-                        <ListItemButton>
-                          <ListItemText primary={"Param " + param.name} />
-                        </ListItemButton>
-                      </ListItem>
-                    );
-                  })}
-                </List>
-                <FormControl fullWidth sx={{ marginTop: 2 }}>
-                  <InputLabel> Select type </InputLabel>
-                  <Select label="Select type">
-                    <MenuItem value={"float"} onClick={handleParamTypeChange}> Float </MenuItem>
-                    <MenuItem value={"enum"} onClick={handleParamTypeChange}> Enumerable </MenuItem>
-                    <MenuItem value={"list"} onClick={handleParamTypeChange}>
-                      {" "}
-                      Connections/Messages List{" "}
-                    </MenuItem>
-                  </Select>
-                </FormControl>
-              </nav>
+        <DisplayList
+          name="Created Agents"
+          collection={["Agent one", "Agent two"]}
+        />
+        <Box
+          sx={{
+            width: "100%",
+            height: 700,
+            maxWidth: 800,
+            bgcolor: "background.paper",
+            display: "inline-block",
+            paddingTop: 9,
+            marginLeft: 10,
+          }}
+        >
+          <Stack>
+            <Box sx={{ textAlign: "left" }}>
+              <TextField
+                variant="outlined"
+                label="Agent Type Name"
+                id="agent_type_input"
+              />
             </Box>
-            <Box
-              sx={{
-                minHeight: 600,
-                maxHeight: 600,
-                maxWidth: 360,
-                minWidth: 360,
-                bgcolor: "background.paper",
-                overflow: "auto",
-                display: "inline-block",
-              }}
-            >
-              <nav aria-label="main behaviours">
-                <h2> Behaviours </h2>
-                <List
-                  sx={{
-                    minHeight: 422,
-                    maxHeight: 422,
-                    border: "solid",
-                    borderColor: "black",
-                    overflow: "auto",
-                  }}
-                >
-                  {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14].map(
-                    (number) => {
-                      return (
-                        <ListItem disablePadding>
-                          <ListItemButton>
-                            <ListItemText primary={"Behav " + number} />
-                          </ListItemButton>
-                        </ListItem>
-                      );
-                    }
-                  )}
-                </List>
-                <FormControl fullWidth sx={{ marginTop: 2 }}>
-                  <InputLabel id="behavSelect"> Select type </InputLabel>
-                  <Select label="Select type" labelId="behavSelect">
-                    <MenuItem value={"onSetup"}> Setup </MenuItem>
-                    <MenuItem value={"onEvent"}> OneTime/OnEvent </MenuItem>
-                  </Select>
-                </FormControl>
-              </nav>
-            </Box>
+            <Stack direction="row">
+              <SelectList
+                name="Parameters"
+                collection={params}
+                options={paramListOptions}
+                handleParamTypeChange={handleParamTypeChange}
+              />
+              {/* TODO change to SelectList */}
+              <Box
+                sx={{
+                  minHeight: 600,
+                  maxHeight: 600,
+                  maxWidth: 360,
+                  minWidth: 360,
+                  bgcolor: "background.paper",
+                  overflow: "auto",
+                  display: "inline-block",
+                }}
+              >
+                <nav aria-label="main behaviours">
+                  <h2> Behaviours </h2>
+                  <List
+                    sx={{
+                      minHeight: 422,
+                      maxHeight: 422,
+                      border: "solid",
+                      borderColor: "black",
+                      overflow: "auto",
+                    }}
+                  >
+                    {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14].map(
+                      (number) => {
+                        return (
+                          <ListItem disablePadding>
+                            <ListItemButton>
+                              <ListItemText primary={"Behav " + number} />
+                            </ListItemButton>
+                          </ListItem>
+                        );
+                      }
+                    )}
+                  </List>
+                  <FormControl fullWidth sx={{ marginTop: 2 }}>
+                    <InputLabel id="behavSelect"> Select type </InputLabel>
+                    <Select label="Select type" labelId="behavSelect">
+                      <MenuItem value={"onSetup"}> Setup </MenuItem>
+                      <MenuItem value={"onEvent"}> OneTime/OnEvent </MenuItem>
+                    </Select>
+                  </FormControl>
+                </nav>
+              </Box>
+            </Stack>
           </Stack>
-        </Stack>
-      </Box>
-    </Stack>
+        </Box>
+      </Stack>
+    </>
   );
 }

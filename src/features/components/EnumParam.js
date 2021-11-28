@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useSelector } from "react-redux";
 import PropTypes from "prop-types"
 
 import {
@@ -13,7 +14,7 @@ import {
   Button,
 } from "@mui/material";
 
-import {} from "../agentsTabSlice";
+import {selectEnums} from "./enumSlice";
 
 import NewEnumVal from "./NewEnumVal";
 import EnumVal from "./EnumVal";
@@ -22,6 +23,9 @@ const EnumParam = (props) => {
   const {save} = props
   const [enumType, setEnumType] = useState("new");
   const [enumState, setEnumState] = useState("init");
+
+  const [selectedExistingEnum, setSelectedExistingEnum] = useState(0);
+  const enums = useSelector(selectEnums);
 
   const [enumVals, setEnumVals] = useState([]);
   const [enumValName, setEnumValName] = useState("");
@@ -105,6 +109,7 @@ const EnumParam = (props) => {
         newParamData.enumVals = enumVals;
         break;
       case "existing":
+        newParamData.oldEnumData = enums[selectedExistingEnum];
         break;
       default:
         break;
@@ -116,12 +121,12 @@ const EnumParam = (props) => {
   useEffect(()=>{
     updateParamData()
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [paramName, enumVals]);
+  }, [paramName, enumType, enumVals]);
 
   return (
     <>
     <FormControl fullWidth sx={{ marginTop: 2 }}>
-      {enumState === "init" ? (
+      {enumType === "new" ? (
         <TextField
           variant="outlined"
           label="Name"
@@ -191,7 +196,20 @@ const EnumParam = (props) => {
           />
         </>
       ) : enumType === "existing" ? (
-        <List></List>
+        <>
+        <Select
+          value={selectedExistingEnum}
+          onChange={(e) => setSelectedExistingEnum(e.target.value)}
+          sx={{ margin: 1 }}
+        >
+          {
+            enums.map((key,index)=> {
+              return <MenuItem value={index}> {key.name} </MenuItem>;
+            })
+          }
+
+        </Select>
+        </>
       ) : (
         <></>
       )}
