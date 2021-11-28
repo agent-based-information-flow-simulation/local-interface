@@ -10,13 +10,18 @@ export function VisualizationTab() {
 
   useEffect(() => {
     const runningSimulationsWebsocket = new WebSocket("ws://localhost:8000/simulations");
+    console.debug("opened running simulations websocket");
     runningSimulationsWebsocket.onmessage = (message) => {
-        const data = JSON.parse(message.data)
-        setRunningSimulations(data.running_simulations)
+      const data = JSON.parse(message.data)
+      setRunningSimulations(data.running_simulations)
     };
-    return () => {
-        runningSimulationsWebsocket.close();
+    runningSimulationsWebsocket.onclose = () => {
+      console.debug("closing running simulations websocket");
     }
+    // return () => {
+    //   console.log("closing running sims websocket");
+    //   runningSimulationsWebsocket.close();
+    // }
   }, []);
 
   const getSimulationOutput = (simulationId) => {
@@ -35,7 +40,8 @@ export function VisualizationTab() {
         ...prevState, 
         [simulationId]: []
       }));
-      const simulationOutputWebsocket = new WebSocket(`ws://localhost:8000/simulations/${data.id}`);
+      const simulationOutputWebsocket = new WebSocket(`ws://localhost:8000/simulations/${simulationId}`);
+      console.debug(`opened ${simulationId} websocket`);
       simulationOutputWebsocket.onmessage = (message) => {
         const data = JSON.parse(message.data);
         const simulationId = data.id;
@@ -45,6 +51,9 @@ export function VisualizationTab() {
             [simulationId]: [...prevState[simulationId], outputLine]
           })
         );
+      }
+      simulationOutputWebsocket.onclose = () => {
+        console.debug(`closing ${simulationId} websocket`);
       }
     }
   }
