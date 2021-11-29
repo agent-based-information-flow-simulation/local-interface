@@ -34,4 +34,15 @@ And will then compiled into AA code into code in following structure
 OP_CODE    LHS, RHS
 ```
 
+`OP_CODE` is guaranteed to be a 4 character alphabetic string. What follows is 4 spaces, and comma separated arguments.
+
 What follows is a description of `OP_CODE`s and their arguments.
+
+### Float
+#### Expression
+`ADD ` Add, LHS float, RHS is float, result is LHS incremented by RHS
+`SUBT` Subtract, LHS float, RHS is float, result is LHS decremented by RHS
+`MULT` Multiply, LHS float, RHS is float, result is LHS multiplied by RHS
+`DIV ` Divide, LHS float, RHS is non-zero float, result is LHS divided by RHS
+
+

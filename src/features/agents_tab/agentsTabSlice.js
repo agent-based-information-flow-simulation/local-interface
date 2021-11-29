@@ -6,7 +6,8 @@ const initialState = {
   current_selected: -1,
   parameters: [],
   param_count: 0,
-  behaviours: []
+  behaviours: [],
+  scope_vars: [],
 }
 
 export const agentsTabSlice = createSlice({
@@ -24,12 +25,18 @@ export const agentsTabSlice = createSlice({
       state.parameters = newArr;
     },
     addBehav: (state, action) => {
-      state.behaviours.push(action.payload)
+      state.behaviours.push(action.payload);
+    },
+    addScopeVar: (state, action) => {
+      state.scope_vars.push(action.payload);
+    },
+    resetScopeVars: (state, action) => {
+      state.scope_vars = [];
     }
   }
 });
 
-export const {addAgent, addParam, addBehav} = agentsTabSlice.actions;
+export const {addAgent, addParam, addBehav, addScopeVar, resetScopeVars} = agentsTabSlice.actions;
 
 export const selectCurrentAgents = (state) => {
   if (state.current_selected !== -1)
@@ -39,6 +46,10 @@ export const selectCurrentAgents = (state) => {
 
 export const selectParameters = (state) => {
   return state.agentsTab.parameters;
+}
+
+export const selectScopeVars = (state) => {
+  return state.agentsTab.scope_vars;
 }
 
 export const selectBehaviours = (state) => {

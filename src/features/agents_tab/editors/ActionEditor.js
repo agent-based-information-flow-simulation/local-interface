@@ -20,14 +20,23 @@ const ActionEditor = (props) => {
   const { onClose, open } = props;
   const [actionType, setActionType] = useState("modifySelf");
   const [selectedParam, setSelectedParam] = useState(-1);
+
+  const [statements, setStatements] = useState([]);
+  const [actionOperations, setActionOperations] = useState([])
+
   const params = useSelector(selectParameters);
+
+  const save = (statement, operation) => {
+    setStatements([...statements, statement]);
+    setActionOperations([...actionOperations, operation]);
+  }
 
   const ModeDisplay = (props) => {
     if(props.param === undefined) return <></>;
     switch (props.param.type) {
       case "float_init":
       case "float_distribution":
-        return <FloatParamEditor />;
+        return <FloatParamEditor save={save} selectedParam={props.param}/>;
       case "enum_new_init":
       case "enum_new_percentages":
       case "enum_existing_init":
@@ -42,7 +51,7 @@ const ActionEditor = (props) => {
   };
 
   return (
-    <Dialog fullScreen={true} onClose={onClose} open={open}>
+    <Dialog fullScreen={true} onClose={onClose} open={open} disableAutoFocus={true} disableEnforceFocus={true}>
       <Container sx={{ padding: 3 }}>
         <DialogTitle> New action </DialogTitle>
         <FormGroup fullWidth>
@@ -69,6 +78,13 @@ const ActionEditor = (props) => {
                 })}
               </Select>
               <FormHelperText>{selectedParam===-1 ? "Select param to change" : ""} </FormHelperText>
+              <ul>
+                {
+                  statements.map((value, index) => {
+                    return <li> {value} </li>;
+                  })
+                }
+              </ul>
               <ModeDisplay param={params[selectedParam]} />
             </>
           ) : (
