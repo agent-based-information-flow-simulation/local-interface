@@ -1,4 +1,4 @@
-import React, { useState, useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import {
   Select,
@@ -11,7 +11,11 @@ import {
   TextField,
 } from "@mui/material";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
-import { selectParameters, selectScopeVars, addScopeVar } from "../agentsTabSlice";
+import {
+  selectParameters,
+  selectScopeVars,
+  addScopeVar,
+} from "../agentsTabSlice";
 import InlineText from "./InlineText";
 
 export const FloatExprOps = [
@@ -19,6 +23,15 @@ export const FloatExprOps = [
   { opcode: "SUBT", label: "-=" },
   { opcode: "MULT", label: "*=" },
   { opcode: "DIV ", label: "/=" },
+];
+
+export const FloatCondOps = [
+  { opcode: "LT  ", label: "<" },
+  { opcode: "GT  ", label: ">" },
+  { opcode: "LTE ", label: ">=" },
+  { opcode: "GTE ", label: ">=" },
+  { opcode: "EQ  ", label: "==" },
+  { opcode: "NEQ ", label: "!=" },
 ];
 
 export const FloatParamEditor = (props) => {
@@ -40,68 +53,113 @@ export const FloatParamEditor = (props) => {
   useEffect(() => {
     let param_names = params.map((val, index) => val.name);
     setVariables([...read_only, ...param_names, ...scope_vars]);
-    setLhsCandidate([...lhsCandidates, ...scope_vars])
+    setLhsCandidate([...lhsCandidates, ...scope_vars]);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [params, scope_vars]);
 
-  const handleLhsChange = (value) =>{
+  const handleLhsChange = (value) => {
     setCurLhs(value);
-  }
+  };
 
-  const handleRhsChange = (value) =>{
-    setCurRhs(value)
-  }
+  const handleRhsChange = (value) => {
+    setCurRhs(value);
+  };
 
   const updateLhsCandidates = (value) => {
     dispatch(addScopeVar(value));
-  }
+  };
 
   const addExprStatement = () => {
     //validate LHS
     let err_flag = false;
-    if(lhsCandidates.findIndex(el => el === curLhs) === -1){
+    if (lhsCandidates.findIndex((el) => el === curLhs) === -1) {
       setLhsError(true);
       err_flag = true;
     }
     //validate RHS
-    if(variables.findIndex(el => el === curRhs) === -1 && isNaN(parseFloat(curRhs))){
+    if (
+      variables.findIndex((el) => el === curRhs) === -1 &&
+      isNaN(parseFloat(curRhs))
+    ) {
       setRhsError(true);
       err_flag = true;
     }
-    if(!err_flag){
-      let statement = curLhs + ' ' + FloatExprOps.find(el => el.opcode === curOpCode).label + ' ' + curRhs;
-      let operation = curOpCode + '    ' + curLhs + ',' + curRhs;
-      save(statement, operation)
+    if (!err_flag) {
+      let statement =
+        curLhs +
+        " " +
+        FloatExprOps.find((el) => el.opcode === curOpCode).label +
+        " " +
+        curRhs;
+      let operation = curOpCode + "    " + curLhs + "," + curRhs;
+      save(statement, operation);
       setEditOn(false);
       setLhsError(false);
       setRhsError(false);
     }
-  }
+  };
 
   const addDeclStatement = () => {
-    console.log("we here")
     //validate LHS
     let err_flag = false;
-    if(variables.findIndex(el => el === curLhs) !== -1){
-      console.log(variables);
+    if (variables.findIndex((el) => el === curLhs) !== -1) {
       setLhsError(true);
       err_flag = true;
     }
     //validate RHS
-    if(variables.findIndex(el => el === curRhs) === -1 && isNaN(parseFloat(curRhs))){
+    if (
+      variables.findIndex((el) => el === curRhs) === -1 &&
+      isNaN(parseFloat(curRhs))
+    ) {
       setRhsError(true);
       err_flag = true;
     }
-    if(!err_flag){
+    if (!err_flag) {
       updateLhsCandidates(curLhs);
-      let statement = "let " + curLhs + ' = ' + curRhs;
-      let operation = "DECL    " + curLhs + ',' + curRhs;
-      save(statement, operation)
+      let statement = "let " + curLhs + " = " + curRhs;
+      let operation = "DECL    " + curLhs + "," + curRhs;
+      save(statement, operation);
       setEditOn(false);
     }
+  };
 
+  const addCondStatement = () => {
+    let err_flag = false;
+    if (
+      variables.findIndex((el) => el === curLhs) === -1 &&
+      isNaN(parseFloat(curLhs))
+    ) {
+      setLhsError(true);
+      err_flag = true;
+    }
+    if (
+      variables.findIndex((el) => el === curRhs) === -1 &&
+      isNaN(parseFloat(curRhs))
+    ) {
+      setRhsError(true);
+      err_flag = true;
+    }
+    if (!err_flag) {
+      let statement =
+        "If " +
+        curLhs +
+        " " +
+        FloatCondOps.find((el) => el.opcode === curOpCode).label +
+        " " +
+        curRhs;
+      let operation = curOpCode + "    " + curLhs + "," + curRhs;
+      save(statement, operation);
+      setEditOn(false);
+      setLhsError(false);
+      setRhsError(false);
+    }
+  };
+
+  const addEndCondStatement = () => {
+    let statement = "End if";
+    let operation = "FI";
+    save(statement, operation);
   }
-
 
   const ExprStatement = () => {
     return (
@@ -110,7 +168,7 @@ export const FloatParamEditor = (props) => {
           freeSolo
           options={lhsCandidates}
           renderInput={(params) => <TextField {...params} />}
-          sx={{width: "200px"}}
+          sx={{ width: "200px" }}
           error={lhsError}
           value={curLhs}
           inputValue={curLhs}
@@ -129,20 +187,20 @@ export const FloatParamEditor = (props) => {
           freeSolo
           options={variables}
           renderInput={(params) => <TextField {...params} />}
-          sx={{width: "200px"}}
+          sx={{ width: "200px" }}
           error={rhsError}
           value={curRhs}
           inputValue={curRhs}
           onInputChange={(event, value) => handleRhsChange(value)}
           helperText="RHS must be a valid property or a number"
         />
-      <IconButton
-        sx={{  p: "10px" }}
-        color="primary"
-        onClick={addExprStatement}
-      >
-        <AddCircleIcon sx={{ fontSize: "30px" }} />
-      </IconButton>
+        <IconButton
+          sx={{ p: "10px" }}
+          color="primary"
+          onClick={addExprStatement}
+        >
+          <AddCircleIcon sx={{ fontSize: "30px" }} />
+        </IconButton>
       </Stack>
     );
   };
@@ -150,35 +208,82 @@ export const FloatParamEditor = (props) => {
   const DeclStatement = () => {
     return (
       <Stack direction="row">
-      <InlineText text="Let: "/>
-      <TextField
-        value={curLhs}
-        onChange={(e) => handleLhsChange(e.target.value)}
-        error={lhsError}
-        helperText="LHS must be a new identifier"
-      />
-      <InlineText text=" = "/>
+        <InlineText text="Let: " />
+        <TextField
+          value={curLhs}
+          onChange={(e) => handleLhsChange(e.target.value)}
+          error={lhsError}
+          helperText="LHS must be a new identifier"
+        />
+        <InlineText text=" = " />
+        <Autocomplete
+          freeSolo
+          options={variables}
+          renderInput={(params) => <TextField {...params} />}
+          sx={{ width: "200px" }}
+          error={rhsError}
+          value={curRhs}
+          inputValue={curRhs}
+          onInputChange={(event, value) => handleRhsChange(value)}
+          helperText="RHS must be a valid property or a number"
+        />
+
+        <IconButton
+          sx={{ p: "10px" }}
+          color="primary"
+          onClick={addDeclStatement}
+        >
+          <AddCircleIcon sx={{ fontSize: "30px" }} />
+        </IconButton>
+      </Stack>
+    );
+  };
+
+  const CondStatement = () => {
+    return (
+    <Stack direction="row">
       <Autocomplete
         freeSolo
         options={variables}
         renderInput={(params) => <TextField {...params} />}
-        sx={{width: "200px"}}
+        sx={{ width: "200px" }}
+        error={lhsError}
+        value={curLhs}
+        inputValue={curLhs}
+        onInputChange={(event, value) => handleLhsChange(value)}
+        helperText="LHS must be a valid variable or a number"
+      />
+      <Select value={curOpCode} onChange={(e) => setCurOpCode(e.target.value)}>
+        {FloatCondOps.map((op, index) => {
+          return <MenuItem value={op.opcode}> {op.label} </MenuItem>;
+        })}
+      </Select>
+      <Autocomplete
+        freeSolo
+        options={variables}
+        renderInput={(params) => <TextField {...params} />}
+        sx={{ width: "200px" }}
         error={rhsError}
         value={curRhs}
         inputValue={curRhs}
         onInputChange={(event, value) => handleRhsChange(value)}
-        helperText="RHS must be a valid property or a number"
+        helperText="RHS must be a valid variable or a number"
       />
+      <IconButton sx={{ p: "10px" }} color="primary" onClick={addCondStatement}>
+        <AddCircleIcon sx={{ fontSize: "30px" }} />
+      </IconButton>
+    </Stack>
+    );
+  };
 
-      <IconButton
-        sx={{  p: "10px" }}
-        color="primary"
-        onClick={addDeclStatement}
-      >
+  const EndCondStatement = () => {
+    return (
+      <Stack direction="row">
+        <InlineText text="End conditional block" />
+      <IconButton sx={{ p: "10px" }} color="primary" onClick={addEndCondStatement}>
         <AddCircleIcon sx={{ fontSize: "30px" }} />
       </IconButton>
       </Stack>
-
     );
   }
 
@@ -191,41 +296,40 @@ export const FloatParamEditor = (props) => {
       case "decl":
         return <DeclStatement />;
       case "cond":
-        break;
+        return <CondStatement />;
       case "endc":
-        break;
+        return <EndCondStatement />;
       default:
         return <></>;
     }
-    return <></>;
   };
 
   return (
     <>
-    <Stack direction="row" sx={{ display: "flex" }}>
-      <Box sx={{ width: "100%" }}>
-        <Select
-          sx={{ width: "100%" }}
-          value={statementType}
-          onChange={(e) => setStatementType(e.target.value)}
+      <Stack direction="row" sx={{ display: "flex" }}>
+        <Box sx={{ width: "100%" }}>
+          <Select
+            sx={{ width: "100%" }}
+            value={statementType}
+            onChange={(e) => setStatementType(e.target.value)}
+          >
+            <MenuItem value={"expr"}> Expression </MenuItem>
+            <MenuItem value={"decl"}> Declaration </MenuItem>
+            <MenuItem value={"cond"}> Conditional </MenuItem>
+            <MenuItem value={"endc"}> End Conditional </MenuItem>
+          </Select>
+          <FormHelperText> Choose statement type </FormHelperText>
+        </Box>
+        <IconButton
+          sx={{ width: 60, p: "10px" }}
+          color="primary"
+          onClick={(e) => setEditOn(true)}
+          disabled={editOn}
         >
-          <MenuItem value={"expr"}> Expression </MenuItem>
-          <MenuItem value={"decl"}> Declaration </MenuItem>
-          <MenuItem value={"cond"}> Conditional </MenuItem>
-          <MenuItem value={"endc"}> End Conditional </MenuItem>
-        </Select>
-        <FormHelperText> Choose statement type </FormHelperText>
-      </Box>
-      <IconButton
-        sx={{ width: 60, p: "10px" }}
-        color="primary"
-        onClick={(e) => setEditOn(true)}
-        disabled={editOn}
-      >
-        <AddCircleIcon sx={{ fontSize: "45px" }} />
-      </IconButton>
-    </Stack>
-    <ModeDisplay />
+          <AddCircleIcon sx={{ fontSize: "45px" }} />
+        </IconButton>
+      </Stack>
+      <ModeDisplay />
     </>
   );
 };

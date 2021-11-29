@@ -1,0 +1,40 @@
+# lines beggining with # sign are ignored
+# top level directive ENVIRONMENT ends with EENVIRONMENT describes single Agent ENVIRONMENT
+# inside environment multiple definitons of AGENT and MESSAGE are allowed in any order
+ENVIRONMENT
+# AGENT directive is followed by a non-whitespace UID token
+# which corresponds to the agent class name
+AGENT a1
+# instruction PRM declares a parameter named $arg1 of type $arg2
+PRM     param1,float
+PRM     param2,float
+PRM     param3,enum
+PRM     param4,enum
+PRM     param5,list
+PRM     param6,list
+# after the block of PRM instructions specification instructions take place
+# SPRM - Specify PaRaMeter; $arg1 - name of param, $arg2 - valid parameter subtype
+SPRM    param1,init
+# AARG - Add ARGument; add argument $arg2 to param $arg1
+AARG    param1,200
+SPRM    param2,dist_normal
+AARG    param2,2138
+AARG    param2,2137
+SPRM    param3,enum_init
+# EVAL - Enum VALue; - constructs enum value with name $arg1, and data $arg2
+EVAL    enum_val1,1
+EVAL    enum_val2,0
+AARG    param3,enum_val1
+AARG    param3,enum_val2
+SPRM    param4,enum_percent
+EVAL    enum_val3,99
+EVAL    enum_val4,1
+AARG    param4,enum_val3
+AARG    param4,enum_val4
+SPRM    param5,conn_list
+SPRM    param6,msg_list
+
+# We escape AGENT scope with EAGENT directive
+EAGENT
+
+EENVIRONMENT

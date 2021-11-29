@@ -18,7 +18,7 @@ import DisplayList from "../components/DisplayList";
 import { useSelector } from "react-redux";
 
 import { selectParameters, addParam, selectBehaviours } from "./agentsTabSlice";
-import { selectMessageTypes } from "../simulationSlice"
+// import { selectMessageTypes } from "../simulationSlice"
 
 export function AgentsTab(props) {
   const paramListOptions = [
@@ -40,7 +40,7 @@ export function AgentsTab(props) {
 
   const params = useSelector(selectParameters);
   const behavs = useSelector(selectBehaviours);
-  const messages = useSelector(selectMessageTypes);
+  //const messages = useSelector(selectMessageTypes);
 
   const handleParamTypeChange = (e) => {
     setParamDialogType(e.target.dataset.value);
