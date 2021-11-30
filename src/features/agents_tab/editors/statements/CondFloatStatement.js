@@ -1,6 +1,42 @@
 import React, { useState } from "react";
+import PropTypes from "prop-types";
+import {
+  Stack,
+  Autocomplete,
+  MenuItem,
+  IconButton,
+  TextField,
+  Select,
+} from "@mui/material"
+import AddCircleIcon from "@mui/icons-material/AddCircle";
 
-export const CondStatement = () => {
+export const FloatCondOps = [
+  { opcode: "LT  ", label: "<" },
+  { opcode: "GT  ", label: ">" },
+  { opcode: "LTE ", label: ">=" },
+  { opcode: "GTE ", label: ">=" },
+  { opcode: "EQ  ", label: "==" },
+  { opcode: "NEQ ", label: "!=" },
+];
+
+export const CondFloatStatement = (props) => {
+  const { save, setEditOn, variables } = props;
+
+  const [curLhs, setCurLhs] = useState("");
+  const [lhsError, setLhsError] = useState(false);
+  const [curRhs, setCurRhs] = useState("");
+  const [rhsError, setRhsError] = useState(false);
+  const [curOpCode, setCurOpCode] = useState(FloatCondOps[0].opcode);
+
+
+  const handleLhsChange = (value) => {
+    setCurLhs(value);
+  };
+
+  const handleRhsChange = (value) => {
+    setCurRhs(value);
+  };
+
   const addCondStatement = () => {
     let err_flag = false;
     if (
@@ -69,4 +105,13 @@ export const CondStatement = () => {
   );
 };
 
-export default CondStatement;
+CondFloatStatement.propTypes = {
+  save: PropTypes.func.isRequired,
+  setEditOn: PropTypes.func.isRequired,
+  variables: PropTypes.arrayOf(PropTypes.shape({
+    name: PropTypes.string,
+    type: PropTypes.string,
+  })).isRequired,
+}
+
+export default CondFloatStatement;

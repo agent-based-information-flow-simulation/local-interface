@@ -21,14 +21,6 @@ import {
 } from "../agentsTabSlice";
 import InlineText from "./InlineText";
 
-export const FloatCondOps = [
-  { opcode: "LT  ", label: "<" },
-  { opcode: "GT  ", label: ">" },
-  { opcode: "LTE ", label: ">=" },
-  { opcode: "GTE ", label: ">=" },
-  { opcode: "EQ  ", label: "==" },
-  { opcode: "NEQ ", label: "!=" },
-];
 
 export const FloatParamEditor = (props) => {
   const { save, selectedParam } = props;
@@ -43,7 +35,7 @@ export const FloatParamEditor = (props) => {
   const [curRhs, setCurRhs] = useState("");
   const [rhsError, setRhsError] = useState(false);
   const params = useSelector(selectParameters);
-  const scope_vars = useState([]);
+  const [scopeVars, setScopeVars] = useState([]);
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const read_only = [
     { name: "connCount", type: "float" },
@@ -55,14 +47,14 @@ export const FloatParamEditor = (props) => {
   const [exprRhs, setExprRhs] = useState([]);
 
   useEffect(() => {
-    let tmpArr = [...scope_vars, selectedParam];
+    let tmpArr = [...scopeVars, selectedParam];
     setExprLhs(tmpArr);
     tmpArr = params.filter((el) => el.type === "float");
-    tmpArr = [...tmpArr, ...scope_vars, ...read_only];
+    tmpArr = [...tmpArr, ...scopeVars, ...read_only];
     setExprRhs(tmpArr);
-    tmpArr = [...params, ...scope_vars, ...read_only];
+    tmpArr = [...params, ...scopeVars, ...read_only];
     setVariables(tmpArr);
-  }, [params, scope_vars, selectedParam, read_only]);
+  }, [params, scopeVars, selectedParam, read_only]);
 
   const handleLhsChange = (value) => {
     setCurLhs(value);
@@ -72,11 +64,9 @@ export const FloatParamEditor = (props) => {
     setCurRhs(value);
   };
 
-  const updateLhsCandidates = (value) => {
-    dispatch(addScopeVar(value));
-  };
-
-  const addScopeVar()
+  const addScopeVar = (value) => {
+    setScopeVars([...scopeVars, value]);
+  }
 
   const ModeDisplay = () => {
     if (!editOn) return <></>;
@@ -99,7 +89,7 @@ export const FloatParamEditor = (props) => {
             variables={variables}
           />
         );
-      case "cond":
+      case "cond_float":
         return <CondStatement />;
       case "endc":
         return <EndCondStatement />;
@@ -119,7 +109,8 @@ export const FloatParamEditor = (props) => {
           >
             <MenuItem value={"expr"}> Expression </MenuItem>
             <MenuItem value={"decl"}> Declaration </MenuItem>
-            <MenuItem value={"cond"}> Conditional </MenuItem>
+            <MenuItem value={"cond_float"}> Conditional (number) </MenuItem>
+            <MenuItem value={"cond_enum"}> Conditional (enum) </MenuItem>
             <MenuItem value={"endc"}> End Conditional </MenuItem>
           </Select>
           <FormHelperText> Choose statement type </FormHelperText>

@@ -112,7 +112,6 @@ ExprStatement.propTypes = {
   rhsCandidates: PropTypes.arrayOf(PropTypes.shape({
     name: PropTypes.string,
     type: PropTypes.string
-
   })).isRequired,
 }
 
