@@ -1,51 +1,53 @@
-import React, { useState } from "react";
+import React, { useState} from "react"
 import PropTypes from "prop-types";
 import {
- Stack,
- Autocomplete,
- TextField,
- Select,
- MenuItem,
- IconButton
+  Stack,
+  Autocomplete,
+  Select,
+  MenuItem,
+  TextField,
+  IconButton,
 } from "@mui/material"
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 
-const FloatExprOps = [
-  { opcode: "ADD ", label: "+=" },
-  { opcode: "SUBT", label: "-=" },
-  { opcode: "MULT", label: "*=" },
-  { opcode: "DIV ", label: "/=" },
+const EnumCondOps = [
+  { opcode: "EQ  ", label: "==" },
+  { opcode: "NEQ ", label: "!=" },
 ];
 
-export const ExprStatement = (props) => {
 
-  const { save, setEditOn, lhsCandidates, rhsCandidates} = props;
+export const CondEnumStatement = (props) => {
+  const {save, setEditOn, variables} = props;
 
   const [curLhs, setCurLhs] = useState("");
   const [lhsError, setLhsError] = useState(false);
   const [curRhs, setCurRhs] = useState("");
   const [rhsError, setRhsError] = useState(false);
-  const [curOpCode, setCurOpCode] = useState(FloatExprOps[0].opcode);
+  const [curOpCode, setCurOpCode] = useState(EnumCondOps[0].opcode);
+
+  const [rhsCandidates, setRhsCandidates] = useState([]);
 
   const handleLhsChange = (value) => {
     setCurLhs(value);
+    let val = variables.find(el => el.name === value);
+    setRhsCandidates(val.values.map((el,index)=>el.name));
   };
 
   const handleRhsChange = (value) => {
     setCurRhs(value);
   };
 
-
-  const addExprStatement = () => {
-    //validate LHS
+  const addCondStatement = () => {
     let err_flag = false;
-    if (lhsCandidates.findIndex((el) => el.name === curLhs) === -1) {
+    if (
+      variables.findIndex((el) => el.name === curLhs) === -1 &&
+      isNaN(parseFloat(curLhs))
+    ) {
       setLhsError(true);
       err_flag = true;
     }
-    //validate RHS
     if (
-      rhsCandidates.findIndex((el) => el.name === curRhs) === -1 &&
+      rhsCandidates.findIndex((el) => el === curRhs) === -1 &&
       isNaN(parseFloat(curRhs))
     ) {
       setRhsError(true);
@@ -53,12 +55,14 @@ export const ExprStatement = (props) => {
     }
     if (!err_flag) {
       let statement =
+        "If " +
         curLhs +
         " " +
-        FloatExprOps.find((el) => el.opcode === curOpCode).label +
+        EnumCondOps.find((el) => el.opcode === curOpCode).label +
         " " +
         curRhs;
       let operation = curOpCode + "    " + curLhs + "," + curRhs;
+      console.log("Saving...")
       save(statement, operation);
       setEditOn(false);
       setLhsError(false);
@@ -70,50 +74,47 @@ export const ExprStatement = (props) => {
     <Stack direction="row">
       <Autocomplete
         freeSolo
-        options={lhsCandidates.map((el,index)=>el.name)}
+        options={variables.map((el,index)=>el.name)}
         renderInput={(params) => <TextField {...params} />}
         sx={{ width: "200px" }}
         error={lhsError}
         value={curLhs}
         inputValue={curLhs}
         onInputChange={(event, value) => handleLhsChange(value)}
-        helperText="LHS must be a valid property"
+        helperText="LHS must be a valid variable or a number"
       />
       <Select value={curOpCode} onChange={(e) => setCurOpCode(e.target.value)}>
-        {FloatExprOps.map((op, index) => {
+        {EnumCondOps.map((op, index) => {
           return <MenuItem value={op.opcode}> {op.label} </MenuItem>;
         })}
       </Select>
       <Autocomplete
         freeSolo
-        options={rhsCandidates.map((el,index)=>el.name)}
+        options={rhsCandidates}
         renderInput={(params) => <TextField {...params} />}
         sx={{ width: "200px" }}
         error={rhsError}
         value={curRhs}
         inputValue={curRhs}
+        disabled={curLhs === ""}
         onInputChange={(event, value) => handleRhsChange(value)}
-        helperText="RHS must be a valid property or a number"
+        helperText="RHS must be a valid variable or a number"
       />
-      <IconButton sx={{ p: "10px" }} color="primary" onClick={addExprStatement}>
+      <IconButton sx={{ p: "10px" }} color="primary" onClick={addCondStatement}>
         <AddCircleIcon sx={{ fontSize: "30px" }} />
       </IconButton>
     </Stack>
   );
-};
 
-ExprStatement.propTypes = {
+}
+
+CondEnumStatement.propTypes = {
   save: PropTypes.func.isRequired,
   setEditOn: PropTypes.func.isRequired,
-  lhsCandidates: PropTypes.arrayOf(PropTypes.shape({
+  variables: PropTypes.arrayOf(PropTypes.shape({
     name: PropTypes.string,
-    type: PropTypes.string
-  })).isRequired,
-  rhsCandidates: PropTypes.arrayOf(PropTypes.shape({
-    name: PropTypes.string,
-    type: PropTypes.string
+    type: PropTypes.string,
   })).isRequired,
 }
 
-
-export default ExprStatement;
+export default CondEnumStatement;

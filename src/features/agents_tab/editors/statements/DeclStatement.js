@@ -39,13 +39,13 @@ export const DeclStatement = (props) => {
   const addDeclStatement = () => {
     //validate LHS
     let err_flag = false;
-    if (variables.findIndex((el) => el === curLhs) !== -1) {
+    if (variables.findIndex((el) => el.name === curLhs) !== -1) {
       setLhsError(true);
       err_flag = true;
     }
     //validate RHS
     if (
-      variables.findIndex((el) => el === curRhs) === -1 &&
+      variables.findIndex((el) => el.name === curRhs) === -1 &&
       isNaN(parseFloat(curRhs))
     ) {
       setRhsError(true);

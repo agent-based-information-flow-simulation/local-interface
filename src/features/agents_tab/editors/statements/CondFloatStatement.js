@@ -10,7 +10,7 @@ import {
 } from "@mui/material"
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 
-export const FloatCondOps = [
+const FloatCondOps = [
   { opcode: "LT  ", label: "<" },
   { opcode: "GT  ", label: ">" },
   { opcode: "LTE ", label: ">=" },
@@ -40,14 +40,14 @@ export const CondFloatStatement = (props) => {
   const addCondStatement = () => {
     let err_flag = false;
     if (
-      variables.findIndex((el) => el === curLhs) === -1 &&
+      variables.findIndex((el) => el.name === curLhs) === -1 &&
       isNaN(parseFloat(curLhs))
     ) {
       setLhsError(true);
       err_flag = true;
     }
     if (
-      variables.findIndex((el) => el === curRhs) === -1 &&
+      variables.findIndex((el) => el.name === curRhs) === -1 &&
       isNaN(parseFloat(curRhs))
     ) {
       setRhsError(true);
@@ -73,7 +73,7 @@ export const CondFloatStatement = (props) => {
     <Stack direction="row">
       <Autocomplete
         freeSolo
-        options={variables}
+        options={variables.map((el,index)=>el.name)}
         renderInput={(params) => <TextField {...params} />}
         sx={{ width: "200px" }}
         error={lhsError}
@@ -89,7 +89,7 @@ export const CondFloatStatement = (props) => {
       </Select>
       <Autocomplete
         freeSolo
-        options={variables}
+        options={variables.map((el,index)=>el.name)}
         renderInput={(params) => <TextField {...params} />}
         sx={{ width: "200px" }}
         error={rhsError}

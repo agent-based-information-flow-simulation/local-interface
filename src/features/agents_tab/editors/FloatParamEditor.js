@@ -10,12 +10,11 @@ import {
 } from "@mui/material";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 
-import {
-  ExprStatement,
-  DeclStatement,
-  CondFloatStatement,
-  EndCondStatement,
-} from "./statements";
+import ExprStatement from "./statements/ExprStatement";
+import DeclStatement from "./statements/DeclStatement";
+import CondFloatStatement from "./statements/CondFloatStatement";
+import CondEnumStatement from "./statements/CondEnumStatement";
+import EndCondStatement from "./statements/EndCondStatement";
 
 import {
   selectParameters,
@@ -38,6 +37,7 @@ export const FloatParamEditor = (props) => {
   const [exprRhs, setExprRhs] = useState([]);
   const [variables, setVariables] = useState([]);
   const [floatVars, setFloatVars] = useState([]);
+  const [enumVars, setEnumVars] = useState([]);
 
   useEffect(() => {
     let tmpArr = [...scopeVars, selectedParam];
@@ -47,9 +47,12 @@ export const FloatParamEditor = (props) => {
     setExprRhs(tmpArr);
     tmpArr = [...params, ...scopeVars, ...read_only];
     setVariables(tmpArr);
-    tmpArr = tmpArr.filter((el) => el.type === "float");
-    setFloatVars(tmpArr);
-  }, [params, scopeVars, selectedParam, read_only]);
+    let tmpArrFloat = tmpArr.filter((el) => el.type === "float");
+    setFloatVars(tmpArrFloat);
+    let tmpArrEnum = tmpArr.filter((el) => el.type === "enum");
+    setEnumVars(tmpArrEnum);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [scopeVars, selectedParam]);
 
   const addScopeVar = (value) => {
     setScopeVars([...scopeVars, value]);
@@ -83,6 +86,14 @@ export const FloatParamEditor = (props) => {
             save={save}
             setEditOn={setEditOn}
             variables={floatVars}
+          />
+        );
+      case "cond_enum":
+        return (
+          <CondEnumStatement
+            save={save}
+            setEditOn={setEditOn}
+            variables={enumVars}
           />
         );
       case "endc":
