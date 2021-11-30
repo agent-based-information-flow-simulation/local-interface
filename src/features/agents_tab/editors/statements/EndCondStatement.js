@@ -1,6 +1,17 @@
-import React, { useState } from "react";
+import React from "react";
+import PropTypes from "prop-types";
+import {
+  Stack,
+  IconButton
+} from "@mui/material";
+import AddCircleIcon from "@mui/icons-material/AddCircle";
 
-export const EndCondStatement = () => {
+import InlineText from "../InlineText";
+
+export const EndCondStatement = (props) => {
+
+  const {save} = props
+
   const addEndCondStatement = () => {
     let statement = "End if";
     let operation = "FI";
@@ -20,5 +31,9 @@ export const EndCondStatement = () => {
     </Stack>
   );
 };
+
+EndCondStatement.propTypes = {
+  save: PropTypes.func.isRequired,
+}
 
 export default EndCondStatement;

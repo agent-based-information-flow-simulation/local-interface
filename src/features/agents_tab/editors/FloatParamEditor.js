@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 import {
   Select,
   MenuItem,
@@ -7,33 +7,24 @@ import {
   Stack,
   Box,
   IconButton,
-  Autocomplete,
-  TextField,
 } from "@mui/material";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 
-import { ExprStatement, DeclStatement } from "./statements";
+import {
+  ExprStatement,
+  DeclStatement,
+  CondFloatStatement,
+  EndCondStatement,
+} from "./statements";
 
 import {
   selectParameters,
-  selectScopeVars,
-  addScopeVar,
 } from "../agentsTabSlice";
-import InlineText from "./InlineText";
-
 
 export const FloatParamEditor = (props) => {
   const { save, selectedParam } = props;
-  const dispatch = useDispatch();
   const [editOn, setEditOn] = useState(false);
   const [statementType, setStatementType] = useState("expr");
-  const [variables, setVariables] = useState([]);
-  const [lhsCandidates, setLhsCandidate] = useState([selectedParam.name]);
-  const [curOpCode, setCurOpCode] = useState(FloatExprOps[0].opcode);
-  const [curLhs, setCurLhs] = useState("");
-  const [lhsError, setLhsError] = useState(false);
-  const [curRhs, setCurRhs] = useState("");
-  const [rhsError, setRhsError] = useState(false);
   const params = useSelector(selectParameters);
   const [scopeVars, setScopeVars] = useState([]);
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -45,6 +36,8 @@ export const FloatParamEditor = (props) => {
 
   const [exprLhs, setExprLhs] = useState([]);
   const [exprRhs, setExprRhs] = useState([]);
+  const [variables, setVariables] = useState([]);
+  const [floatVars, setFloatVars] = useState([]);
 
   useEffect(() => {
     let tmpArr = [...scopeVars, selectedParam];
@@ -54,19 +47,13 @@ export const FloatParamEditor = (props) => {
     setExprRhs(tmpArr);
     tmpArr = [...params, ...scopeVars, ...read_only];
     setVariables(tmpArr);
+    tmpArr = tmpArr.filter((el) => el.type === "float");
+    setFloatVars(tmpArr);
   }, [params, scopeVars, selectedParam, read_only]);
-
-  const handleLhsChange = (value) => {
-    setCurLhs(value);
-  };
-
-  const handleRhsChange = (value) => {
-    setCurRhs(value);
-  };
 
   const addScopeVar = (value) => {
     setScopeVars([...scopeVars, value]);
-  }
+  };
 
   const ModeDisplay = () => {
     if (!editOn) return <></>;
@@ -87,12 +74,19 @@ export const FloatParamEditor = (props) => {
             save={save}
             setEditOn={setEditOn}
             variables={variables}
+            addScopeVar={addScopeVar}
           />
         );
       case "cond_float":
-        return <CondStatement />;
+        return (
+          <CondFloatStatement
+            save={save}
+            setEditOn={setEditOn}
+            variables={floatVars}
+          />
+        );
       case "endc":
-        return <EndCondStatement />;
+        return <EndCondStatement save={save} />;
       default:
         return <></>;
     }
