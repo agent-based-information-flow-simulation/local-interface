@@ -40,23 +40,23 @@ What follows is a description of `OP_CODE`s and their arguments.
 
 ### Float
 #### Expression
-`ADD ` Add, LHS float, RHS is float, result is LHS incremented by RHS
-`SUBT` Subtract, LHS float, RHS is float, result is LHS decremented by RHS
-`MULT` Multiply, LHS float, RHS is float, result is LHS multiplied by RHS
-`DIV ` Divide, LHS float, RHS is non-zero float, result is LHS divided by RHS
+- `ADD ` Add, LHS float, RHS is float, result is LHS incremented by RHS
+- `SUBT` Subtract, LHS float, RHS is float, result is LHS decremented by RHS
+- `MULT` Multiply, LHS float, RHS is float, result is LHS multiplied by RHS
+- `DIV ` Divide, LHS float, RHS is non-zero float, result is LHS divided by RHS
 #### Declaration
-`DECL` Declare, LHS valid unique identifier, RHS is float, result is new float variable with LHS UID.
+- `DECL` Declare, LHS valid unique identifier, RHS is float, result is new float variable with LHS UID.
 #### Float Conditional
-`LT  ` LessThan operator, true if LHS < RHS
-`GT  ` GreaterThan operator, true if LHS > RHS
-`LTE ` LessThanOrEqual operator, true if LHS <= RHS
-`GTE ` GreaterThanOrEqual operator, true if LHS >= RHS
-`EQ  ` Equality operator, true if LHS == RHS
-`NEQ ` Not equality operator, true if LHS != RHS
+- `LT  ` LessThan operator, true if LHS < RHS
+- `GT  ` GreaterThan operator, true if LHS > RHS
+- `LTE ` LessThanOrEqual operator, true if LHS <= RHS
+- `GTE ` GreaterThanOrEqual operator, true if LHS >= RHS
+- `EQ  ` Equality operator, true if LHS == RHS
+- `NEQ ` Not equality operator, true if LHS != RHS
 #### Enum Conditional
-`EQ  ` Equality operator, true if LHS == RHS
-`NEQ ` Not equality operator, true if LHS != RHS
+- `EQ  ` Equality operator, true if LHS == RHS
+- `NEQ ` Not equality operator, true if LHS != RHS
 #### End Conditional
-`FI  ` Ends conditional block
+- `FI  ` Ends conditional block
 
 
