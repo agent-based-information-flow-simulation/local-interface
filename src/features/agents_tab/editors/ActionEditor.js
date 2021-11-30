@@ -87,6 +87,13 @@ const ActionEditor = (props) => {
             <></>
           )}
         </FormGroup>
+        <ol>
+            {
+              actionOperations.map((operation, index) => {
+                return <li> {operation} </li>
+              })
+            }
+        </ol>
       </Container>
     </Dialog>
   );

@@ -52,7 +52,7 @@ export const DeclStatement = (props) => {
       err_flag = true;
     }
     if (!err_flag) {
-      if(isNaN(parseFloat(curRhs))){
+      if(isNaN(parseFloat(curLhs))){
         addScopeVar({
           name: curLhs,
           type: typeLookup(curLhs)
@@ -64,7 +64,6 @@ export const DeclStatement = (props) => {
         })
 
       }
-      addScopeVar(curLhs);
       let statement = "let " + curLhs + " = " + curRhs;
       let operation = "DECL    " + curLhs + "," + curRhs;
       save(statement, operation);

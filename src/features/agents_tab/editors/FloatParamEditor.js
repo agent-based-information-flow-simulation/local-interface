@@ -40,6 +40,7 @@ export const FloatParamEditor = (props) => {
   const [enumVars, setEnumVars] = useState([]);
 
   useEffect(() => {
+    console.log("using effect:", scopeVars);
     let tmpArr = [...scopeVars, selectedParam];
     setExprLhs(tmpArr);
     tmpArr = params.filter((el) => el.type === "float");
@@ -55,7 +56,11 @@ export const FloatParamEditor = (props) => {
   }, [scopeVars, selectedParam]);
 
   const addScopeVar = (value) => {
-    setScopeVars([...scopeVars, value]);
+    console.log(value)
+    let newArr = [...scopeVars];
+    newArr.push(value);
+    console.log(newArr);
+    setScopeVars(newArr);
   };
 
   const ModeDisplay = () => {
