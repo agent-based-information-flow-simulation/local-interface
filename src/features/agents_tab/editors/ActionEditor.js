@@ -34,13 +34,9 @@ const ActionEditor = (props) => {
   const ModeDisplay = (props) => {
     if(props.param === undefined) return <></>;
     switch (props.param.type) {
-      case "float_init":
-      case "float_distribution":
+      case "float":
         return <FloatParamEditor save={save} selectedParam={props.param}/>;
-      case "enum_new_init":
-      case "enum_new_percentages":
-      case "enum_existing_init":
-      case "enum_existing_percentages":
+      case "enum":
         return <EnumParamEditor />;
       case "list_conns":
       case "list_messages":

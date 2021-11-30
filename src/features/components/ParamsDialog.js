@@ -26,7 +26,8 @@ function ParamsDialog(props) {
     if(param.name === "" && paramData.type !== "existing") return null;
     switch(paramData.type){
       case "initVal":
-        param.type = "float_init";
+        param.type = "float"; //old: float_init
+        param.mode = "init"
         let val = parseFloat(paramData.initVal);
         if(isNaN(val)){
           return null;
@@ -34,7 +35,8 @@ function ParamsDialog(props) {
         param.value = paramData.initVal;
         return param;
       case "distribution":
-        param.type = "float_distribution"
+        param.type = "float"
+        param.mode = "distribution" //old: float_distribution
         param.distribution = paramData.distribution;
         for(let i=0; i<distributionsDict[param.distribution].arg_count; i++){
           if(isNaN(parseFloat(paramData.distribution_args[i]))){
@@ -47,7 +49,8 @@ function ParamsDialog(props) {
         param.state = paramData.state;
         switch(paramData.state){
           case "init":
-            param.type = "enum_new_init"
+            param.type = "enum"; //old: enum_new_init
+            param.mode = "new_init";
             param.values = paramData.enumVals;
             let val = parseFloat(paramData.selectedInit);
             if(param.values.length < 2){
@@ -59,7 +62,8 @@ function ParamsDialog(props) {
             param.selectedInit = paramData.selectedInit;
             return param;
           case "percentages":
-            param.type = "enum_new_percentages"
+            param.type = "enum"; //old: enum_new_percentages
+            param.mode = "new_percentages";
             param.values = paramData.enumVals;
             console.log(param.values)
             let sum = 0;
@@ -77,21 +81,25 @@ function ParamsDialog(props) {
         param.name = paramData.oldEnumData.name;
         switch(paramData.oldEnumData.state){
           case "init":
-            param.type = "enum_existing_init";
+            param.type = "enum"; //old: enum_existing_init
+            param.mode = "existing_init";
             param.values = paramData.oldEnumData.values;
             param.selectedInit = paramData.oldEnumData.selectedInit;
             return param;
           case "percentages":
-            param.type = "enum_existing_percentages"
+            param.type = "enum" //old: enum_existing_percentages
+            param.mode = "exiting_percentages";
             param.values = paramData.oldEnumData.values;
             return param;
           default: return null;
         }
       case "conns":
         param.type = "list_conns"
+        param.mode = "list_conns"
         return param;
       case "msgs":
         param.type = "list_msgs"
+        param.mode = "list_msgs"
         return param;
       default:
         return null;

@@ -55,16 +55,18 @@ const EnumPercentages = (props) => {
 
 const renderParam = (param) => {
   switch (param.type) {
-    case "float_init":
-      return <FloatInit value={param.value} />;
-    case "float_distribution":
-      return <FloatDistribution distribution={param.distribution} distribution_args={param.distribution_args}/>
-    case "enum_new_init":
-    case "enum_existing_init":
-      return <EnumInit values={param.values} selectedIndex={param.selectedInit} />
-    case "enum_new_percentages":
-    case "enum_existing_percentages":
-      return <EnumPercentages values={param.values}/>
+    case "float":
+      if(param.mode === "init"){
+        return <FloatInit value={param.value} />;
+      }else{
+        return <FloatDistribution distribution={param.distribution} distribution_args={param.distribution_args}/>
+      }
+    case "enum":
+      if(param.mode.contains('init')){
+        return <EnumInit values={param.values} selectedIndex={param.selectedInit} />
+      }else{
+        return <EnumPercentages values={param.values}/>
+      }
     default:
       return (<></>);
   }
