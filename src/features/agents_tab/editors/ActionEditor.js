@@ -1,7 +1,9 @@
+/* eslint-disable no-loop-func */
 import React, { useState } from "react";
 import PropTypes from "prop-types";
 import { useSelector } from "react-redux";
 import { selectParameters } from "../agentsTabSlice";
+import { selectBlockLvl } from "./editorSlice";
 import {
   Container,
   Dialog,
@@ -10,6 +12,9 @@ import {
   MenuItem,
   FormGroup,
   FormHelperText,
+  Button,
+  Alert,
+  TextField,
 } from "@mui/material";
 
 import FloatParamEditor from "./FloatParamEditor";
@@ -18,24 +23,144 @@ import ListParamEditor from "./ListParamEditor";
 
 const ActionEditor = (props) => {
   const { onClose, open } = props;
-  const [actionType, setActionType] = useState("modifySelf");
+  const [actionType, setActionType] = useState("modify_self");
   const [selectedParam, setSelectedParam] = useState(-1);
+  const [blockError, setBlockError] = useState(false);
+
+  const [actionName, setActionName] = useState("");
+  const [nameError, setNameError] = useState(false);
 
   const [statements, setStatements] = useState([]);
-  const [actionOperations, setActionOperations] = useState([])
+  const [actionOperations, setActionOperations] = useState([]);
 
   const params = useSelector(selectParameters);
+  const block_lvl = useSelector(selectBlockLvl);
 
   const save = (statement, operation) => {
     setStatements([...statements, statement]);
     setActionOperations([...actionOperations, operation]);
-  }
+  };
+
+  // TODO: Add checking for empty instructions
+  const saveAction = () => {
+    if (block_lvl) {
+      setBlockError(true);
+      return;
+    }
+    if (actionName === "" || !isNaN(actionName)) {
+      setNameError(true);
+      return;
+    }
+    setNameError(false);
+    setBlockError(false);
+    let parsedOpArr = [];
+    let rawOpArr = [...actionOperations];
+    while (rawOpArr.findIndex((el) => el.startsWith("DECL")) !== -1) {
+      let index = rawOpArr.findIndex((el) => el.startsWith("DECL"));
+      parsedOpArr.push(rawOpArr[index]);
+      rawOpArr.splice(index, 1);
+    }
+    rawOpArr.forEach((el) => parsedOpArr.push(el));
+    let code = "ACTION " + actionName + ',' + actionType + "\n";
+    parsedOpArr.forEach((el) => (code += el + "\n"));
+    code += "EACTION\n";
+    console.log(code);
+  };
+
+  const findUnmatchedIndexes = () => {
+    let end_indexes = statements.reduce((arr, e, i) => {
+      if (e.startsWith("End")) {
+        arr.push(i);
+      }
+      return arr;
+    }, []);
+    let if_indexes = statements.reduce((arr, e, i) => {
+      if (e.startsWith("If")) {
+        arr.push(i);
+      }
+      return arr;
+    }, []);
+
+    if (end_indexes.length > if_indexes.length) {
+      while (if_indexes.length !== 0) {
+        let checked = if_indexes[0];
+        let found_index = -1;
+        for (
+          var i = checked + 1;
+          i < end_indexes[end_indexes.length - 1];
+          i++
+        ) {
+          if (end_indexes.findIndex((el) => el === i) !== -1) {
+            found_index = end_indexes.findIndex((el) => el === i);
+            break;
+          }
+        }
+        if_indexes.splice(0, 1);
+        end_indexes.splice(found_index, 1);
+      }
+      return end_indexes;
+    } else {
+      while (end_indexes.length !== 0) {
+        // console.log("end:", end_indexes);
+        // console.log("if:", if_indexes);
+        let checked = end_indexes[0];
+        let found_index = -1;
+        for (var i = checked - 1; i > if_indexes[0]; i--) {
+          if (end_indexes.findIndex((el) => el === i) !== -1) {
+            found_index = end_indexes.findIndex((el) => el === i);
+            break;
+          }
+        }
+        end_indexes.splice(0, 1);
+        if_indexes.splice(found_index, 1);
+        // console.log("end:", end_indexes);
+        // console.log("if:", if_indexes);
+      }
+      return if_indexes;
+    }
+  };
+
+  const StatementsList = (props) => {
+    let indentLevel = 0;
+    let indexes = [];
+    if (blockError) {
+      indexes = findUnmatchedIndexes();
+    }
+
+    return (
+      <ul>
+        {statements.map((value, index) => {
+          let correct = 0;
+          if (value.startsWith("If") || value.startsWith("While")) {
+            indentLevel += 4;
+            correct = -4;
+          } else if (value.startsWith("End")) {
+            indentLevel -= 4;
+          }
+          let color = "black";
+          if (indexes.length > 0) {
+            if (indexes.findIndex((el) => el === index) !== -1) {
+              color = "red";
+            }
+          }
+          return (
+            <li
+              style={{ marginLeft: indentLevel + correct + "em", color: color }}
+            >
+              {" "}
+              {value}{" "}
+            </li>
+          );
+        })}
+      </ul>
+    );
+  };
 
   const ModeDisplay = (props) => {
-    if(props.param === undefined) return <></>;
+    if (props.param === undefined) return <></>;
     switch (props.param.type) {
       case "float":
-        return <FloatParamEditor save={save} selectedParam={props.param}/>;
+        return <FloatParamEditor save={save} selectedParam={props.param} />;
       case "enum":
         return <EnumParamEditor />;
       case "list_conns":
@@ -47,19 +172,30 @@ const ActionEditor = (props) => {
   };
 
   return (
-    <Dialog fullScreen={true} onClose={onClose} open={open} disableAutoFocus={true} disableEnforceFocus={true}>
+    <Dialog
+      fullScreen={true}
+      onClose={onClose}
+      open={open}
+      disableAutoFocus={true}
+      disableEnforceFocus={true}
+    >
       <Container sx={{ padding: 3 }}>
         <DialogTitle> New action </DialogTitle>
         <FormGroup fullWidth>
+          <TextField
+            value={actionName}
+            onChange={(e) => setActionName(e.target.value)}
+            label="Action name"
+          />
           <Select
             value={actionType}
             onChange={(e) => setActionType(e.target.value)}
             sx={{ marginTop: 1 }}
           >
-            <MenuItem value={"modifySelf"}> Modify Self </MenuItem>
-            <MenuItem value={"sendMsg"}> Send message </MenuItem>
+            <MenuItem value={"modify_self"}> Modify Self </MenuItem>
+            <MenuItem value={"send_msg"}> Send message </MenuItem>
           </Select>
-          {actionType === "modifySelf" ? (
+          {actionType === "modify_self" ? (
             <>
               <Select
                 value={selectedParam}
@@ -73,27 +209,37 @@ const ActionEditor = (props) => {
                   return <MenuItem value={index}> {param.name} </MenuItem>;
                 })}
               </Select>
-              <FormHelperText>{selectedParam===-1 ? "Select param to change" : ""} </FormHelperText>
-              <ul>
-                {
-                  statements.map((value, index) => {
-                    return <li> {value} </li>;
-                  })
-                }
-              </ul>
+              <FormHelperText>
+                {selectedParam === -1 ? "Select param to change" : ""}{" "}
+              </FormHelperText>
+              <StatementsList />
               <ModeDisplay param={params[selectedParam]} />
             </>
           ) : (
             <></>
           )}
         </FormGroup>
-        <ol>
-            {
-              actionOperations.map((operation, index) => {
-                return <li> {operation} </li>
-              })
-            }
-        </ol>
+        {blockError ? (
+          <Alert severity="error" onClose={(e) => setBlockError(false)}>
+            Error saving! There is a conditional or a loop without matching
+            close block
+          </Alert>
+        ) : (
+          <></>
+        )}
+        {nameError ? (
+          <Alert severity="error" onClose={(e) => setNameError(false)}>
+            Error saving! You need to set a name for the action, and it cannot
+            be a number!{" "}
+          </Alert>
+        ) : (
+          <></>
+        )}
+
+        <Button variant="contained" onClick={saveAction}>
+          {" "}
+          Save action{" "}
+        </Button>
       </Container>
     </Dialog>
   );

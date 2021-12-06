@@ -105,7 +105,6 @@ const EnumParam = (props) => {
           default:
             break;
         }
-        console.log(enumVals);
         newParamData.enumVals = enumVals;
         break;
       case "existing":

@@ -65,7 +65,6 @@ function ParamsDialog(props) {
             param.type = "enum"; //old: enum_new_percentages
             param.mode = "new_percentages";
             param.values = paramData.enumVals;
-            console.log(param.values)
             let sum = 0;
             for(let i=0; i<param.values.length; i++){
               sum += parseFloat(param.values[i].percentage);

@@ -7,12 +7,17 @@ import {
   IconButton,
 } from "@mui/material"
 
+import { useDispatch } from "react-redux";
+import { addScopeVar } from "../editorSlice";
+
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import InlineText from "../InlineText";
 
 export const DeclStatement = (props) => {
 
-  const { save, setEditOn, variables, addScopeVar} = props;
+  const { save, setEditOn, variables } = props;
+
+  const dispatch = useDispatch();
 
   const typeLookup = ( name ) => {
     let variable = variables.find(el => el.name === name);
@@ -52,16 +57,16 @@ export const DeclStatement = (props) => {
       err_flag = true;
     }
     if (!err_flag) {
-      if(isNaN(parseFloat(curLhs))){
-        addScopeVar({
+      if(isNaN(parseFloat(curRhs))){
+        dispatch(addScopeVar({
           name: curLhs,
-          type: typeLookup(curLhs)
-        })
+          type: typeLookup(curRhs)
+        }))
       }else{
-        addScopeVar({
+        dispatch(addScopeVar({
           name: curLhs,
           type: "float"
-        })
+        }))
 
       }
       let statement = "let " + curLhs + " = " + curRhs;
@@ -103,7 +108,6 @@ export const DeclStatement = (props) => {
 DeclStatement.propTypes = {
   save: PropTypes.func.isRequired,
   setEditOn: PropTypes.func.isRequired,
-  addScopeVar: PropTypes.func.isRequired,
   variables: PropTypes.arrayOf(PropTypes.shape({
     name: PropTypes.string,
     type: PropTypes.string

@@ -8,13 +8,21 @@ import AddCircleIcon from "@mui/icons-material/AddCircle";
 
 import InlineText from "../InlineText";
 
-export const EndCondStatement = (props) => {
+
+import { useDispatch } from "react-redux";
+import {
+  closeBlock
+} from "../editorSlice";
+
+export const EndBlockStatement = (props) => {
 
   const {save} = props
+  const dispatch = useDispatch();
 
   const addEndCondStatement = () => {
-    let statement = "End if";
-    let operation = "FI";
+    let statement = "End block";
+    let operation = "EBLOCK";
+    dispatch(closeBlock());
     save(statement, operation);
   };
 
@@ -32,8 +40,8 @@ export const EndCondStatement = (props) => {
   );
 };
 
-EndCondStatement.propTypes = {
+EndBlockStatement.propTypes = {
   save: PropTypes.func.isRequired,
 }
 
-export default EndCondStatement;
+export default EndBlockStatement;

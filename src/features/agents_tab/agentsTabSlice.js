@@ -7,7 +7,7 @@ const initialState = {
   parameters: [],
   param_count: 0,
   behaviours: [],
-  scope_vars: [],
+  actions: [],
 }
 
 export const agentsTabSlice = createSlice({
@@ -27,16 +27,13 @@ export const agentsTabSlice = createSlice({
     addBehav: (state, action) => {
       state.behaviours.push(action.payload);
     },
-    addScopeVar: (state, action) => {
-      state.scope_vars.push(action.payload);
-    },
-    resetScopeVars: (state, action) => {
-      state.scope_vars = [];
+    addAction: (state, action) => {
+      state.actions.push(action.payload);
     }
   }
 });
 
-export const {addAgent, addParam, addBehav, addScopeVar, resetScopeVars} = agentsTabSlice.actions;
+export const {addAgent, addParam, addBehav} = agentsTabSlice.actions;
 
 export const selectCurrentAgents = (state) => {
   if (state.current_selected !== -1)
@@ -44,12 +41,12 @@ export const selectCurrentAgents = (state) => {
   //TODO Else, deselect, return something magical
 }
 
-export const selectParameters = (state) => {
-  return state.agentsTab.parameters;
+export const selectActions = (state) => {
+  return state.agentsTab.actions;
 }
 
-export const selectScopeVars = (state) => {
-  return state.agentsTab.scope_vars;
+export const selectParameters = (state) => {
+  return state.agentsTab.parameters;
 }
 
 export const selectBehaviours = (state) => {

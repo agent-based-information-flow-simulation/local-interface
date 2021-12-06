@@ -16,13 +16,14 @@ import {
   openBlock
 } from "../editorSlice";
 
+
 const EnumCondOps = [
-  { opcode: "IEQ  ", label: "==" },
-  { opcode: "INEQ ", label: "!=" },
+  { opcode: "WEQ  ", label: "==" },
+  { opcode: "WNEQ ", label: "!=" },
 ];
 
 
-export const CondEnumStatement = (props) => {
+export const WhileEnumStatement = (props) => {
   const {save, setEditOn, variables} = props;
   const dispatch = useDispatch();
 
@@ -62,12 +63,13 @@ export const CondEnumStatement = (props) => {
     }
     if (!err_flag) {
       let statement =
-        "If " +
+        "While " +
         curLhs +
         " " +
         EnumCondOps.find((el) => el.opcode === curOpCode).label +
         " " +
-        curRhs;
+        curRhs +
+        " do:";
       let operation = curOpCode + "    " + curLhs + "," + curRhs;
       dispatch(openBlock());
       save(statement, operation);
@@ -115,7 +117,7 @@ export const CondEnumStatement = (props) => {
 
 }
 
-CondEnumStatement.propTypes = {
+WhileEnumStatement.propTypes = {
   save: PropTypes.func.isRequired,
   setEditOn: PropTypes.func.isRequired,
   variables: PropTypes.arrayOf(PropTypes.shape({
@@ -124,4 +126,4 @@ CondEnumStatement.propTypes = {
   })).isRequired,
 }
 
-export default CondEnumStatement;
+export default WhileEnumStatement;

@@ -1,43 +1,43 @@
-import React, { useState} from "react"
+import React, { useState } from "react";
 import PropTypes from "prop-types";
+
 import {
   Stack,
   Autocomplete,
-  Select,
   MenuItem,
-  TextField,
   IconButton,
+  TextField,
+  Select,
 } from "@mui/material"
 import AddCircleIcon from "@mui/icons-material/AddCircle";
-
 
 import { useDispatch } from "react-redux";
 import {
   openBlock
 } from "../editorSlice";
 
-const EnumCondOps = [
-  { opcode: "IEQ  ", label: "==" },
-  { opcode: "INEQ ", label: "!=" },
+const FloatCondOps = [
+  { opcode: "WLT  ", label: "<" },
+  { opcode: "WGT  ", label: ">" },
+  { opcode: "WLTE ", label: ">=" },
+  { opcode: "WGTE ", label: ">=" },
+  { opcode: "WEQ  ", label: "==" },
+  { opcode: "WNEQ ", label: "!=" },
 ];
 
-
-export const CondEnumStatement = (props) => {
-  const {save, setEditOn, variables} = props;
+export const WhileFloatStatement = (props) => {
+  const { save, setEditOn, variables } = props;
   const dispatch = useDispatch();
 
   const [curLhs, setCurLhs] = useState("");
   const [lhsError, setLhsError] = useState(false);
   const [curRhs, setCurRhs] = useState("");
   const [rhsError, setRhsError] = useState(false);
-  const [curOpCode, setCurOpCode] = useState(EnumCondOps[0].opcode);
+  const [curOpCode, setCurOpCode] = useState(FloatCondOps[0].opcode);
 
-  const [rhsCandidates, setRhsCandidates] = useState([]);
 
   const handleLhsChange = (value) => {
     setCurLhs(value);
-    let val = variables.find(el => el.name === value);
-    setRhsCandidates(val.values.map((el,index)=>el.name));
   };
 
   const handleRhsChange = (value) => {
@@ -54,7 +54,7 @@ export const CondEnumStatement = (props) => {
       err_flag = true;
     }
     if (
-      rhsCandidates.findIndex((el) => el === curRhs) === -1 &&
+      variables.findIndex((el) => el.name === curRhs) === -1 &&
       isNaN(parseFloat(curRhs))
     ) {
       setRhsError(true);
@@ -62,12 +62,13 @@ export const CondEnumStatement = (props) => {
     }
     if (!err_flag) {
       let statement =
-        "If " +
+        "While " +
         curLhs +
         " " +
-        EnumCondOps.find((el) => el.opcode === curOpCode).label +
+        FloatCondOps.find((el) => el.opcode === curOpCode).label +
         " " +
-        curRhs;
+        curRhs +
+        " do:";
       let operation = curOpCode + "    " + curLhs + "," + curRhs;
       dispatch(openBlock());
       save(statement, operation);
@@ -91,19 +92,18 @@ export const CondEnumStatement = (props) => {
         helperText="LHS must be a valid variable or a number"
       />
       <Select value={curOpCode} onChange={(e) => setCurOpCode(e.target.value)}>
-        {EnumCondOps.map((op, index) => {
+        {FloatCondOps.map((op, index) => {
           return <MenuItem value={op.opcode}> {op.label} </MenuItem>;
         })}
       </Select>
       <Autocomplete
         freeSolo
-        options={rhsCandidates}
+        options={variables.map((el,index)=>el.name)}
         renderInput={(params) => <TextField {...params} />}
         sx={{ width: "200px" }}
         error={rhsError}
         value={curRhs}
         inputValue={curRhs}
-        disabled={curLhs === ""}
         onInputChange={(event, value) => handleRhsChange(value)}
         helperText="RHS must be a valid variable or a number"
       />
@@ -112,16 +112,16 @@ export const CondEnumStatement = (props) => {
       </IconButton>
     </Stack>
   );
+};
 
-}
-
-CondEnumStatement.propTypes = {
+WhileFloatStatement.propTypes = {
   save: PropTypes.func.isRequired,
   setEditOn: PropTypes.func.isRequired,
+  mode: PropTypes.string.isRequired,
   variables: PropTypes.arrayOf(PropTypes.shape({
     name: PropTypes.string,
     type: PropTypes.string,
   })).isRequired,
 }
 
-export default CondEnumStatement;
+export default WhileFloatStatement;

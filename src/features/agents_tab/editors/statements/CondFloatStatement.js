@@ -10,17 +10,24 @@ import {
 } from "@mui/material"
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 
+
+import { useDispatch } from "react-redux";
+import {
+  openBlock
+} from "../editorSlice";
+
 const FloatCondOps = [
-  { opcode: "LT  ", label: "<" },
-  { opcode: "GT  ", label: ">" },
-  { opcode: "LTE ", label: ">=" },
-  { opcode: "GTE ", label: ">=" },
-  { opcode: "EQ  ", label: "==" },
-  { opcode: "NEQ ", label: "!=" },
+  { opcode: "ILT  ", label: "<" },
+  { opcode: "IGT  ", label: ">" },
+  { opcode: "ILTE ", label: ">=" },
+  { opcode: "IGTE ", label: ">=" },
+  { opcode: "IEQ  ", label: "==" },
+  { opcode: "INEQ ", label: "!=" },
 ];
 
 export const CondFloatStatement = (props) => {
   const { save, setEditOn, variables } = props;
+  const dispatch = useDispatch();
 
   const [curLhs, setCurLhs] = useState("");
   const [lhsError, setLhsError] = useState(false);
@@ -62,6 +69,7 @@ export const CondFloatStatement = (props) => {
         " " +
         curRhs;
       let operation = curOpCode + "    " + curLhs + "," + curRhs;
+      dispatch(openBlock());
       save(statement, operation);
       setEditOn(false);
       setLhsError(false);
