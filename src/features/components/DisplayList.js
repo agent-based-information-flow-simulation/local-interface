@@ -9,7 +9,7 @@ import {
 } from "@mui/material"
 
 const DisplayList = (props) => {
-  const {name, collection} = props;
+  const {name, collection, onItemClick} = props;
 
   return(
       <Box
@@ -34,7 +34,7 @@ const DisplayList = (props) => {
           >
             {collection.map((item) => {
               return (
-                <ListItem disablePadding>
+                <ListItem disablePadding onClick={() => onItemClick(item)}>
                   <ListItemButton>
                     <ListItemText primary={item} />
                   </ListItemButton>
@@ -50,7 +50,8 @@ const DisplayList = (props) => {
 
 DisplayList.propTypes = {
   name: PropTypes.string.isRequired,
-  collection: PropTypes.arrayOf(PropTypes.string.isRequired).isRequired
+  collection: PropTypes.arrayOf(PropTypes.string.isRequired).isRequired,
+  onItemClick: PropTypes.func
 }
 
 export default DisplayList;
