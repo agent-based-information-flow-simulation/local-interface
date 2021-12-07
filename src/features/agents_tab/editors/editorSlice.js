@@ -3,6 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
   scopeVars: [],
   openBlocks: 0,
+  actions: [],
 }
 
 export const editorSlice = createSlice({
@@ -20,13 +21,18 @@ export const editorSlice = createSlice({
     },
     closeBlock: (state, action) => {
       state.openBlocks -= 1;
+    },
+    addAction: (state, action) => {
+      state.actions.push(action.payload);
     }
   }
 })
 
-export const {addScopeVar, resetScope, openBlock, closeBlock} = editorSlice.actions;
+export const {addScopeVar, resetScope, openBlock, closeBlock, addAction} = editorSlice.actions;
 
 export const selectScopeVars = (state) => state.editor.scopeVars;
+
+export const selectActions = (state) => state.editor.actions;
 
 export const selectBlockLvl = (state) =>{
   return state.editor.openBlocks;

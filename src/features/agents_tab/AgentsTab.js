@@ -15,12 +15,16 @@ import ParamsDialog from "../components/ParamsDialog";
 import BehavDialog from "./BehavDialog";
 import SelectList from "../components/SelectList";
 import DisplayList from "../components/DisplayList";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { validateQualifiedName } from "../../app/utils";
 
-import { selectParameters, addParam, selectBehaviours } from "./agentsTabSlice";
+import { selectParameters, addParam, selectBehaviours, addAgent } from "./agentsTabSlice";
 // import { selectMessageTypes } from "../simulationSlice"
 
 export function AgentsTab(props) {
+
+  const dispatch = useDispatch();
+
   const paramListOptions = [
     { value: "float", display: "Float" },
     { value: "enum", display: "Enumerable" },
@@ -37,6 +41,10 @@ export function AgentsTab(props) {
   const [paramDialogType, setParamDialogType] = React.useState("");
   const [behavDialogType, setBehavDialogType] = React.useState("");
   const [notifyError, setNotifyError] = React.useState(false);
+
+  const [agentName, setAgentName] = React.useState("");
+  const [nameError, setNameError] = React.useState("");
+  const [behavError, setBehavError] = React.useState("");
 
   const params = useSelector(selectParameters);
   const behavs = useSelector(selectBehaviours);
@@ -66,10 +74,69 @@ export function AgentsTab(props) {
     setNotifyError(false);
   };
 
+  const generatePRM = (param) => {
+    let code = "PRM " + param.name + ",";
+    switch(param.type) {
+      case "float":
+        code += "float,";
+        switch(param.mode){
+          case "init":
+            code += "init," + param.value + '\n';
+            return code;
+          case "distribution":
+            code += "dist," + param.distribution + ',';
+            param.distribution_args.forEach(el => code += el + ",");
+            code = code.slice(0, -1) + '\n';
+            return code;
+          default:
+            return "";
+        }
+      case "enum":
+        code += "enum";
+        param.values.forEach(val => code += "," + val.name + "," + val.percentage);
+        return code + "\n";
+      case "list":
+        code += "list,";
+        switch(param.mode){
+          case "conn":
+            return code + "conn\n";
+          case "msg":
+            return code + "msg\n";
+          default:
+            return "";
+        }
+      default:
+        return "";
+    }
+  }
+
+
+  const saveAgent = () => {
+    let err_flag = false;
+    if(!validateQualifiedName(agentName)){
+      err_flag = true;
+      setNameError(true);
+    }
+    // if(behavs.length === 0){
+    //   err_flag = true;
+    //   setBehavError(true);
+    // }
+    if(!err_flag){
+      let code = "AGENT " + agentName +'\n';
+      params.forEach(el => code += generatePRM(el));
+      behavs.forEach(el => code += el.code);
+      code += "EAGENT\n";
+      console.log(code);
+
+    }
+
+
+  };
+
   return (
     <>
       <ParamsDialog open={paramDialogOpen} onClose={handleParamClose} type={paramDialogType} addParam={addParam} />
-      <BehavDialog open={behavDialogOpen} onClose={handleBehavClose} type={behavDialogType} />
+      <BehavDialog open={behavDialogOpen} handleClose={handleBehavClose} type={behavDialogType} />
       <Dialog open={notifyError} onClose={handleNotifyClose}>
         <DialogTitle> Error while saving </DialogTitle>
         <DialogContent>
@@ -102,7 +169,7 @@ export function AgentsTab(props) {
           sx={{
             width: "100%",
             height: 700,
-            maxWidth: 800,
+            maxWidth: 720,
             bgcolor: "background.paper",
             display: "inline-block",
             paddingTop: 9,
@@ -115,6 +182,8 @@ export function AgentsTab(props) {
                 variant="outlined"
                 label="Agent Type Name"
                 id="agent_type_input"
+                value={agentName}
+                onChange={(e) => setAgentName(e.target.value)}
               />
             </Box>
             <Stack direction="row">
@@ -131,6 +200,7 @@ export function AgentsTab(props) {
                 handleParamTypeChange={handleBehavTypeChange}
               />
             </Stack>
+            <Button variant="contained" onClick={saveAgent}> Add Agent </Button>
           </Stack>
         </Box>
       </Stack>

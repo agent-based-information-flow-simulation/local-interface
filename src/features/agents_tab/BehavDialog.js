@@ -6,10 +6,14 @@ import { OnSetupBehav } from "./OnSetupBehav";
 const BehavDialog = (props) => {
   const { handleClose, open, type } = props;
 
+  const saveCallback = () => {
+    handleClose(false);
+  }
+
   const ModeDisplay = () => {
     switch (type) {
       case "onSetup":
-        return <OnSetupBehav/>;
+        return <OnSetupBehav onClose={saveCallback}/>;
       case "onEvent":
         return <h1>XDD</h1>;
       default:
@@ -20,7 +24,7 @@ const BehavDialog = (props) => {
   return (
     <Dialog onClose={handleClose} open={open}>
       <Container sx={{ padding: 3 }}>
-        <DialogTitle> New parameter </DialogTitle>
+        <DialogTitle> New behaviour </DialogTitle>
         <ModeDisplay />
       </Container>
     </Dialog>

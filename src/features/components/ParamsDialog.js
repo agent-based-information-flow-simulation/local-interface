@@ -93,12 +93,12 @@ function ParamsDialog(props) {
           default: return null;
         }
       case "conns":
-        param.type = "list_conns"
-        param.mode = "list_conns"
+        param.type = "list"
+        param.mode = "conn"
         return param;
       case "msgs":
-        param.type = "list_msgs"
-        param.mode = "list_msgs"
+        param.type = "list"
+        param.mode = "msg"
         return param;
       default:
         return null;

@@ -41,6 +41,16 @@ const ActionEditor = (props) => {
     setActionOperations([...actionOperations, operation]);
   };
 
+  const reset = () => {
+    setActionType("modify_self")
+    setSelectedParam(-1);
+    setBlockError(false);
+    setActionName("")
+    setNameError(false);
+    setStatements([]);
+    setActionOperations([]);
+  }
+
   // TODO: Add checking for empty instructions
   const saveAction = () => {
     if (block_lvl) {
@@ -64,8 +74,20 @@ const ActionEditor = (props) => {
     let code = "ACTION " + actionName + ',' + actionType + "\n";
     parsedOpArr.forEach((el) => (code += el + "\n"));
     code += "EACTION\n";
-    console.log(code);
+    let script = statements.join('\n');
+    let ret_action = {
+      name: actionName,
+      code: code,
+      script: script,
+    }
+    reset();
+    onClose(ret_action);
   };
+
+  const cancel = () => {
+    reset();
+    onClose(null);
+  }
 
   const findUnmatchedIndexes = () => {
     let end_indexes = statements.reduce((arr, e, i) => {
@@ -239,6 +261,9 @@ const ActionEditor = (props) => {
         <Button variant="contained" onClick={saveAction}>
           {" "}
           Save action{" "}
+        </Button>
+        <Button variant="outlined" onClick={cancel} sx={{margin: 2}}>
+          Cancel
         </Button>
       </Container>
     </Dialog>

@@ -98,14 +98,18 @@ const EnumParam = (props) => {
         newParamData.state = enumState;
         switch (enumState) {
           case "init":
-            newParamData.selectedInit = selectedIndex;
+            let updateVals = [...enumVals];
+            updateVals = updateVals.map((el,index) => {
+              return index === selectedIndex ? {...el, percentage: "100"} : el;
+            })
+            newParamData.enumVals = updateVals;
             break;
           case "percentages":
+            newParamData.enumVals = enumVals;
             break;
           default:
             break;
         }
-        newParamData.enumVals = enumVals;
         break;
       case "existing":
         newParamData.oldEnumData = enums[selectedExistingEnum];
