@@ -68,6 +68,7 @@ export const AssignFloatStatement = (props) => {
         value={curRhs}
         inputValue = {curRhs}
         onInputChange = {(event, value) => handleRhsChange(value)}
+        error={rhsError}
       />
       <IconButton sx={{ p: "10px" }} color="primary" onClick={addAssignStatement}>
         <AddCircleIcon sx={{ fontSize: "30px" }} />
@@ -76,3 +77,18 @@ export const AssignFloatStatement = (props) => {
     </Stack>
   );
 }
+
+AssignFloatStatement.propTypes = {
+  save: PropTypes.func.isRequired,
+  setEditOn: PropTypes.func.isRequired,
+  lhsCandidates: PropTypes.arrayOf(PropTypes.shape({
+    name: PropTypes.string,
+    type: PropTypes.string
+  })).isRequired,
+  rhsCandidates: PropTypes.arrayOf(PropTypes.shape({
+    name: PropTypes.string,
+    type: PropTypes.string
+  })).isRequired,
+}
+
+export default AssignFloatStatement;

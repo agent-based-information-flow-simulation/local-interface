@@ -17,6 +17,7 @@ import CondEnumStatement from "./statements/CondEnumStatement";
 import EndBlockStatement from "./statements/EndBlockStatement";
 import WhileEnumStatement from "./statements/WhileEnumStatement";
 import WhileFloatStatement from "./statements/WhileFloatStatement";
+import AssignFloatStatement from "./statements/AssignFloatStatement";
 
 import {
   selectParameters,
@@ -64,6 +65,15 @@ export const FloatParamEditor = (props) => {
     if (!editOn) return <></>;
 
     switch (statementType) {
+      case "assign_float":
+        return (
+          <AssignFloatStatement
+            save={save}
+            setEditOn={setEditOn}
+            lhsCandidates={exprLhs}
+            rhsCandidates={exprRhs}
+          />
+        );
       case "expr":
         return (
           <ExprStatement
@@ -129,7 +139,7 @@ export const FloatParamEditor = (props) => {
             value={statementType}
             onChange={(e) => setStatementType(e.target.value)}
           >
-            <MenuItem value={"assign"}> Assignment </MenuItem>
+            <MenuItem value={"assign_float"}> Assignment (number) </MenuItem>
             <MenuItem value={"expr"}> Expression </MenuItem>
             <MenuItem value={"decl"}> Declaration </MenuItem>
             <MenuItem value={"cond_float"}> Conditional (number) </MenuItem>
