@@ -107,7 +107,7 @@ export function MessageTab() {
       let code = "MESSAGE " + msgName + ',' + FIPACommActs[fipaType] +"\n";
       params.forEach(el => code += "PRM " + el.name + ",float\n");
       dispatch(clearParams());
-      code += "EMESSAGE";
+      code += "EMESSAGE\n";
       console.log(code);
       newMsg.code = code;
       setMsgName("");

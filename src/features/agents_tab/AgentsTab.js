@@ -140,7 +140,6 @@ export function AgentsTab(props) {
       params.forEach(el => code += generatePRM(el));
       behavs.forEach(el => code += el.code);
       code += "EAGENT\n";
-      console.log(code);
       let agent = {
         name: agentName,
         params: [...params],
