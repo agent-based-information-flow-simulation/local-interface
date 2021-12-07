@@ -1,5 +1,5 @@
 export const validateQualifiedName = (name) => {
-  const format = /[!@#$%^&*()+\-=\[\]{};':"\\|,.<>\/?]+/;
+  const format = /[!@#$%^&*()+\-=[\]{};':"\\|,.<>/?]+/;
   if(name === ""){
     console.log("namae wa emptey")
     return false;

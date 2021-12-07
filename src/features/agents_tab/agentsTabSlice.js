@@ -35,10 +35,14 @@ export const agentsTabSlice = createSlice({
 
 export const {addAgent, addParam, addBehav} = agentsTabSlice.actions;
 
-export const selectCurrentAgents = (state) => {
+export const selectCurrentAgent = (state) => {
   if (state.current_selected !== -1)
     return state.agents[state.current_selected];
   //TODO Else, deselect, return something magical
+}
+
+export const selectAgents = (state) => {
+  return state.agentsTab.agents;
 }
 
 export const selectActions = (state) => {

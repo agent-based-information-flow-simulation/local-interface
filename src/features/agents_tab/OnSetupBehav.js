@@ -41,7 +41,7 @@ export const OnSetupBehav = (props) => {
     if(!err_flag){
       let code = "BEHAV " + behavName + ", setup\n";
       actions.forEach(el => code+=el.code);
-      code += "EBEHAV";
+      code += "EBEHAV\n";
       let behav = {
         name: behavName,
         actions: [...actions],

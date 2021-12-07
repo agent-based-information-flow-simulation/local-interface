@@ -127,6 +127,7 @@ const ActionEditor = (props) => {
         // console.log("if:", if_indexes);
         let checked = end_indexes[0];
         let found_index = -1;
+        // eslint-disable-next-line no-redeclare
         for (var i = checked - 1; i > if_indexes[0]; i--) {
           if (end_indexes.findIndex((el) => el === i) !== -1) {
             found_index = end_indexes.findIndex((el) => el === i);
