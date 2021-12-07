@@ -24,11 +24,15 @@ export const messageTabSlice = createSlice({
     },
     setCurrentParam: (state, action) => {
       state.current_selected = action.payload;
+    },
+    clearParams: (state, action) => {
+      state.param_count = 0;
+      state.parameters = [];
     }
   }
 })
 
-export const {addMessage, addParam, setCurrentParam} = messageTabSlice.actions;
+export const {addMessage, addParam, setCurrentParam, clearParams} = messageTabSlice.actions;
 
 export const selectParameters = (state) => {
   return state.messageTab.parameters;

@@ -13,69 +13,71 @@ import {
   Select,
   MenuItem,
 } from "@mui/material";
-import ParamsDialog from "../components/ParamsDialog";
 import SelectList from "../components/SelectList";
 import DisplayList from "../components/DisplayList";
-import ParamInspector from "../components/ParamInspector";
-
+import { MessageParamsDialog } from "../components/MessageParamsDialog";
 import { useSelector, useDispatch } from "react-redux";
 
 import {
   selectParameters,
   addParam,
-  selectCurrentParam,
   setCurrentParam,
+  clearParams,
 } from "../message_tab/messageTabSlice";
 
 import { selectMessageTypes, addMessage } from "../simulationSlice";
+import { validateQualifiedName } from "../../app/utils";
 
 export function MessageTab() {
   const dispatch = useDispatch();
   const paramListOptions = [
     { value: "float", display: "Float" },
-    { value: "enum", display: "Enumerable" },
-    { value: "list", display: "Connections/Messages" },
   ];
 
   const FIPACommActs = [
-    "Accept Proposal",
+    "AcceptProposal",
     "Agree",
     "Cancel",
-    "Call for Proposal",
+    "CallForProposal",
     "Confirm",
     "Disconfirm",
     "Failure",
     "Inform",
-    "Inform If",
-    "Inform Ref",
-    "Not Understood",
+    "InformIf",
+    "InformRef",
+    "NotUnderstood",
     "Propagate",
     "Propose",
     "Proxy",
-    "Query if",
-    "Query ref",
+    "QueryIf",
+    "QueryRef",
     "Refuse",
-    "Reject Proposal",
+    "RejectProposal",
     "Request",
-    "Request When",
-    "Request Whenever",
+    "RequestWhen",
+    "RequestWhenever",
     "Subscribe",
   ];
 
   const [fipaType, setFipaType] = useState(7);
   const [open, setOpen] = useState(false);
-  const [dialogType, setDialogType] = useState("");
+  const [dialogType, setDialogType] = useState(paramListOptions[0].value);
   const [msgName, setMsgName] = useState("");
+  const [nameError, setNameError] = useState(false);
   const [notifyError, setNotifyError] = useState(false);
-
   const params = useSelector(selectParameters);
-  const curParam = useSelector(selectCurrentParam);
+
   const messages = useSelector(selectMessageTypes);
 
   const handleParamTypeChange = (e) => {
     setDialogType(e.target.dataset.value);
     setOpen(true);
   };
+
+  const handleNameChange = (name) => {
+    setNameError(false);
+    setMsgName(name);
+  }
 
   const handleClose = (error) => {
     setNotifyError(error);
@@ -91,16 +93,32 @@ export function MessageTab() {
   };
 
   const addMessageClick = () => {
-    let newMsg = {};
-    newMsg.name = msgName;
-    newMsg.type = FIPACommActs[fipaType];
-    newMsg.params = params;
-    dispatch(addMessage(newMsg));
+    let err_flag = false;
+    if(!validateQualifiedName(msgName) || messages.findIndex(el => el.name === msgName) !== -1){
+      err_flag = true;
+      setNameError(true);
+    }
+    if(!err_flag){
+      setNameError(false);
+      let newMsg = {};
+      newMsg.name = msgName;
+      newMsg.type = FIPACommActs[fipaType];
+      newMsg.params = params;
+      let code = "MESSAGE " + msgName + ',' + FIPACommActs[fipaType] +"\n";
+      params.forEach(el => code += "PRM " + el.name + ",float\n");
+      dispatch(clearParams());
+      code += "EMESSAGE";
+      console.log(code);
+      newMsg.code = code;
+      setMsgName("");
+      setFipaType(7);
+      dispatch(addMessage(newMsg));
+    }
   };
 
   return (
     <>
-      <ParamsDialog
+      <MessageParamsDialog
         open={open}
         onClose={handleClose}
         type={dialogType}
@@ -149,7 +167,9 @@ export function MessageTab() {
                 label="Message Type Name"
                 id="message_name_input"
                 value={msgName}
-                onChange={(e) => setMsgName(e.target.value)}
+                onChange={(e) => handleNameChange(e.target.value)}
+                error={nameError}
+                helperText="Name empty, not unique or invalid"
               />
               <Select
                 value={fipaType}
@@ -180,7 +200,6 @@ export function MessageTab() {
             </Button>
           </Stack>
         </Box>
-        {curParam ? <ParamInspector param={curParam} /> : <></>}
       </Stack>
     </>
   );

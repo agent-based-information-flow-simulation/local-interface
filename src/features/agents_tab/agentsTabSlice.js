@@ -14,10 +14,6 @@ export const agentsTabSlice = createSlice({
   name: 'agentsTab',
   initialState,
   reducers: {
-    addAgent: (state, action) => {
-      state.agent_count += 1;
-      state.agents.push(action.payload);
-    },
     addParam: (state, action) => {
       state.param_count += 1;
       let newArr = JSON.parse(JSON.stringify(state.parameters))
@@ -33,7 +29,7 @@ export const agentsTabSlice = createSlice({
   }
 });
 
-export const {addAgent, addParam, addBehav} = agentsTabSlice.actions;
+export const {addParam, addBehav} = agentsTabSlice.actions;
 
 export const selectCurrentAgent = (state) => {
   if (state.current_selected !== -1)

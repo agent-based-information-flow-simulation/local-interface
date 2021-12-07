@@ -19,7 +19,8 @@ import DisplayList from "../components/DisplayList";
 import { useSelector, useDispatch } from "react-redux";
 import { validateQualifiedName } from "../../app/utils";
 
-import { selectParameters, addParam, selectBehaviours, addAgent, selectAgents } from "./agentsTabSlice";
+import { selectParameters, addParam, selectBehaviours } from "./agentsTabSlice";
+import {addAgent, selectAgents } from "../simulationSlice";
 // import { selectMessageTypes } from "../simulationSlice"
 
 export function AgentsTab(props) {
