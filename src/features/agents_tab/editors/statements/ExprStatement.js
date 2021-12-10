@@ -70,7 +70,7 @@ export const ExprStatement = (props) => {
     <Stack direction="row">
       <Autocomplete
         freeSolo
-        options={lhsCandidates.map((el,index)=>el.name)}
+        options={lhsCandidates.map((el,index)=> el===undefined ? "" : el.name)}
         renderInput={(params) => <TextField {...params} />}
         sx={{ width: "200px" }}
         error={lhsError}

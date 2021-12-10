@@ -185,7 +185,7 @@ const ActionEditor = (props) => {
       case "float":
         return <FloatParamEditor save={save} selectedParam={props.param} />;
       case "enum":
-        return <EnumParamEditor />;
+        return <EnumParamEditor save={save} selectedParam={props.param} />;
       case "list_conns":
       case "list_messages":
         return <ListParamEditor />;

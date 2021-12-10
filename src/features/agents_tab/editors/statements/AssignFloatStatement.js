@@ -17,8 +17,8 @@ export const AssignFloatStatement = (props) => {
 
   const { lhsCandidates, rhsCandidates, save, setEditOn } = props;
 
-  const [curLhs, setCurLhs] = useState(lhsCandidates[0].name)
-  const [curRhs, setCurRhs] = useState("")
+  const [curLhs, setCurLhs] = useState(lhsCandidates[0] === undefined ? "" : lhsCandidates[0].name);
+  const [curRhs, setCurRhs] = useState("");
 
   const [rhsError, setRhsError] = useState(false);
 
@@ -54,6 +54,7 @@ export const AssignFloatStatement = (props) => {
       >
         {
           lhsCandidates.map((el, index)=>{
+            if(el === undefined) return <></>;
             return <MenuItem value={el.name}> {el.name} </MenuItem>;
           })
         }

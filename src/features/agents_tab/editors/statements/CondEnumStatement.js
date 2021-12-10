@@ -121,6 +121,9 @@ CondEnumStatement.propTypes = {
   variables: PropTypes.arrayOf(PropTypes.shape({
     name: PropTypes.string,
     type: PropTypes.string,
+    values: PropTypes.arrayOf(PropTypes.shape({
+      name: PropTypes.string.isRequired,
+    }))
   })).isRequired,
 }
 

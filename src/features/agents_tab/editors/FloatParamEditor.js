@@ -47,12 +47,12 @@ export const FloatParamEditor = (props) => {
   const [enumVars, setEnumVars] = useState([]);
 
   useEffect(() => {
-    let tmpArr = [...scopeVars, selectedParam];
+    let tmpArr = [...scopeVars, selectedParam]; //first we set the possible floats as LHS for expression
     setExprLhs(tmpArr);
     tmpArr = params.filter((el) => el.type === "float");
-    tmpArr = [...tmpArr, ...scopeVars, ...read_only];
+    tmpArr = [...tmpArr, ...scopeVars, ...read_only]; //then we add read_only to this array for RHS for expression
     setExprRhs(tmpArr);
-    tmpArr = [...params, ...scopeVars, ...read_only];
+    tmpArr = [...params, ...scopeVars, ...read_only]; //for all other we give a posibility of selecting any variable or param
     setVariables(tmpArr);
     let tmpArrFloat = tmpArr.filter((el) => el.type === "float");
     setFloatVars(tmpArrFloat);
