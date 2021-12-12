@@ -17,8 +17,8 @@ import {
 } from "../editorSlice";
 
 const EnumCondOps = [
-  { opcode: "IEQ  ", label: "==" },
-  { opcode: "INEQ ", label: "!=" },
+  { opcode: "IEQ ", label: "==" },
+  { opcode: "INEQ", label: "!=" },
 ];
 
 
