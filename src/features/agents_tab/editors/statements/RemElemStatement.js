@@ -6,7 +6,7 @@ import {
   MenuItem,
   IconButton,
 } from "@mui/material"
-import { AddCircleIcon } from "@mui/icons-material"
+import AddCircleIcon from "@mui/icons-material/AddCircle"
 import InlineText from '../InlineText'
 
 export const RemElemStatement = (props) => {

@@ -7,7 +7,7 @@ import {
   IconButton,
 } from "@mui/material"
 
-import AddCircleIcon from "@mui/icons-material"
+import AddCircleIcon from "@mui/icons-material/AddCircle"
 
 const ListCondOps = [
   { opcode: "IN  ", label: "in"},

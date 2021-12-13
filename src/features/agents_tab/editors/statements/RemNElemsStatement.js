@@ -7,7 +7,7 @@ import {
   IconButton,
   TextField,
 } from "@mui/material"
-import { AddCircleIcon } from "@mui/icons-material"
+import  AddCircleIcon from "@mui/icons-material/AddCircle"
 import InlineText from '../InlineText'
 
 export const RemNElemsStatement = (props) => {

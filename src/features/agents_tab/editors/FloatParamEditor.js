@@ -18,6 +18,7 @@ import EndBlockStatement from "./statements/EndBlockStatement";
 import WhileEnumStatement from "./statements/WhileEnumStatement";
 import WhileFloatStatement from "./statements/WhileFloatStatement";
 import AssignFloatStatement from "./statements/AssignFloatStatement";
+import CondListStatement from "./statements/CondListStatement";
 
 import {
   selectParameters,
@@ -123,12 +124,21 @@ export const FloatParamEditor = (props) => {
             variables={enumVars}
           />
         );
+      case "cond_list":
+        return (
+          <CondListStatement
+            save={save}
+            setEditOn={setEditOn}
+            rhsCandidates={[selectedParam]} //tmp
+            lhsCandidates={variables} //tmp
+          />
+        )
       case "endb":
         return <EndBlockStatement save={save} />;
       default:
         return <></>;
     }
-  };
+  }
 
   return (
     <>
@@ -144,6 +154,7 @@ export const FloatParamEditor = (props) => {
             <MenuItem value={"decl"}> Declaration </MenuItem>
             <MenuItem value={"cond_float"}> Conditional (number) </MenuItem>
             <MenuItem value={"cond_enum"}> Conditional (enum) </MenuItem>
+            <MenuItem value={"cond_list"}> Conditional (list) </MenuItem>
             <MenuItem value={"while_float"}> Do while Condition (number) </MenuItem>
             <MenuItem value={"while_enum"}> Do while Condition (enum) </MenuItem>
             <MenuItem value={"endb"}> End Block (condition/while) </MenuItem>

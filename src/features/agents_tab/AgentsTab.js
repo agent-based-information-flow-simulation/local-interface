@@ -35,7 +35,9 @@ export function AgentsTab(props) {
 
   const behavListOptions = [
     { value: "onSetup", display: "Setup"},
-    { value: "onEvent", display: "OneTime/OnEvent"},
+    { value: "oneTime", display: "One Time"},
+    { value: "cyclic", display: "Cyclic"},
+    { value: "onMessageReceive", display: "On Message Receive"}
   ];
 
   const [paramDialogOpen, setParamDialogOpen] = React.useState(false);
@@ -146,6 +148,7 @@ export function AgentsTab(props) {
         behavs: [...behavs],
         code: code,
       }
+      console.log(agent.params)
       dispatch(addAgent(agent));
     }
   };

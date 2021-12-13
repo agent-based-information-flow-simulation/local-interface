@@ -1,7 +1,10 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { Container, Dialog, DialogTitle } from "@mui/material";
-import { OnSetupBehav } from "./OnSetupBehav";
+import OnSetupBehav from "./behavs/OnSetupBehav";
+import OneTimeBehav from "./behavs/OneTimeBehav";
+import CyclicBehav from "./behavs/CyclicBehav";
+import MessageRecvBehav from "./behavs/MessageRecvBehav";
 
 const BehavDialog = (props) => {
   const { handleClose, open, type } = props;
@@ -14,8 +17,12 @@ const BehavDialog = (props) => {
     switch (type) {
       case "onSetup":
         return <OnSetupBehav onClose={saveCallback}/>;
-      case "onEvent":
-        return <h1>XDD</h1>;
+      case "oneTime":
+        return <OneTimeBehav onClose={saveCallback}/>;
+      case "cyclic":
+        return <CyclicBehav onClose={saveCallback}/>;
+      case "onMessageReceive":
+        return <MessageRecvBehav onClose={saveCallback}/>;
       default:
         return <></>;
     }

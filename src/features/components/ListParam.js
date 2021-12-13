@@ -24,7 +24,7 @@ export const ListParam = (props) => {
   useEffect(()=>{
     updateParamData()
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [paramName]);
+  }, [paramName, listType]);
 
   return (
     <>

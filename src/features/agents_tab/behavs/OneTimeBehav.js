@@ -1,25 +1,23 @@
-import React, {useState } from "react";
+import React, { useState } from "react";
 import {
-  FormControl, TextField, Button
+  FormControl, TextField, Button, InputAdornment
 } from "@mui/material"
 
-import ActionEditor from './editors/ActionEditor';
+import ActionEditor from '../editors/ActionEditor';
 import { useDispatch, useSelector } from "react-redux";
-import { addAction, resetScope, selectActions } from "./editors/editorSlice";
-import { addBehav } from "./agentsTabSlice";
-import { validateQualifiedName } from "../../app/utils";
+import { addAction, resetScope, selectActions } from "../editors/editorSlice";
+import { addBehav } from "../agentsTabSlice";
+import { validateQualifiedName } from "../../../app/utils";
 
-export const OnSetupBehav = (props) => {
-
+export const OneTimeBehav = (props) => {
   const {onClose} = props;
-
   const [behavName, setBehavName] = useState("")
+  const [delay, setDelay] = useState(0);
   const [actionDialogOpen, setActionDialogOpen] = useState(false);
   const [nameError, setNameError] = useState(false);
   const [actionError, setActionError] = useState(false);
   const dispatch = useDispatch();
   const actions = useSelector(selectActions);
-
   const onActionDialogClose = (action) =>{
     if(action !== null){
       dispatch(addAction(action));
@@ -39,7 +37,7 @@ export const OnSetupBehav = (props) => {
       setActionError(true);
     }
     if(!err_flag){
-      let code = "BEHAV " + behavName + ", setup\n";
+      let code = "BEHAV " + behavName + ", one_time," + delay +"\n";
       actions.forEach(el => code+=el.code);
       code += "EBEHAV\n";
       let behav = {
@@ -52,10 +50,10 @@ export const OnSetupBehav = (props) => {
     }
   }
 
-
   return (
     <>
-    <ActionEditor open={actionDialogOpen} onClose={onActionDialogClose}/>
+    <ActionEditor open={actionDialogOpen} onClose={onActionDialogClose} />
+
     <FormControl fullWidth>
       <TextField
         variant="outlined"
@@ -63,6 +61,17 @@ export const OnSetupBehav = (props) => {
         id="behav_name"
         value={behavName}
         onChange={(e)=>setBehavName(e.target.value)}
+      />
+      <TextField
+        sx={{marginTop: 2}}
+        label="Delay"
+        id="behav_delay"
+        type="number"
+        value={delay}
+        onChange={(e)=>setDelay(e.target.value)}
+        InputProps={{
+          startAdornment: <InputAdornment position="start">s</InputAdornment>,
+        }}
       />
     </FormControl>
     <p><b>Actions: </b></p>
@@ -76,3 +85,5 @@ export const OnSetupBehav = (props) => {
     </>
   );
 }
+
+export default OneTimeBehav;

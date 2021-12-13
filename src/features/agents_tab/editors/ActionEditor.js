@@ -4,6 +4,7 @@ import PropTypes from "prop-types";
 import { useSelector } from "react-redux";
 import { selectParameters } from "../agentsTabSlice";
 import { selectBlockLvl } from "./editorSlice";
+import { selectMessageTypes } from "../../simulationSlice";
 import {
   Container,
   Dialog,
@@ -20,11 +21,13 @@ import {
 import FloatParamEditor from "./FloatParamEditor";
 import EnumParamEditor from "./EnumParamEditor";
 import ListParamEditor from "./ListParamEditor";
+import SendMessageEditor from "./SendMessageEditor";
 
 const ActionEditor = (props) => {
-  const { onClose, open } = props;
+  const { onClose, open, rcvMsg } = props;
   const [actionType, setActionType] = useState("modify_self");
   const [selectedParam, setSelectedParam] = useState(-1);
+  const [sndMsg, setSndMsg] = useState("");
   const [blockError, setBlockError] = useState(false);
 
   const [actionName, setActionName] = useState("");
@@ -35,6 +38,7 @@ const ActionEditor = (props) => {
 
   const params = useSelector(selectParameters);
   const block_lvl = useSelector(selectBlockLvl);
+  const messages = useSelector(selectMessageTypes);
 
   const save = (statement, operation) => {
     setStatements([...statements, statement]);
@@ -188,7 +192,7 @@ const ActionEditor = (props) => {
         return <EnumParamEditor save={save} selectedParam={props.param} />;
       case "list_conns":
       case "list_messages":
-        return <ListParamEditor />;
+        return <ListParamEditor save={save} selectedParam={props.param}/>;
       default:
         return <></>;
     }
@@ -239,7 +243,23 @@ const ActionEditor = (props) => {
               <ModeDisplay param={params[selectedParam]} />
             </>
           ) : (
-            <></>
+            <>
+              <TextField
+                value={sndMsg}
+                onChange={(e) =>{ setSndMsg(e.target.value); console.log(e.target.value)}}
+                label="Send message type"
+                select
+                sx={{marginTop: 1}}
+              >
+                {
+                  messages.map((el, index) => {
+                    return <MenuItem value={index}> {el.name}_{el.type} </MenuItem>;
+                  })
+                }
+              </TextField>
+              <StatementsList />
+              <SendMessageEditor save={save} rcvMsg={rcvMsg} sndMsg={messages[sndMsg]} />
+            </>
           )}
         </FormGroup>
         {blockError ? (
