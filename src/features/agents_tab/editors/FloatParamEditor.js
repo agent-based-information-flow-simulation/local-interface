@@ -29,17 +29,12 @@ import {
 } from "./editorSlice";
 
 export const FloatParamEditor = (props) => {
-  const { save, selectedParam } = props;
+  const { save, selectedParam, rcvMsg } = props;
   const [editOn, setEditOn] = useState(false);
   const [statementType, setStatementType] = useState("expr");
   const params = useSelector(selectParameters);
   const scopeVars = useSelector(selectScopeVars);
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  const read_only = [
-    { name: "connCount", type: "float" },
-    { name: "msgRCount", type: "float" },
-    { name: "msgSCount", type: "float" },
-  ];
 
   const [exprLhs, setExprLhs] = useState([]);
   const [exprRhs, setExprRhs] = useState([]);
@@ -48,6 +43,22 @@ export const FloatParamEditor = (props) => {
   const [enumVars, setEnumVars] = useState([]);
 
   useEffect(() => {
+    console.log(rcvMsg);
+    const read_only = [
+      { name: "connCount", type: "float" },
+      { name: "msgRCount", type: "float" },
+      { name: "msgSCount", type: "float" },
+    ];
+    if(rcvMsg !== undefined){
+      // add rcv params to read only
+      let rcvParams = rcvMsg.params.map((el, index) => {
+        return {
+          name: "RCV." + el.name,
+          type: el.type,
+        }
+      })
+      read_only = ([...read_only, ...rcvParams]);
+    }
     let tmpArr = [...scopeVars, selectedParam]; //first we set the possible floats as LHS for expression
     setExprLhs(tmpArr);
     tmpArr = params.filter((el) => el.type === "float");
