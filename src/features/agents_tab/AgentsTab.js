@@ -19,9 +19,8 @@ import DisplayList from "../components/DisplayList";
 import { useSelector, useDispatch } from "react-redux";
 import { validateQualifiedName } from "../../app/utils";
 
-import { selectParameters, addParam, selectBehaviours } from "./agentsTabSlice";
-import {addAgent, selectAgents } from "../simulationSlice";
-// import { selectMessageTypes } from "../simulationSlice"
+import { selectParameters, addParam, selectBehaviours, reset } from "./agentsTabSlice";
+import {addAgent, selectAgents, addName } from "../simulationSlice";
 
 export function AgentsTab(props) {
 
@@ -148,8 +147,9 @@ export function AgentsTab(props) {
         behavs: [...behavs],
         code: code,
       }
-      console.log(agent.params)
       dispatch(addAgent(agent));
+      dispatch(addName(agentName));
+      dispatch(reset);
     }
   };
 

@@ -1,4 +1,6 @@
 import React from "react";
+import {useDispatch} from "react-redux";
+import {resetActions} from "./editors/editorSlice";
 import PropTypes from "prop-types";
 import { Container, Dialog, DialogTitle } from "@mui/material";
 import OnSetupBehav from "./behavs/OnSetupBehav";
@@ -8,9 +10,19 @@ import MessageRecvBehav from "./behavs/MessageRecvBehav";
 
 const BehavDialog = (props) => {
   const { handleClose, open, type } = props;
+  const dispatch = useDispatch();
 
   const saveCallback = () => {
+    console.log("dispatchingggSave")
+    dispatch(resetActions())
     handleClose(false);
+  }
+
+  const wrappedHandleClose = () =>  {
+    console.log("dispatchinggg")
+    dispatch(resetActions())
+    handleClose();
+
   }
 
   const ModeDisplay = () => {
@@ -29,7 +41,7 @@ const BehavDialog = (props) => {
   };
 
   return (
-    <Dialog onClose={handleClose} open={open}>
+    <Dialog onClose={(e) => wrappedHandleClose()} open={open}>
       <Container sx={{ padding: 3 }}>
         <DialogTitle> New behaviour </DialogTitle>
         <ModeDisplay />

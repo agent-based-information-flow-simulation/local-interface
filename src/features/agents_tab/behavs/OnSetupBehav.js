@@ -5,9 +5,10 @@ import {
 
 import ActionEditor from '../editors/ActionEditor';
 import { useDispatch, useSelector } from "react-redux";
-import { addAction, resetScope, selectActions } from "../editors/editorSlice";
+import { addAction, resetScope, selectActions, resetActions} from "../editors/editorSlice";
 import { addBehav } from "../agentsTabSlice";
 import { validateQualifiedName } from "../../../app/utils";
+import { addName } from "../../simulationSlice";
 
 export const OnSetupBehav = (props) => {
 
@@ -48,6 +49,8 @@ export const OnSetupBehav = (props) => {
         code: code,
       }
       dispatch(addBehav(behav));
+      dispatch(resetScope);
+      dispatch(addName(behavName));
       onClose();
     }
   }

@@ -9,8 +9,8 @@ import {
 
 import ActionEditor from "../editors/ActionEditor";
 import { useDispatch, useSelector } from "react-redux";
-import { addAction, resetScope, selectActions } from "../editors/editorSlice";
-import { selectMessageTypes } from "../../simulationSlice";
+import { addAction, resetScope, selectActions, resetActions } from "../editors/editorSlice";
+import { selectMessageTypes, addName } from "../../simulationSlice";
 import { addBehav } from "../agentsTabSlice";
 import { validateQualifiedName } from "../../../app/utils";
 
@@ -61,6 +61,9 @@ export const MessageRecvBehav = (props) => {
         code: code,
       };
       dispatch(addBehav(behav));
+      dispatch(resetScope);
+      dispatch(resetActions);
+      dispatch(addName(behavName));
       onClose();
     }
   };

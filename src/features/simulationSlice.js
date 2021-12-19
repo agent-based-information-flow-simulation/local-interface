@@ -3,6 +3,7 @@ import {createSlice} from '@reduxjs/toolkit';
 const initialState = {
   agent_types: [],
   message_types: [],
+  names: [],
 }
 
 export const simulationSlice = createSlice({
@@ -15,14 +16,20 @@ export const simulationSlice = createSlice({
     addAgent: (state, action) => {
       state.agent_types.push(action.payload);
     },
-
+    addName: (state, action) => {
+      state.names.push(action.payload);
+    }
   }
 })
 
-export const {addMessage, addAgent} = simulationSlice.actions;
+export const {addMessage, addAgent, addName} = simulationSlice.actions;
 
 export const selectMessageTypes = (state) => {
   return state.simulation.message_types;
+}
+
+export const selectNames = (state) => {
+  return state.simulation.names;
 }
 
 export const selectAgents = (state) => {

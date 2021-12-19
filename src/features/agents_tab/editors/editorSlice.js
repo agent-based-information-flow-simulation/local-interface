@@ -16,6 +16,10 @@ export const editorSlice = createSlice({
     resetScope: (state, action) => {
       state.scopeVars = []
     },
+    resetActions: (state, action) => {
+      console.log("yoooo shit fam")
+      state.actions = [];
+    },
     openBlock: (state, action) => {
       state.openBlocks += 1;
     },
@@ -28,7 +32,7 @@ export const editorSlice = createSlice({
   }
 })
 
-export const {addScopeVar, resetScope, openBlock, closeBlock, addAction} = editorSlice.actions;
+export const {addScopeVar, resetScope, openBlock, closeBlock, addAction, resetActions} = editorSlice.actions;
 
 export const selectScopeVars = (state) => state.editor.scopeVars;
 

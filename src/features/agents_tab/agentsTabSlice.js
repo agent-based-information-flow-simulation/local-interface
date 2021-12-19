@@ -1,11 +1,9 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
-  agent_count: 0,
   agents: [],
   current_selected: -1,
   parameters: [],
-  param_count: 0,
   behaviours: [],
   actions: [],
 }
@@ -25,11 +23,15 @@ export const agentsTabSlice = createSlice({
     },
     addAction: (state, action) => {
       state.actions.push(action.payload);
+    },
+    reset: (state, action) => {
+      state.parameters = [];
+      state.behaviours = [];
     }
   }
 });
 
-export const {addParam, addBehav} = agentsTabSlice.actions;
+export const {addParam, addBehav, reset} = agentsTabSlice.actions;
 
 export const selectCurrentAgent = (state) => {
   if (state.current_selected !== -1)

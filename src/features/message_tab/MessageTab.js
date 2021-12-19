@@ -94,7 +94,7 @@ export function MessageTab() {
 
   const addMessageClick = () => {
     let err_flag = false;
-    if(!validateQualifiedName(msgName) || messages.findIndex(el => el.name === msgName) !== -1){
+    if(!validateQualifiedName(msgName) || messages.findIndex(el => (el.name === msgName && el.type === FIPACommActs[fipaType])) !== -1){
       err_flag = true;
       setNameError(true);
     }
@@ -108,7 +108,6 @@ export function MessageTab() {
       params.forEach(el => code += "PRM " + el.name + ",float\n");
       dispatch(clearParams());
       code += "EMESSAGE\n";
-      console.log(code);
       newMsg.code = code;
       setMsgName("");
       setFipaType(7);

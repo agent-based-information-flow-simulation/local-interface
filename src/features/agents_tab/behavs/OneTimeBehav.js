@@ -8,6 +8,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { addAction, resetScope, selectActions } from "../editors/editorSlice";
 import { addBehav } from "../agentsTabSlice";
 import { validateQualifiedName } from "../../../app/utils";
+import { addName } from "../../simulationSlice";
 
 export const OneTimeBehav = (props) => {
   const {onClose} = props;
@@ -46,6 +47,8 @@ export const OneTimeBehav = (props) => {
         code: code,
       }
       dispatch(addBehav(behav));
+      dispatch(resetScope);
+      dispatch(addName(behavName));
       onClose();
     }
   }

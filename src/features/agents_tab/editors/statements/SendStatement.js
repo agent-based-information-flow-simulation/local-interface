@@ -41,3 +41,5 @@ export const SendStatement = (props) => {
     </Stack>
   )
 }
+
+export default SendStatement;

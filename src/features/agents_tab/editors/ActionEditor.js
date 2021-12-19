@@ -1,9 +1,9 @@
 /* eslint-disable no-loop-func */
 import React, { useState } from "react";
 import PropTypes from "prop-types";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { selectParameters } from "../agentsTabSlice";
-import { selectBlockLvl } from "./editorSlice";
+import { selectBlockLvl, resetScope } from "./editorSlice";
 import { selectMessageTypes } from "../../simulationSlice";
 import {
   Container,
@@ -25,6 +25,7 @@ import SendMessageEditor from "./SendMessageEditor";
 
 const ActionEditor = (props) => {
   const { onClose, open, rcvMsg } = props;
+  const dispatch = useDispatch();
   const [actionType, setActionType] = useState("modify_self");
   const [selectedParam, setSelectedParam] = useState(-1);
   const [sndMsg, setSndMsg] = useState("");
@@ -32,6 +33,9 @@ const ActionEditor = (props) => {
 
   const [actionName, setActionName] = useState("");
   const [nameError, setNameError] = useState(false);
+
+  const [missingSets, setMissingSets] = useState([]);
+  const [sendError, setSendError] = useState(false);
 
   const [statements, setStatements] = useState([]);
   const [actionOperations, setActionOperations] = useState([]);
@@ -53,20 +57,43 @@ const ActionEditor = (props) => {
     setNameError(false);
     setStatements([]);
     setActionOperations([]);
+    dispatch(resetScope);
   }
 
   // TODO: Add checking for empty instructions
   const saveAction = () => {
+    let error_flag = false;
+    setSendError(false);
+    setNameError(false);
+    setBlockError(false);
     if (block_lvl) {
       setBlockError(true);
-      return;
+      error_flag = true;
     }
     if (actionName === "" || !isNaN(actionName)) {
       setNameError(true);
-      return;
+      error_flag = true;
     }
-    setNameError(false);
-    setBlockError(false);
+    if( actionType === "send_msg" ){
+      let toverify = messages[sndMsg].params.map((el, index) => el.name);
+      var found = "";
+      var indexFound = -1;
+      actionOperations.forEach((el, index) => {
+        if(el.includes("SET") && el.includes("SEND")){
+          found = el.substring(el.indexOf(".") + 1, el.indexOf(","));
+          indexFound = toverify.findIndex(el => el === found);
+          if(indexFound !== -1){
+            toverify.splice(indexFound, 1);
+          }
+        }
+      })
+      if(toverify.length !== 0){
+        setMissingSets(toverify);
+        setSendError(true);
+        error_flag = true;
+      }
+    }
+    if(error_flag) return;
     let parsedOpArr = [];
     let rawOpArr = [...actionOperations];
     while (rawOpArr.findIndex((el) => el.startsWith("DECL")) !== -1) {
@@ -106,45 +133,21 @@ const ActionEditor = (props) => {
       }
       return arr;
     }, []);
+    var stack = [];
+    var bad_ends = [];
 
-    if (end_indexes.length > if_indexes.length) {
-      while (if_indexes.length !== 0) {
-        let checked = if_indexes[0];
-        let found_index = -1;
-        for (
-          var i = checked + 1;
-          i < end_indexes[end_indexes.length - 1];
-          i++
-        ) {
-          if (end_indexes.findIndex((el) => el === i) !== -1) {
-            found_index = end_indexes.findIndex((el) => el === i);
-            break;
-          }
-        }
-        if_indexes.splice(0, 1);
-        end_indexes.splice(found_index, 1);
+    statements.forEach((el, index)=> {
+      if(if_indexes.find(ind => ind === index) !== undefined){
+        stack.push(index);
       }
-      return end_indexes;
-    } else {
-      while (end_indexes.length !== 0) {
-        // console.log("end:", end_indexes);
-        // console.log("if:", if_indexes);
-        let checked = end_indexes[0];
-        let found_index = -1;
-        // eslint-disable-next-line no-redeclare
-        for (var i = checked - 1; i > if_indexes[0]; i--) {
-          if (end_indexes.findIndex((el) => el === i) !== -1) {
-            found_index = end_indexes.findIndex((el) => el === i);
-            break;
-          }
+      if(end_indexes.find(ind => ind === index) !== undefined){
+        if(stack.length === 0){
+          bad_ends.push(index);
         }
-        end_indexes.splice(0, 1);
-        if_indexes.splice(found_index, 1);
-        // console.log("end:", end_indexes);
-        // console.log("if:", if_indexes);
+        stack.pop()
       }
-      return if_indexes;
-    }
+    })
+    return [...stack, ...bad_ends];
   };
 
   const StatementsList = (props) => {
@@ -153,7 +156,6 @@ const ActionEditor = (props) => {
     if (blockError) {
       indexes = findUnmatchedIndexes();
     }
-
     return (
       <ul>
         {statements.map((value, index) => {
@@ -172,7 +174,7 @@ const ActionEditor = (props) => {
           }
           return (
             <li
-              style={{ marginLeft: indentLevel + correct + "em", color: color }}
+              style={{ marginLeft: Math.max(indentLevel + correct, 0) + "em", color: color }}
             >
               {" "}
               {value}{" "}
@@ -187,12 +189,11 @@ const ActionEditor = (props) => {
     if (props.param === undefined) return <></>;
     switch (props.param.type) {
       case "float":
-        return <FloatParamEditor save={save} selectedParam={props.param} />;
+        return <FloatParamEditor save={save} />;
       case "enum":
-        return <EnumParamEditor save={save} selectedParam={props.param} />;
-      case "list_conns":
-      case "list_messages":
-        return <ListParamEditor save={save} selectedParam={props.param}/>;
+        return <EnumParamEditor save={save}  />;
+      case "list":
+        return <ListParamEditor save={save} />;
       default:
         return <></>;
     }
@@ -246,7 +247,7 @@ const ActionEditor = (props) => {
             <>
               <TextField
                 value={sndMsg}
-                onChange={(e) =>{ setSndMsg(e.target.value); console.log(e.target.value)}}
+                onChange={(e) =>{ setSndMsg(e.target.value)}}
                 label="Send message type"
                 select
                 sx={{marginTop: 1}}
@@ -278,6 +279,18 @@ const ActionEditor = (props) => {
         ) : (
           <></>
         )}
+        {
+          sendError ? (
+            <Alert severity="error" onClose={(e) => setSendError(false)}>
+              Error saving! Missing set values of sent message:
+              {
+                missingSets.map((el, index) => el + ", ")
+              }
+            </Alert>
+          ) : (
+            <></>
+          )
+        }
 
         <Button variant="contained" onClick={saveAction}>
           {" "}

@@ -1,4 +1,11 @@
+import {store} from "./store"
+
 export const validateQualifiedName = (name) => {
+  const state = store.getState();
+  if(state.simulation.names.find(el => el === name)){
+    console.log("namae wa duplicatedo")
+    return false;
+  }
   const format = /[!@#$%^&*()+\-=[\]{};':"\\|,.<>/?]+/;
   if(name === ""){
     console.log("namae wa emptey")
