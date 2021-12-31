@@ -17,6 +17,7 @@ import RemNElemsStatement from "./statements/RemNElemsStatement";
 import ClearListStatement from "./statements/ClearListStatement";
 import AssignEnumStatement from "./statements/AssignEnumStatement";
 import SendStatement from "./statements/SendStatement";
+import { SubsetListStatement } from "./statements/SubsetListStatement";
 
 import {
   selectParameters,
@@ -96,6 +97,16 @@ export const StatementDisplay = (props) => {
 
   if (!editOn) return <></>;
   switch (statementType) {
+    case "subset":
+      return (
+        <SubsetListStatement
+          save={save}
+          setEditOn={setEditOn}
+          lhsCandidates={lists}
+          rhsCandidates={lists}
+          numCandidates={floats}
+        />
+      )
     case "send":
       return (
         <SendStatement

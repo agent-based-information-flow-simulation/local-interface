@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
-import { Box, Stack, Divider, Button, Grid, Alert, TextField } from "@mui/material";
+import { Stack, Divider, Button, Grid, Alert, TextField } from "@mui/material";
 import DisplayList from "../components/DisplayList";
 import StatisticalDescEditor from "./editors/StatisticalDescEditor";
 

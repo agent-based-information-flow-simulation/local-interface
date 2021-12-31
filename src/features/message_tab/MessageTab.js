@@ -30,9 +30,7 @@ import { validateQualifiedName } from "../../app/utils";
 
 export function MessageTab() {
   const dispatch = useDispatch();
-  const paramListOptions = [
-    { value: "float", display: "Float" },
-  ];
+  const paramListOptions = [{ value: "float", display: "Float" }];
 
   const FIPACommActs = [
     "AcceptProposal",
@@ -77,7 +75,7 @@ export function MessageTab() {
   const handleNameChange = (name) => {
     setNameError(false);
     setMsgName(name);
-  }
+  };
 
   const handleClose = (error) => {
     setNotifyError(error);
@@ -94,18 +92,23 @@ export function MessageTab() {
 
   const addMessageClick = () => {
     let err_flag = false;
-    if(!validateQualifiedName(msgName) || messages.findIndex(el => (el.name === msgName && el.type === FIPACommActs[fipaType])) !== -1){
+    if (
+      !validateQualifiedName(msgName) ||
+      messages.findIndex(
+        (el) => el.name === msgName && el.type === FIPACommActs[fipaType]
+      ) !== -1
+    ) {
       err_flag = true;
       setNameError(true);
     }
-    if(!err_flag){
+    if (!err_flag) {
       setNameError(false);
       let newMsg = {};
       newMsg.name = msgName;
       newMsg.type = FIPACommActs[fipaType];
       newMsg.params = params;
-      let code = "MESSAGE " + msgName + ',' + FIPACommActs[fipaType] +"\n";
-      params.forEach(el => code += "PRM " + el.name + ",float\n");
+      let code = "MESSAGE " + msgName + "," + FIPACommActs[fipaType] + "\n";
+      params.forEach((el) => (code += "PRM " + el.name + ",float\n"));
       dispatch(clearParams());
       code += "EMESSAGE\n";
       newMsg.code = code;
@@ -147,7 +150,11 @@ export function MessageTab() {
         }
         spacing={2}
       >
-        <DisplayList name="Created Messages" collection={messages.map((it)=> it.name)} />
+        <DisplayList
+          name="Created Messages"
+          collection={messages.map((it) => it.name)}
+          onItemClick={paramClick}
+        />
         <Box
           sx={{
             width: "100%",

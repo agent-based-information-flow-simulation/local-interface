@@ -213,12 +213,14 @@ export function AgentsTab(props) {
                 collection={params}
                 options={paramListOptions}
                 handleParamTypeChange={handleParamTypeChange}
+                collectionItemClick={()=>{}}
               />
               <SelectList
                 name="Behaviours"
                 collection={behavs}
                 options={behavListOptions}
                 handleParamTypeChange={handleBehavTypeChange}
+                collectionItemClick={()=>{}}
               />
             </Stack>
             {
