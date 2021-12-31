@@ -27,7 +27,7 @@ export const EnumParamEditor = (props) => {
           >
             <MenuItem value={"assign_float"}> Assignment (number) </MenuItem>
             <MenuItem value={"assign_enum"}> Assignment (enum) </MenuItem>
-            <MenuItem value={"expr"}> Expression </MenuItem>
+            <MenuItem value={"expr"}> Math Expression </MenuItem>
             <MenuItem value={"decl"}> Declaration </MenuItem>
             <MenuItem value={"cond_float"}> Conditional (number) </MenuItem>
             <MenuItem value={"cond_enum"}> Conditional (enum) </MenuItem>

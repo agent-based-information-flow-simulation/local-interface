@@ -32,7 +32,7 @@ export const ListParamEditor = (props) => {
             <MenuItem value={"clr_list"}> Clear list </MenuItem>
             <MenuItem value={"subset"}> Store subset of a list </MenuItem>
             <MenuItem value={"get_len"}> Get length of a list </MenuItem>
-            <MenuItem value={"expr"}> Expression </MenuItem>
+            <MenuItem value={"expr"}> Math Expression </MenuItem>
             <MenuItem value={"decl"}> Declaration </MenuItem>
             <MenuItem value={"cond_float"}> Conditional (number) </MenuItem>
             <MenuItem value={"cond_enum"}> Conditional (enum) </MenuItem>
