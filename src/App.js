@@ -6,6 +6,7 @@ import "./App.css";
 import { TabPanel, a11yProps } from "./features/tab_panel/TabPanel";
 import { AgentsTab } from "./features/agents_tab/AgentsTab";
 import { MessageTab } from "./features/message_tab/MessageTab";
+import GraphTab from "./features/graph_tab/GraphTab";
 import { VisualizationTab } from "./features/visualization_tab/VisualizationTab";
 
 function App() {
@@ -36,7 +37,7 @@ function App() {
         <MessageTab />
       </TabPanel>
       <TabPanel value={value} index={2}>
-        Item Three
+        <GraphTab />
       </TabPanel>
       <TabPanel value={value} index={3}>
         <VisualizationTab />

@@ -1,19 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { FormControl, Select, MenuItem, TextField, Button } from "@mui/material";
 import PropTypes from "prop-types"
-
-export const distributionsDict = {
-  normal: {
-    name: "Normal",
-    arg_count: 2,
-    param_names: ["miu", "sigma"],
-  },
-  exp: {
-    name: "Exponential",
-    arg_count: 1,
-    param_names: ["lambda"],
-  },
-};
+import {distributionsDict} from "../../app/utils"
 
 export const FloatParam = (props) => {
 

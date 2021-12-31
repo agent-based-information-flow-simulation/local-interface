@@ -13,13 +13,11 @@ const BehavDialog = (props) => {
   const dispatch = useDispatch();
 
   const saveCallback = () => {
-    console.log("dispatchingggSave")
     dispatch(resetActions())
     handleClose(false);
   }
 
   const wrappedHandleClose = () =>  {
-    console.log("dispatchinggg")
     dispatch(resetActions())
     handleClose();
 

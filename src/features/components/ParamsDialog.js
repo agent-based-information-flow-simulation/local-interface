@@ -3,8 +3,8 @@ import PropTypes from "prop-types";
 import DialogTitle from "@mui/material/DialogTitle";
 import Dialog from "@mui/material/Dialog";
 import { Container } from "@mui/material";
-
-import FloatParam, {distributionsDict} from "./FloatParam";
+import {distributionsDict} from "../../app/utils"
+import FloatParam from "./FloatParam";
 import EnumParam from "./EnumParam";
 import ListParam from "./ListParam";
 import {useDispatch} from "react-redux"

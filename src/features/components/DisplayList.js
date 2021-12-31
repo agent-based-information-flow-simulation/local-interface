@@ -9,7 +9,7 @@ import {
 } from "@mui/material"
 
 const DisplayList = (props) => {
-  const {name, collection, onItemClick} = props;
+  const {name, collection, onItemClick, selectedItem } = props;
 
   return(
       <Box
@@ -32,9 +32,14 @@ const DisplayList = (props) => {
               borderColor: "black",
             }}
           >
-            {collection.map((item) => {
+            {collection.map((item, index) => {
               return (
-                <ListItem disablePadding onClick={() => onItemClick(item)}>
+                <ListItem
+                sx={index === selectedItem ? {
+                  bgcolor: "#1976d2",
+                  color: "white"
+                } : {}}
+                disablePadding onClick={() => onItemClick(item, index)}>
                   <ListItemButton>
                     <ListItemText primary={item} />
                   </ListItemButton>

@@ -3,7 +3,7 @@ import Stack from "@mui/material/Stack";
 import DisplayList from "../components/DisplayList";
 import { Button } from "@mui/material";
 import { useSelector } from "react-redux";
-import { selectAgents, selectMessageTypes } from "../simulationSlice";
+import { selectAgents, selectMessageTypes, selectGraph} from "../simulationSlice";
 
 export function VisualizationTab() {
   const [runningSimulations, setRunningSimulations] = React.useState([]);
@@ -11,6 +11,7 @@ export function VisualizationTab() {
   const [selectedSimulationId, setSelectedSimulationId] = React.useState("");
   const messages = useSelector(selectMessageTypes)
   const agents = useSelector(selectAgents);
+  const graph = useSelector(selectGraph);
 
   const [code, setCode] = React.useState("");
 
@@ -18,6 +19,7 @@ export function VisualizationTab() {
     let tmp_code = "";
     messages.forEach(el => tmp_code += el.code + '\n');
     agents.forEach(el => tmp_code += el.code + '\n');
+    tmp_code += graph.code;
     setCode(tmp_code);
   }
 

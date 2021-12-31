@@ -3,6 +3,7 @@ import {createSlice} from '@reduxjs/toolkit';
 const initialState = {
   agent_types: [],
   message_types: [],
+  graph: {},
   names: [],
 }
 
@@ -18,11 +19,18 @@ export const simulationSlice = createSlice({
     },
     addName: (state, action) => {
       state.names.push(action.payload);
+    },
+    setGraph: (state, action) => {
+      state.graph = action.payload;
     }
   }
 })
 
-export const {addMessage, addAgent, addName} = simulationSlice.actions;
+export const {addMessage, addAgent, addName, setGraph} = simulationSlice.actions;
+
+export const selectGraph = (state) => {
+  return state.simulation.graph;
+}
 
 export const selectMessageTypes = (state) => {
   return state.simulation.message_types;
