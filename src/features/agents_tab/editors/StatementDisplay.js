@@ -45,6 +45,7 @@ export const StatementDisplay = (props) => {
   const [connLists, setConnLists] = useState([])
   const [msgLists, setMsgLists] = useState([])
   const [lists, setLists] = useState([])
+  const [listItems, setListItems] = useState([])
   const rcvJid = {name: "RCV.sender", type: "jid"};
   const rcvVar = {name: "RCV", type: "msg"};
   const sendVar = {name: "SEND", type: "msg"};
@@ -53,7 +54,9 @@ export const StatementDisplay = (props) => {
 
   useEffect(()=>{
     let toSetMutFloats = [...scopeVars];
+    let toSetListItems = [...listItems];
     if(sndMsg){
+      toSetListItems = [...toSetListItems, sendVar];
       let tmpArr = sndMsg.params.map((el,index)=>{
         return {
           name: "SEND." + el.name,
@@ -70,6 +73,8 @@ export const StatementDisplay = (props) => {
     setMutFloats(toSetMutFloats);
     let toSetFloats = [...toSetMutFloats, ...read_only];
     if(rcvMsg){
+      console.log(rcvMsg)
+      toSetListItems = [...toSetListItems, rcvVar, rcvJid];
       let rcvParams = rcvMsg.params.map((el, index) => {
         return {
           name: "RCV." + el.name,
@@ -79,6 +84,9 @@ export const StatementDisplay = (props) => {
       rcvParams = rcvParams.filter((el) => el.type === "float");
       toSetFloats = [...toSetFloats, ...rcvParams];
     }
+    console.info(rcvMsg)
+    console.info(Boolean(rcvMsg))
+    setListItems(toSetListItems);
     setFloats(toSetFloats);
     let tmpEnums = params.filter((el) => el.type === "enum");
     setEnums(tmpEnums);
@@ -112,7 +120,7 @@ export const StatementDisplay = (props) => {
         <SendStatement
           save={save}
           setEditOn={setEditOn}
-          connLists={[...connLists, rcvJid]}
+          connLists={Object.values({...(rcvMsg !== undefined ? [...connLists, rcvJid] : [...connLists])})}
         />
       );
     case "assign_enum":
@@ -129,7 +137,7 @@ export const StatementDisplay = (props) => {
           save={save}
           setEditOn={setEditOn}
           lhsCandidates={lists}
-          rhsCandidates={[sendVar, rcvVar, rcvJid]}
+          rhsCandidates={listItems}
         />
       );
     case "rem_element":
@@ -138,7 +146,7 @@ export const StatementDisplay = (props) => {
           save={save}
           setEditOn={setEditOn}
           lhsCandidates={lists}
-          rhsCandidates={[sendVar, rcvVar, rcvJid]}
+          rhsCandidates={listItems}
         />
       );
     case "rem_n_el":
@@ -163,7 +171,7 @@ export const StatementDisplay = (props) => {
           save={save}
           setEditOn={setEditOn}
           rhsCandidates={lists}
-          lhsCandidates={[sendVar, rcvVar, rcvJid]}
+          lhsCandidates={listItems}
         />
       );
     case "assign_float":

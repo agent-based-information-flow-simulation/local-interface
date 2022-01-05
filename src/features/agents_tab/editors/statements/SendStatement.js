@@ -14,6 +14,8 @@ export const SendStatement = (props) => {
   const {save, setEditOn, connLists} = props;
   const [receiver, setReceiver] = useState("");
 
+  console.log(connLists);
+
   const addSendStatement = () => {
     let statement = "Send to " + receiver;
     let operation = "SEND    " + receiver;

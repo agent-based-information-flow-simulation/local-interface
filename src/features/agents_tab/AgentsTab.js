@@ -149,7 +149,9 @@ export function AgentsTab(props) {
       }
       dispatch(addAgent(agent));
       dispatch(addName(agentName));
-      dispatch(reset);
+      setAgentName("");
+      console.log("Saving done!")
+      dispatch(reset());
     }
   };
 

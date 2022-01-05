@@ -25,6 +25,7 @@ export const agentsTabSlice = createSlice({
       state.actions.push(action.payload);
     },
     reset: (state, action) => {
+      console.log("RESETING")
       state.parameters = [];
       state.behaviours = [];
     }
