@@ -12,6 +12,7 @@ import {
   DialogContentText,
   Select,
   MenuItem,
+  Alert,
 } from "@mui/material";
 import SelectList from "../components/SelectList";
 import DisplayList from "../components/DisplayList";
@@ -26,36 +27,11 @@ import {
 } from "../message_tab/messageTabSlice";
 
 import { selectMessageTypes, addMessage } from "../simulationSlice";
-import { validateQualifiedName } from "../../app/utils";
+import { validateMessageName, FIPACommActs, errorCodes } from "../../app/utils";
 
 export function MessageTab() {
   const dispatch = useDispatch();
   const paramListOptions = [{ value: "float", display: "Float" }];
-
-  const FIPACommActs = [
-    "AcceptProposal",
-    "Agree",
-    "Cancel",
-    "CallForProposal",
-    "Confirm",
-    "Disconfirm",
-    "Failure",
-    "Inform",
-    "InformIf",
-    "InformRef",
-    "NotUnderstood",
-    "Propagate",
-    "Propose",
-    "Proxy",
-    "QueryIf",
-    "QueryRef",
-    "Refuse",
-    "RejectProposal",
-    "Request",
-    "RequestWhen",
-    "RequestWhenever",
-    "Subscribe",
-  ];
 
   const [fipaType, setFipaType] = useState(7);
   const [open, setOpen] = useState(false);
@@ -63,6 +39,7 @@ export function MessageTab() {
   const [msgName, setMsgName] = useState("");
   const [nameError, setNameError] = useState(false);
   const [notifyError, setNotifyError] = useState(false);
+  const [errorText, setErrorText] = useState("");
   const params = useSelector(selectParameters);
 
   const messages = useSelector(selectMessageTypes);
@@ -92,12 +69,11 @@ export function MessageTab() {
 
   const addMessageClick = () => {
     let err_flag = false;
-    if (
-      !validateQualifiedName(msgName) ||
-      messages.findIndex(
-        (el) => el.name === msgName && el.type === FIPACommActs[fipaType]
-      ) !== -1
-    ) {
+    console.log(validateMessageName(msgName, FIPACommActs[fipaType]));
+    if (validateMessageName(msgName, FIPACommActs[fipaType]) !== 0) {
+      let err_code = validateMessageName(msgName, FIPACommActs[fipaType]);
+      let error = errorCodes.find((el) => el.code === err_code);
+      setErrorText(error.info);
       err_flag = true;
       setNameError(true);
     }
@@ -174,8 +150,6 @@ export function MessageTab() {
                 id="message_name_input"
                 value={msgName}
                 onChange={(e) => handleNameChange(e.target.value)}
-                error={nameError}
-                helperText="Name empty, not unique or invalid"
               />
               <Select
                 value={fipaType}
@@ -196,6 +170,13 @@ export function MessageTab() {
                 handleParamTypeChange={handleParamTypeChange}
               />
             </Stack>
+            {nameError ? (
+              <Alert severity="error" onClose={(e) => setNameError(false)}>
+                Name Error: {errorText}
+              </Alert>
+            ) : (
+              <></>
+            )}
             <Button
               variant="contained"
               sx={{ margin: 2 }}

@@ -17,7 +17,7 @@ import BehavDialog from "./BehavDialog";
 import SelectList from "../components/SelectList";
 import DisplayList from "../components/DisplayList";
 import { useSelector, useDispatch } from "react-redux";
-import { validateQualifiedName } from "../../app/utils";
+import { validateAgentName, errorCodes } from "../../app/utils";
 
 import { selectParameters, addParam, selectBehaviours, reset } from "./agentsTabSlice";
 import {addAgent, selectAgents, addName } from "../simulationSlice";
@@ -47,6 +47,7 @@ export function AgentsTab(props) {
 
   const [agentName, setAgentName] = React.useState("");
   const [nameError, setNameError] = React.useState(false);
+  const [nameErrorText, setNameErrorText] = React.useState("");
   const [behavError, setBehavError] = React.useState(false);
   const [paramError, setParamError] = React.useState(false);
 
@@ -124,8 +125,11 @@ export function AgentsTab(props) {
 
   const saveAgent = () => {
     let err_flag = false;
-    if(!validateQualifiedName(agentName)){
+    if(validateAgentName(agentName) !== 0){
       err_flag = true;
+      let err_code = validateAgentName(agentName);
+      let error = errorCodes.find((el) => el.code === err_code);
+      setNameErrorText(error.info);
       setNameError(true);
     }
     if(behavs.length === 0){
@@ -206,7 +210,6 @@ export function AgentsTab(props) {
                 id="agent_type_input"
                 value={agentName}
                 onChange={(e) => handleNameChange(e.target.value)}
-                error={nameError}
               />
             </Box>
             <Stack direction="row">
@@ -227,13 +230,22 @@ export function AgentsTab(props) {
             </Stack>
             {
               behavError ?
-              <Alert severity="error" onClose={(e) => setBehavError}>Error saving! Please add some behaviours</Alert>
+              <Alert severity="error" onClose={(e) => setBehavError(false)}>Error saving! Please add some behaviours</Alert>
               :
               <></>
             }
             {
               paramError ?
-              <Alert severity="error" onClose={(e) => setParamError}>Error saving! Please add some parameters</Alert>
+              <Alert severity="error" onClose={(e) => setParamError(false)}>Error saving! Please add some parameters</Alert>
+              :
+              <></>
+
+            }
+            {
+              nameError ?
+              <Alert severity="error" onClose={(e) => setNameError(false)}>
+                Name Error: {nameErrorText}
+              </Alert>
               :
               <></>
 
