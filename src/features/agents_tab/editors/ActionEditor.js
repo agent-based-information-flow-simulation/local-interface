@@ -75,6 +75,10 @@ const ActionEditor = (props) => {
       error_flag = true;
     }
     if( actionType === "send_msg" ){
+      if(messages[sndMsg] === undefined){
+        error_flag = true;
+        return;
+      }
       let toverify = messages[sndMsg].params.map((el, index) => el.name);
       var found = "";
       var indexFound = -1;
