@@ -40,7 +40,7 @@ const BehavDialog = (props) => {
 
   return (
     <Dialog onClose={(e) => wrappedHandleClose()} open={open}>
-      <Container sx={{ padding: 3 }}>
+      <Container sx={{ padding: 3, width: "35em" }}>
         <DialogTitle> New behaviour </DialogTitle>
         <ModeDisplay />
       </Container>

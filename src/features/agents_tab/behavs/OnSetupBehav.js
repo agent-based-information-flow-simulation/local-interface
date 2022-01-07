@@ -1,13 +1,13 @@
 import React, {useState } from "react";
 import {
-  FormControl, TextField, Button
+  FormControl, TextField, Button, Alert
 } from "@mui/material"
 
 import ActionEditor from '../editors/ActionEditor';
 import { useDispatch, useSelector } from "react-redux";
 import { addAction, resetScope, selectActions, resetActions} from "../editors/editorSlice";
 import { addBehav } from "../agentsTabSlice";
-import { validateQualifiedName } from "../../../app/utils";
+import { validateBehavName, errorCodes, validateAgentName } from "../../../app/utils";
 import { addName } from "../../simulationSlice";
 
 export const OnSetupBehav = (props) => {
@@ -17,6 +17,7 @@ export const OnSetupBehav = (props) => {
   const [behavName, setBehavName] = useState("")
   const [actionDialogOpen, setActionDialogOpen] = useState(false);
   const [nameError, setNameError] = useState(false);
+  const [nameErrorText, setNameErrorText] = useState("");
   const [actionError, setActionError] = useState(false);
   const dispatch = useDispatch();
   const actions = useSelector(selectActions);
@@ -31,8 +32,11 @@ export const OnSetupBehav = (props) => {
 
   const saveBehaviour = () => {
     let err_flag = false;
-    if(!validateQualifiedName(behavName)){
+    if(validateBehavName(behavName) !== 0){
       err_flag = true;
+      const code = validateBehavName(behavName);
+      const error = errorCodes.find((el) => el.code === code);
+      setNameErrorText(error.info);
       setNameError(true);
     }
     if(actions.length === 0){
@@ -73,6 +77,23 @@ export const OnSetupBehav = (props) => {
       actions.map((el,index) => {
         return <p> {el.name} </p>;
       })
+    }
+    {
+      nameError ?
+        <Alert severity="error" onClose={(e) => setNameError(false)}>
+          Name Error! {nameErrorText}
+        </Alert>
+      :
+      <></>
+    }
+    {
+      actionError ?
+        <Alert severity="error" onClose={(e) => setActionError(false)}>
+          Error saving! Please add some actions!
+        </Alert>
+      :
+      <></>
+
     }
     <Button onClick={(e)=>setActionDialogOpen(true)}> Add Action </Button>
     <Button onClick={saveBehaviour}> Add Behaviour </Button>

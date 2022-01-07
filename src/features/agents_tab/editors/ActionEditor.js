@@ -34,7 +34,6 @@ const ActionEditor = (props) => {
   const [actionName, setActionName] = useState("");
   const [nameError, setNameError] = useState(false);
 
-  const [missingSets, setMissingSets] = useState([]);
   const [sendError, setSendError] = useState(false);
 
   const [statements, setStatements] = useState([]);
@@ -83,24 +82,7 @@ const ActionEditor = (props) => {
     if( actionType === "send_msg" ){
       if(messages[sndMsg] === undefined){
         error_flag = true;
-        return;
-      }
-      const toverify = messages[sndMsg].params.map((el, index) => el.name);
-      let found = "";
-      let indexFound = -1;
-      actionOperations.forEach((el, index) => {
-        if(el.includes("SET") && el.includes("SEND")){
-          found = el.substring(el.indexOf(".") + 1, el.indexOf(","));
-          indexFound = toverify.findIndex(el => el === found);
-          if(indexFound !== -1){
-            toverify.splice(indexFound, 1);
-          }
-        }
-      })
-      if(toverify.length !== 0){
-        setMissingSets(toverify);
         setSendError(true);
-        error_flag = true;
       }
     }
     if(error_flag) return;
@@ -292,10 +274,7 @@ const ActionEditor = (props) => {
         {
           sendError ? (
             <Alert severity="error" onClose={(e) => setSendError(false)}>
-              Error saving! Missing set values of sent message:
-              {
-                missingSets.map((el, index) => el + ", ")
-              }
+              Error saving! Please choose a message type to send!
             </Alert>
           ) : (
             <></>

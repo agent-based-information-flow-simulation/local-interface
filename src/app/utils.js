@@ -2,23 +2,29 @@ import { store } from "./store";
 
 const reserved_names = [
   "send",
+  "connections",
   "rcv",
   "len",
   "round",
   "list",
   "filter",
   "self",
-  "get_json_from_spade_message",
-  "get_spade_message",
   "datetime",
   "random",
   "numpy",
-  "orjson",
+  "json",
   "spade",
   "copy",
-  "False",
-  "None",
-  "True",
+  "uuid",
+  "get_json_from_spade_message",
+  "get_spade_message",
+  "backupbehaviour",
+  "backup_url",
+  "backup_period",
+  "backup_delay",
+  "false",
+  "none",
+  "true",
   "and",
   "as",
   "assert",
@@ -54,88 +60,115 @@ const reserved_names = [
 ];
 
 export const FIPACommActs = [
-    "AcceptProposal",
-    "Agree",
-    "Cancel",
-    "CallForProposal",
-    "Confirm",
-    "Disconfirm",
-    "Failure",
-    "Inform",
-    "InformIf",
-    "InformRef",
-    "NotUnderstood",
-    "Propagate",
-    "Propose",
-    "Proxy",
-    "QueryIf",
-    "QueryRef",
-    "Refuse",
-    "RejectProposal",
-    "Request",
-    "RequestWhen",
-    "RequestWhenever",
-    "Subscribe",
-  ];
+  "AcceptProposal",
+  "Agree",
+  "Cancel",
+  "CallForProposal",
+  "Confirm",
+  "Disconfirm",
+  "Failure",
+  "Inform",
+  "InformIf",
+  "InformRef",
+  "NotUnderstood",
+  "Propagate",
+  "Propose",
+  "Proxy",
+  "QueryIf",
+  "QueryRef",
+  "Refuse",
+  "RejectProposal",
+  "Request",
+  "RequestWhen",
+  "RequestWhenever",
+  "Subscribe",
+];
 
 export const errorCodes = [
   {
     code: 101,
-    info: "Name cannot be duplicate!"
+    info: "Name cannot be duplicate!",
   },
   {
     code: 102,
-    info: "Name cannot contain whitespaces!"
+    info: "Name cannot contain whitespaces!",
   },
   {
     code: 103,
-    info: "Name cannot start with a number!"
+    info: "Name cannot start with a number!",
   },
   {
     code: 104,
-    info: "Name can't contain any of the following characters: ! @ # $ % ^ & * ( ) + - = [ ] { } ; ' : \" \\ | , . < > / ?"
+    info: "Name can't contain any of the following characters: ! @ # $ % ^ & * ( ) + - = [ ] { } ; ' : \" \\ | , . < > / ?",
+  },
+  {
+    code: 105,
+    info: "Name can't be a reserved name. Consult documentation for reserved names.", // TODO add link?
   },
   {
     code: 201,
-    info: "Select a valid performative type!"
-  }
-]
+    info: "Select a valid performative type!",
+  },
+];
 
 export const validateAgentName = (name) => {
   const state = store.getState();
   const format = /[!@#$%^&*()+\-=[\]{};':"\\|,.<>/?]+/;
   //check if agent with the same name exists
-  if (state.simulation.agent_types.find((el) => el.name === name)){
+  if (state.simulation.agent_types.find((el) => el.name === name)) {
     return 101;
-  }else if (hasWhiteSpace(name)) {
+  } else if (hasWhiteSpace(name)) {
     return 102;
-  }else if(!isNaN(parseFloat(name[0]))) {
+  } else if (!isNaN(parseFloat(name[0]))) {
     return 103;
-  }else if (format.test(name)) {
+  } else if (format.test(name)) {
     return 104;
+  } else if (reserved_names.find((el) => el === name.toLowerCase()) !== undefined) {
+    return 105;
   }
   return 0;
-}
+};
 
 export const validateMessageName = (name, performative) => {
   const state = store.getState();
   const format = /[!@#$%^&*()+\-=[\]{};':"\\|,.<>/?]+/;
   //check if agent with the same name exists
-  console.log(state.simulation.message_types);
-  if (state.simulation.message_types.find((el) => el.name === name && el.type === performative)){
+  if (
+    state.simulation.message_types.find(
+      (el) => el.name === name && el.type === performative
+    )
+  ) {
     return 101;
-  }else if (hasWhiteSpace(name)) {
+  } else if (hasWhiteSpace(name)) {
     return 102;
-  }else if(!isNaN(parseFloat(name[0]))) {
+  } else if (!isNaN(parseFloat(name[0]))) {
     return 103;
-  }else if (format.test(name)) {
+  } else if (format.test(name)) {
     return 104;
-  }else if (FIPACommActs.find((el) => el === performative) === undefined){
+  } else if (FIPACommActs.find((el) => el === performative) === undefined) {
     return 201;
+  } else if (reserved_names.find((el) => el === name.toLowerCase()) !== undefined) {
+    return 105;
   }
   return 0;
+};
 
-}
+export const validateBehavName = (name) => {
+  const state = store.getState();
+  const format = /[!@#$%^&*()+\-=[\]{};':"\\|,.<>/?]+/;
+  if (state.agentsTab.behaviours.find((el) => el.name === name)) {
+    return 101;
+  } else if (hasWhiteSpace(name)) {
+    return 102;
+  } else if (!isNaN(parseFloat(name[0]))) {
+    return 103;
+  } else if (format.test(name)) {
+    return 104;
+  } else if (reserved_names.find((el) => el === name.toLowerCase()) !== undefined) {
+    return 105;
+  }
+  return 0;
+};
 
 export const validateQualifiedName = (name) => {
   const state = store.getState();
