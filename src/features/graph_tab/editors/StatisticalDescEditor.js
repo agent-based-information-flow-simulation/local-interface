@@ -18,7 +18,7 @@ export const StatisticalDescEditor = (props) => {
   const [agentData, setAgentData] = useState([]);
   const [errorData, setErrorData] = useState([]);
 
-  const {codeCallback} = props;
+  const {codeCallback, displayError} = props;
 
   const generateDEFG = (agent) => {
     let code = "DEFG ";
@@ -33,6 +33,7 @@ export const StatisticalDescEditor = (props) => {
   }
 
   useEffect(()=>{
+    console.log(agentData)
     if(agentData.findIndex((ad, index) => {
       return ad.err_flag > 0;
     }) !== -1){
@@ -117,7 +118,7 @@ export const StatisticalDescEditor = (props) => {
                   handleChange={handleAgentDataChange}
                 />
                 {
-                  el.err_flag > 0 && errorData[index] ?
+                  el.err_flag > 0 && errorData[index] && displayError ?
                     <Alert severity="error" onClose={(e) => setRowError(index, false)}>{errorAlerts[el.err_flag]}</Alert>
                     :
                     <></>

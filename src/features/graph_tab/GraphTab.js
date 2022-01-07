@@ -20,6 +20,7 @@ export const GraphTab = (props) => {
   const [alertDisplay, setAlertDisplay] = useState(false);
   const [codeSet, setCodeSet] = useState(false);
   const [graphSize, setGraphSize] = useState("");
+  const [showError, setShowError] = useState(false);
   const [graphData, setGraphData] = useState({})
 
   const clickedMode = (el, index) => {
@@ -48,6 +49,7 @@ export const GraphTab = (props) => {
   }
 
   const saveGraph = () => {
+    setShowError(true);
     switch(modeIndex) {
       case 0:
         setAlertDisplay(true);
@@ -105,7 +107,7 @@ export const GraphTab = (props) => {
           <TextField label="Graph Size" value={graphSize} onChange={(e) => setGraphSize(e.target.value)}/>
         </Grid>
         <Grid item sx={11}>
-        <StatisticalDescEditor codeCallback={codeCallback} />
+        <StatisticalDescEditor codeCallback={codeCallback} displayError={showError} />
         </Grid>
         <Grid item sx={1}>
           {
