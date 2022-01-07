@@ -38,6 +38,7 @@ const ActionEditor = (props) => {
   const [sendError, setSendError] = useState(false);
 
   const [statements, setStatements] = useState([]);
+  const [statementError, setStatementError] = useState(false);
   const [actionOperations, setActionOperations] = useState([]);
 
   const params = useSelector(selectParameters);
@@ -66,8 +67,13 @@ const ActionEditor = (props) => {
     setSendError(false);
     setNameError(false);
     setBlockError(false);
+    setStatementError(false);
     if (block_lvl) {
       setBlockError(true);
+      error_flag = true;
+    }
+    if(statements.length === 0){
+      setStatementError(true);
       error_flag = true;
     }
     if (actionName === "" || !isNaN(actionName)) {
@@ -79,9 +85,9 @@ const ActionEditor = (props) => {
         error_flag = true;
         return;
       }
-      let toverify = messages[sndMsg].params.map((el, index) => el.name);
-      var found = "";
-      var indexFound = -1;
+      const toverify = messages[sndMsg].params.map((el, index) => el.name);
+      let found = "";
+      let indexFound = -1;
       actionOperations.forEach((el, index) => {
         if(el.includes("SET") && el.includes("SEND")){
           found = el.substring(el.indexOf(".") + 1, el.indexOf(","));
@@ -99,7 +105,7 @@ const ActionEditor = (props) => {
     }
     if(error_flag) return;
     let parsedOpArr = [];
-    let rawOpArr = [...actionOperations];
+    const rawOpArr = [...actionOperations];
     while (rawOpArr.findIndex((el) => el.startsWith("DECL")) !== -1) {
       let index = rawOpArr.findIndex((el) => el.startsWith("DECL"));
       parsedOpArr.push(rawOpArr[index]);
@@ -110,7 +116,7 @@ const ActionEditor = (props) => {
     parsedOpArr.forEach((el) => (code += el + "\n"));
     code += "EACTION\n";
     let script = statements.join('\n');
-    let ret_action = {
+    const ret_action = {
       name: actionName,
       code: code,
       script: script,
@@ -137,8 +143,8 @@ const ActionEditor = (props) => {
       }
       return arr;
     }, []);
-    var stack = [];
-    var bad_ends = [];
+    let stack = [];
+    let bad_ends = [];
 
     statements.forEach((el, index)=> {
       if(if_indexes.find(ind => ind === index) !== undefined){
@@ -294,6 +300,16 @@ const ActionEditor = (props) => {
           ) : (
             <></>
           )
+        }
+        {
+          statementError ? (
+            <Alert severity="error" onClose={(e) => setStatementError(false)}>
+              Error saving! Action needs to contain some statements!
+            </Alert>
+          ) : (
+            <></>
+          )
+
         }
 
         <Button variant="contained" onClick={saveAction}>

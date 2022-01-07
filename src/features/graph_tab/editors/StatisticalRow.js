@@ -35,7 +35,7 @@ export const StatisticalRow = (props) => {
   }, [toChange]);
 
   const updateAgentData = () => {
-    var tmpAd = JSON.parse(JSON.stringify(agentData)); //make a copy of existing agentData
+    let tmpAd = JSON.parse(JSON.stringify(agentData)); //make a copy of existing agentData
     tmpAd.err_flag = 0;
     if (isNaN(parseFloat(amount)) || parseFloat(amount) <= 0) {
       tmpAd.err_flag = 1;
