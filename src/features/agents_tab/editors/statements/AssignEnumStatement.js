@@ -5,6 +5,8 @@ import {
   Autocomplete,
   TextField,
   IconButton,
+  Select,
+  MenuItem,
 } from "@mui/material"
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import InlineText from "../InlineText"
@@ -13,13 +15,11 @@ export const AssignEnumStatement = (props) => {
   const {save, setEditOn, variables} = props;
 
   const [curLhs, setCurLhs] = useState("");
-  const [lhsError, setLhsError] = useState(false);
   const [curRhs, setCurRhs] = useState("");
   const [rhsError, setRhsError] = useState(false);
   const [rhsCandidates, setRhsCandidates] = useState([]);
 
   const addAssignStatement = () => {
-    //LHS is select no need to validate
     //validate RHS
     let err_flag = false;
     if (
@@ -37,7 +37,6 @@ export const AssignEnumStatement = (props) => {
       setRhsError(false);
     }
   }
-
   const handleLhsChange = (value) => {
     setCurLhs(value);
     let val = variables.find(el => el.name === value);
@@ -50,18 +49,33 @@ export const AssignEnumStatement = (props) => {
 
   return (
     <Stack direction="row">
-      <Autocomplete
-        freeSolo
-        options={variables.map((el,index)=>el.name)}
-        renderInput={(params) => <TextField {...params} />}
-        sx={{ width: "200px" }}
-        error={lhsError}
+      <Select
         value={curLhs}
-        inputValue={curLhs}
-        onInputChange={(event, value) => handleLhsChange(value)}
-        helperText="LHS must be a valid enum"
-      />
+        onChange = {(e) => handleLhsChange(e.target.value)}
+      >
+        {
+          variables.map((el, index) => {
+            return (
+              <MenuItem value={el.name}> {el.name} </MenuItem>
+            );
+          })
+        }
+      </Select>
       <InlineText text="=" />
+      <Select
+        value={curRhs}
+        onChange={(e) => setCurRhs(e.target.value)}
+        disabled={curLhs === ""}
+      >
+        {
+          rhsCandidates.map((el,index) => {
+            return(
+              <MenuItem value={el}> {el} </MenuItem>
+            )
+          })
+        }
+
+      </Select>
       <Autocomplete
         freeSolo
         options={rhsCandidates}

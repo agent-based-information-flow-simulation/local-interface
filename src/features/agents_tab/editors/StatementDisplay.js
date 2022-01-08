@@ -43,6 +43,8 @@ export const StatementDisplay = (props) => {
   const [floats, setFloats] = useState([]);
   const [enums, setEnums] = useState([]);
   const [connLists, setConnLists] = useState([])
+  // msgLists currently not used, but as they exist as a separate data type
+  // eslint-disable-next-line no-unused-vars
   const [msgLists, setMsgLists] = useState([])
   const [lists, setLists] = useState([])
   const [listItems, setListItems] = useState([])

@@ -10,6 +10,8 @@ export const SubsetListStatement = (props) => {
   const [curRhs, setCurRhs] = useState("");
   const [curNum, setCurNum] = useState(1);
   const [numError, setNumError] = useState(false);
+  // TODO add error display for mismatched types
+  // eslint-disable-next-line no-unused-vars
   const [typeError, setTypeError] = useState(false);
 
 
