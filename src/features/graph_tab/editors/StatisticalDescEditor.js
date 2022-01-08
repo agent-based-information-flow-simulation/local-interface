@@ -1,10 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
-import { Grid, Button, Divider, Box, Alert } from "@mui/material";
+import { Grid, Divider, Box, Alert } from "@mui/material";
 import { selectAgents } from "../../simulationSlice";
 import StatisticalRow from "./StatisticalRow";
-
-import { distributionsDict } from "../../../app/utils";
 
 const errorAlerts = {
   1: "Amount of agents need to be a number!",
@@ -56,6 +54,7 @@ export const StatisticalDescEditor = (props) => {
        codeCallback(code, "generated statistical description", {agentData: agentData});
     }
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [agentData])
 
   const setRowError = (index, value) => {
@@ -129,7 +128,6 @@ export const StatisticalDescEditor = (props) => {
           })
         }
       </Grid>
-      {/*<Button onClick={XD}>Testing</Button>*/}
     </Box>
   );
 };

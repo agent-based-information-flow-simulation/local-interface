@@ -5,9 +5,9 @@ import {
 
 import ActionEditor from '../editors/ActionEditor';
 import { useDispatch, useSelector } from "react-redux";
-import { addAction, resetScope, selectActions, resetActions} from "../editors/editorSlice";
+import { addAction, resetScope, selectActions } from "../editors/editorSlice";
 import { addBehav } from "../agentsTabSlice";
-import { validateBehavName, errorCodes, validateAgentName } from "../../../app/utils";
+import { validateBehavName, errorCodes } from "../../../app/utils";
 import { addName } from "../../simulationSlice";
 
 export const OnSetupBehav = (props) => {
