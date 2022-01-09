@@ -1,12 +1,27 @@
 import React, { useState, useEffect } from "react";
-import { FormControl, Select, MenuItem, TextField, Button } from "@mui/material"
+import { FormControl, Select, MenuItem, TextField, Button, Alert } from "@mui/material"
 import PropTypes from "prop-types"
+import { errorCodes, validateListParam } from "../../app/utils";
 
 export const ListParam = (props) => {
   const {save} = props
   const [listType, setListType] = useState("conns");
   const [paramName, setParamName] = useState("");
   const [paramData, setParamData] = useState({})
+
+  const [displayError, setDisplayError] = useState(false)
+  const [errorText, setErrorText] = useState("");
+
+  const addButtonClick = () => {
+    const code = validateListParam(paramData);
+    if(code !==0){
+      setDisplayError(true);
+      const error = errorCodes.find(el => el.code === code)
+      setErrorText(error.info);
+    }else{
+      save(paramData);
+    }
+  }
 
   const handleTypeChange = (value) => {
     setListType(value);
@@ -44,7 +59,13 @@ export const ListParam = (props) => {
         <MenuItem value={"msgs"}> Messages </MenuItem>
       </Select>
     </FormControl>
-    <Button onClick={(e) => save(paramData)}> Add parameter </Button>
+    {
+      displayError ?
+      <Alert severity="error" onClose={(e) => setDisplayError(false)}> {errorText} </Alert>
+      :
+      <></>
+    }
+    <Button onClick={addButtonClick}> Add parameter </Button>
     </>
   );
 }

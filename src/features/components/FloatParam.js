@@ -76,7 +76,7 @@ export const FloatParam = (props) => {
   useEffect(()=>{
     updateParamData()
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [paramName, floatType, distribution]);
+  }, [paramName, floatType, distribution, distributionArgs]);
 
   return (
     <>

@@ -12,12 +12,14 @@ import {
   List,
   TextField,
   Button,
+  Alert
 } from "@mui/material";
 
 import {selectEnums} from "./enumSlice";
 
 import NewEnumVal from "./NewEnumVal";
 import EnumVal from "./EnumVal";
+import { errorCodes, validateEnumParam } from "../../app/utils";
 
 const EnumParam = (props) => {
   const {save} = props
@@ -32,9 +34,23 @@ const EnumParam = (props) => {
   const [enumValNameError, setEnumValNameError] = useState(false);
   const [percentageError, setPrecentageError] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(0);
-  const [paramName, setParamName] = useState();
+  const [paramName, setParamName] = useState("");
   const [paramData, setParamData] = useState({});
 
+  const [displayError, setDisplayError] = useState(false);
+  const [errorText, setErrorText] = useState("");
+
+  const addButtonClick = () => {
+    const code = validateEnumParam(paramData);
+    if(code !== 0){
+      setDisplayError(true);
+      const error = errorCodes.find(el => el.code === code);
+      setErrorText(error.info);
+      return;
+    }else{
+      save(paramData);
+    }
+  }
 
   const addEnumVal = () => {
     if (enumVals.some((el) => el.name === enumValName) || enumValName === "") {
@@ -217,7 +233,13 @@ const EnumParam = (props) => {
         <></>
       )}
     </FormControl>
-    <Button onClick={(e) => save(paramData)}> Add parameter </Button>
+    {
+      displayError ?
+      <Alert severity="error" onClose={(e) => setDisplayError(false)}> {errorText} </Alert>
+      :
+      <></>
+    }
+    <Button onClick={addButtonClick}> Add parameter </Button>
     </>
   );
 };
