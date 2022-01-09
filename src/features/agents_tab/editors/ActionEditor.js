@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import PropTypes from "prop-types";
 import { useSelector, useDispatch } from "react-redux";
 import { selectParameters } from "../agentsTabSlice";
-import { selectBlockLvl, resetScope } from "./editorSlice";
+import { selectBlockLvl, resetScope, selectActions } from "./editorSlice";
 import { selectMessageTypes } from "../../simulationSlice";
 import {
   Container,
@@ -31,6 +31,7 @@ const ActionEditor = (props) => {
   const [sndMsg, setSndMsg] = useState("");
   const [blockError, setBlockError] = useState(false);
 
+  const existingActions = useSelector(selectActions);
   const [actionName, setActionName] = useState("");
   const [nameError, setNameError] = useState(false);
 
@@ -76,6 +77,9 @@ const ActionEditor = (props) => {
       error_flag = true;
     }
     if (actionName === "" || !isNaN(actionName)) {
+      setNameError(true);
+      error_flag = true;
+    }else if( existingActions.find((el => el.name === actionName))){
       setNameError(true);
       error_flag = true;
     }
@@ -265,7 +269,7 @@ const ActionEditor = (props) => {
         )}
         {nameError ? (
           <Alert severity="error" onClose={(e) => setNameError(false)}>
-            Error saving! You need to set a name for the action, and it cannot
+            Error saving! You need to set a unique name for the action, and it cannot
             be a number!{" "}
           </Alert>
         ) : (
