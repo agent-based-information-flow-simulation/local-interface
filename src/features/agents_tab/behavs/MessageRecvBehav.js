@@ -24,6 +24,7 @@ export const MessageRecvBehav = (props) => {
   const [nameError, setNameError] = useState(false);
   const [nameErrorText, setNameErrorText] = useState("");
   const [actionError, setActionError] = useState(false);
+  const [messageError, setMessageError] = useState(false);
   const dispatch = useDispatch();
   const actions = useSelector(selectActions);
   const messages = useSelector(selectMessageTypes);
@@ -37,7 +38,7 @@ export const MessageRecvBehav = (props) => {
 
   const saveBehaviour = () => {
     let err_flag = false;
-    if (!validateBehavName(behavName)) {
+    if (validateBehavName(behavName) !== 0) {
       err_flag = true;
       const code = validateBehavName(behavName);
       const error = errorCodes.find((el) => el.code === code);
@@ -47,6 +48,10 @@ export const MessageRecvBehav = (props) => {
     if (actions.length === 0) {
       err_flag = true;
       setActionError(true);
+    }
+    if(messages[selectedMsg] === undefined){
+      err_flag = true;
+      setMessageError(true);
     }
     if (!err_flag) {
       let code =
@@ -126,7 +131,14 @@ export const MessageRecvBehav = (props) => {
         </Alert>
       :
       <></>
-
+    }
+    {
+      messageError ?
+        <Alert severity="error" onClose={(e) => setMessageError(false)}>
+          Erro saving! Please select a valid message type!
+        </Alert>
+      :
+      <></>
     }
 
       <Button onClick={(e) => setActionDialogOpen(true)}> Add Action </Button>

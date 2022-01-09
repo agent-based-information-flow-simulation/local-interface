@@ -34,7 +34,7 @@ export const OneTimeBehav = (props) => {
 
   const saveBehaviour = () => {
     let err_flag = false;
-    if(!validateBehavName(behavName)){
+    if(validateBehavName(behavName) !== 0){
       err_flag = true;
       const code = validateBehavName(behavName);
       const error = errorCodes.find((el) => el.code === code);

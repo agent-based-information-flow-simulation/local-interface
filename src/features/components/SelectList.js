@@ -15,9 +15,9 @@ import {
 export const SelectList = (props) => {
   const {name, collection, options, handleParamTypeChange, collectionItemClick, collectionDisplayFunction} = props
 
-  let itemDisplay = useRef( (item) => {
+  let itemDisplay = (item) => {
     return item.name;
-  });
+  };
 
   return (
     <Box
