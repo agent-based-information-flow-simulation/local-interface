@@ -28,11 +28,12 @@ export const GraphTab = (props) => {
   }
 
   const codeCallback = (code, info, data) => {
+    setAlertDisplay(false)
     setAlertText(info);
     setGraphData(data);
     setError(false);
     setSuccess(false);
-      setCodeSet(false);
+    setCodeSet(false);
     if(code === "ERROR"){
       setError(true);
     }else{
@@ -50,9 +51,9 @@ export const GraphTab = (props) => {
 
   const saveGraph = () => {
     setShowError(true);
+    setAlertDisplay(true)
     switch(modeIndex) {
       case 0:
-        setAlertDisplay(true);
         if(codeSet){
           if(isNaN(parseInt(graphSize))){
             setSuccess(false);
@@ -60,6 +61,7 @@ export const GraphTab = (props) => {
             setAlertText("Specify graph size!!!");
             break;
           }
+          setSuccess(true);
           let code = "GRAPH statistical\n";
           code += "SIZE " + graphSize + "\n";
           code += defgCode;
@@ -115,7 +117,7 @@ export const GraphTab = (props) => {
               error ? (
                 <Alert severity="error" onClose={alertClose}> {alertText}</Alert>
               ) : success ? (
-                <Alert severity="success" onClose={alertClose}> {alertText}</Alert>
+                <Alert severity="success" onClose={alertClose}> Saved sucessfully! </Alert>
               ) : <> </>
             ) : <></>
           }
