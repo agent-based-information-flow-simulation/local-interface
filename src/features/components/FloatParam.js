@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { FormControl, Select, MenuItem, TextField, Button } from "@mui/material";
+import { FormControl, Select, MenuItem, TextField, Button, Alert } from "@mui/material";
 import PropTypes from "prop-types"
-import {distributionsDict} from "../../app/utils"
+import {distributionsDict, validateFloatParam, errorCodes} from "../../app/utils"
 
 export const FloatParam = (props) => {
 
@@ -15,6 +15,9 @@ export const FloatParam = (props) => {
   const [distributionArgs, setDistributionArgs] = useState([]);
   const [paramName, setParamName] = useState("");
   const [paramData, setParamData] = useState({})
+
+  const [displayError, setDisplayError] = useState(false);
+  const [errorText, setErrorText] = useState("");
 
   const handleDistributionChange = (distribution) => {
     let arg_count = distributionsDict[distribution].arg_count;
@@ -41,6 +44,17 @@ export const FloatParam = (props) => {
     updateParamData();
   }
 
+  const saveButtonClick = () => {
+    let code = validateFloatParam(paramData);
+    if(code !== 0){
+      let error = errorCodes.find((el) => el.code === code);
+      setDisplayError(true);
+      setErrorText(error.info);
+    }else{
+      save(paramData);
+    }
+  }
+
   const updateParamData = () => {
     let newParamData = {};
     newParamData.name = paramName;
@@ -62,7 +76,7 @@ export const FloatParam = (props) => {
   useEffect(()=>{
     updateParamData()
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [paramName]);
+  }, [paramName, floatType, distribution]);
 
   return (
     <>
@@ -126,7 +140,13 @@ export const FloatParam = (props) => {
           <></>
         )}
       </FormControl>
-      <Button onClick={(e) => save(paramData)}> Add parameter </Button>
+      {
+        displayError ?
+        <Alert severity="error" onClose={(e) => setDisplayError(false)}> {errorText} </Alert>
+        :
+        <></>
+      }
+      <Button onClick={saveButtonClick}> Add parameter </Button>
     </>
   );
 };

@@ -84,7 +84,16 @@ export const FIPACommActs = [
   "Subscribe",
 ];
 
+const format = /[!@#$%^&*()+`\-=[\]{};':"\\|,.<>/?]+/;
+
 export const errorCodes = [
+  /*
+  1XX - name errors
+  2XX - performative errors
+  3XX - value errors
+  4XX - distribution errors
+  9XX - other errors
+  */
   {
     code: 101,
     info: "Name cannot be duplicate!",
@@ -99,21 +108,41 @@ export const errorCodes = [
   },
   {
     code: 104,
-    info: "Name can't contain any of the following characters: ! @ # $ % ^ & * ( ) + - = [ ] { } ; ' : \" \\ | , . < > / ?",
+    info: "Name can't contain any of the following characters: ! @ # $ % ^ & * ( ) ` + - = [ ] { } ; ' : \" \\ | , . < > / ?",
   },
   {
     code: 105,
     info: "Name can't be a reserved name. Consult documentation for reserved names.", // TODO add link?
   },
   {
+    code: 106,
+    info: "Name cannot be empty!"
+  },
+  {
     code: 201,
     info: "Select a valid performative type!",
   },
+  {
+    code: 301,
+    info: "Invalid value for a float"
+  },
+  {
+    code: 401,
+    info: "Invalid distribution name!"
+  },
+  {
+    code: 402,
+    info: "Invalid distribution arguments!"
+  },
+  {
+    code: 901,
+    info: "Unexpected error: Invalid param type! Contact the developers"
+  }
 ];
+
 
 export const validateAgentName = (name) => {
   const state = store.getState();
-  const format = /[!@#$%^&*()+\-=[\]{};':"\\|,.<>/?]+/;
   //check if agent with the same name exists
   if (state.simulation.agent_types.find((el) => el.name === name)) {
     return 101;
@@ -125,13 +154,14 @@ export const validateAgentName = (name) => {
     return 104;
   } else if (reserved_names.find((el) => el === name.toLowerCase()) !== undefined) {
     return 105;
+  } else if (name.length === 0){
+    return 106;
   }
   return 0;
 };
 
 export const validateMessageName = (name, performative) => {
   const state = store.getState();
-  const format = /[!@#$%^&*()+\-=[\]{};':"\\|,.<>/?]+/;
   //check if agent with the same name exists
   if (
     state.simulation.message_types.find(
@@ -149,13 +179,14 @@ export const validateMessageName = (name, performative) => {
     return 201;
   } else if (reserved_names.find((el) => el === name.toLowerCase()) !== undefined) {
     return 105;
+  } else if (name.length === 0){
+    return 106;
   }
   return 0;
 };
 
 export const validateBehavName = (name) => {
   const state = store.getState();
-  const format = /[!@#$%^&*()+\-=[\]{};':"\\|,.<>/?]+/;
   if (state.agentsTab.behaviours.find((el) => el.name === name)) {
     return 101;
   } else if (hasWhiteSpace(name)) {
@@ -166,6 +197,8 @@ export const validateBehavName = (name) => {
     return 104;
   } else if (reserved_names.find((el) => el === name.toLowerCase()) !== undefined) {
     return 105;
+  } else if (name.length === 0){
+    return 106;
   }
   return 0;
 };
@@ -176,7 +209,6 @@ export const validateQualifiedName = (name) => {
     console.log("namae wa duplicatedo");
     return false;
   }
-  const format = /[!@#$%^&*()+\-=[\]{};':"\\|,.<>/?]+/;
   if (name === "") {
     console.log("namae wa emptey");
     return false;
@@ -230,3 +262,45 @@ export const distributionsDict = {
     },
   },
 };
+
+export const validateFloatParam = (paramData) => {
+  //validate param name
+  const name = paramData.name;
+  const state = store.getState();
+  console.log(name)
+  if (state.agentsTab.parameters.find((el) => el.name === name)) {
+    return 101;
+  } else if (hasWhiteSpace(name)) {
+    return 102;
+  } else if (!isNaN(parseFloat(name[0]))) {
+    return 103;
+  } else if (format.test(name)) {
+    return 104;
+  } else if (reserved_names.find((el) => el === name.toLowerCase()) !== undefined) {
+    return 105;
+  } else if (name.length === 0){
+    return 106;
+  }
+  switch(paramData.type){
+    case "initVal":
+      if(isNaN(parseFloat(paramData.initVal))){
+        return 301;
+      }
+      break;
+    case "distribution":
+      console.log(typeof(paramData.distribution))
+      console.log(paramData.distribution)
+      if(distributionsDict[paramData.distribution] === undefined){
+        return 401;
+      }else{
+        const dist = distributionsDict[paramData.distribution];
+        if(!dist.validate(paramData.distribution_args)){
+          return 402;
+        }
+      }
+      break;
+    default:
+      return 901;
+  }
+  return 0;
+}

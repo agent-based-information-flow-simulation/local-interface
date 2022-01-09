@@ -139,6 +139,8 @@ function ParamsDialog(props) {
       open={open}
       disableAutoFocus={true}
       disableEnforceFocus={true}
+      fullWidth
+      maxWidth="md"
     >
       <Container sx={{ padding: 3 }}>
         <DialogTitle> New parameter </DialogTitle>
