@@ -17,6 +17,7 @@ import RemNElemsStatement from "./statements/RemNElemsStatement";
 import ClearListStatement from "./statements/ClearListStatement";
 import AssignEnumStatement from "./statements/AssignEnumStatement";
 import SendStatement from "./statements/SendStatement";
+import GetLenStatement from "./statements/GetLenStatement";
 import { SubsetListStatement } from "./statements/SubsetListStatement";
 
 import {
@@ -125,6 +126,15 @@ export const StatementDisplay = (props) => {
           connLists={Object.values({...(rcvMsg !== undefined ? [...connLists, rcvJid] : [...connLists])})}
         />
       );
+    case "get_len":
+      return (
+        <GetLenStatement
+          save={save}
+          setEditOn={setEditOn}
+          lhsCandidates={mutFloats}
+          rhsCandidates={lists}
+        />
+      )
     case "assign_enum":
       return (
         <AssignEnumStatement

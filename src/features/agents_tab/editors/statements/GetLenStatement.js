@@ -26,7 +26,7 @@ export const GetLenStatement = (props) => {
   }
 
   return(
-    <Stack>
+    <Stack direction="row">
       <InlineText text="Let " />
       <Select
         value={curLhs}
@@ -34,7 +34,7 @@ export const GetLenStatement = (props) => {
       >
         {
           lhsCandidates.map((el, index) => {
-            return <MenuItem value={el.name}> {el.name} </MenuItem>
+            return <MenuItem value={el.name}> {el.name} ({el.type}) </MenuItem>
           })
         }
       </Select>
@@ -45,7 +45,7 @@ export const GetLenStatement = (props) => {
       >
         {
           rhsCandidates.map((el, index) => {
-            return <MenuItem value={el.name}> {el.name} </MenuItem>
+            return <MenuItem value={el.name}> {el.name} ({el.type}) </MenuItem>
           })
         }
       </Select>
@@ -58,3 +58,4 @@ export const GetLenStatement = (props) => {
     </Stack>
   );
 }
+export default GetLenStatement;

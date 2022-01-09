@@ -56,7 +56,7 @@ export const AssignEnumStatement = (props) => {
         {
           variables.map((el, index) => {
             return (
-              <MenuItem value={el.name}> {el.name} </MenuItem>
+              <MenuItem value={el.name}> {el.name} ({el.type}) </MenuItem>
             );
           })
         }
@@ -70,7 +70,7 @@ export const AssignEnumStatement = (props) => {
         {
           rhsCandidates.map((el,index) => {
             return(
-              <MenuItem value={el}> {el} </MenuItem>
+              <MenuItem value={el}> {el} (enum value) </MenuItem>
             )
           })
         }

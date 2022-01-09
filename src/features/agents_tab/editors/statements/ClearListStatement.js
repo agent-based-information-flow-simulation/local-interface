@@ -29,7 +29,7 @@ export const ClearListStatement = (props) => {
       >
         {
           variables.map((el, index) => {
-            return <MenuItem value={el.name}> {el.name} </MenuItem>;
+            return <MenuItem value={el.name}> {el.name} ({el.type}) </MenuItem>;
           })
         }
       </Select>

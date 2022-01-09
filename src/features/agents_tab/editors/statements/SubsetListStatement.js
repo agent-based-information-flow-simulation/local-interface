@@ -56,7 +56,7 @@ export const SubsetListStatement = (props) => {
       <Select value={curLhs} onChange={(e) => setCurLhs(e.target.value)}>
         {lhsCandidates.map((el, index) => {
           if (el === undefined) return <></>;
-          return <MenuItem value={el.name}> {el.name} </MenuItem>;
+          return <MenuItem value={el.name}> {el.name} ({el.type}) </MenuItem>;
         })}
       </Select>
       <InlineText text="contain" />
@@ -77,7 +77,7 @@ export const SubsetListStatement = (props) => {
         {
           rhsCandidates.map((el, index) => {
             if(el === undefined) return <></>;
-            return <MenuItem value={el.name}> {el.name} </MenuItem>
+            return <MenuItem value={el.name}> {el.name} ({el.type}) </MenuItem>
           })
         }
       </Select>

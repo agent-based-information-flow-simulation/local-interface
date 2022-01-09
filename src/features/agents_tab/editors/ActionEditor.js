@@ -226,7 +226,7 @@ const ActionEditor = (props) => {
                   <em>param...</em>
                 </MenuItem>
                 {params.map((param, index) => {
-                  return <MenuItem value={index}> {param.name} </MenuItem>;
+                  return <MenuItem value={index}> {param.name} ({param.type}) </MenuItem>;
                 })}
               </Select>
               <FormHelperText>

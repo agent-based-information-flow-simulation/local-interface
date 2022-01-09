@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect, useRef} from "react";
 import PropTypes from "prop-types"
 import {
   Box,
@@ -13,7 +13,12 @@ import {
 } from "@mui/material"
 
 export const SelectList = (props) => {
-  const {name, collection, options, handleParamTypeChange, collectionItemClick} = props
+  const {name, collection, options, handleParamTypeChange, collectionItemClick, collectionDisplayFunction} = props
+
+  let itemDisplay = useRef( (item) => {
+    return item.name;
+  });
+
   return (
     <Box
       sx={{
@@ -38,7 +43,7 @@ export const SelectList = (props) => {
             return (
               <ListItem key={index} disablePadding onClick={(e)=>collectionItemClick(index)}>
                 <ListItemButton >
-                  <ListItemText primary={item.name} />
+                  <ListItemText primary={collectionDisplayFunction === undefined ? itemDisplay(item) : collectionDisplayFunction(item)} />
                 </ListItemButton>
               </ListItem>
             );

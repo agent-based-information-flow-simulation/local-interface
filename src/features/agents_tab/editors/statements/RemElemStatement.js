@@ -53,7 +53,7 @@ export const RemElemStatement = (props) => {
         {
           lhsCandidates.map((el, index) => {
             if(el === undefined) return <></>;
-            return <MenuItem value={el.name}> {el.name} </MenuItem>;
+            return <MenuItem value={el.name}> {el.name} ({el.type})</MenuItem>;
           })
         }
         </Select>
@@ -65,7 +65,7 @@ export const RemElemStatement = (props) => {
           {
             rhsOptions.map((el, index) => {
               if(el === undefined) return <></>;
-              return <MenuItem value={el.name}> {el.name} </MenuItem>
+              return <MenuItem value={el.name}> {el.name} ({el.type}) </MenuItem>
             })
           }
         </Select>

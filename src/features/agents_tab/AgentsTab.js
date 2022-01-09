@@ -216,6 +216,7 @@ export function AgentsTab(props) {
               <SelectList
                 name="Parameters"
                 collection={params}
+                collectionDisplayFunction={(item) => item.name + " (" + item.type + ")"}
                 options={paramListOptions}
                 handleParamTypeChange={handleParamTypeChange}
                 collectionItemClick={()=>{}}

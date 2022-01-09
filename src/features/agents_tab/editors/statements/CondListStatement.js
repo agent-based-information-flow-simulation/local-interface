@@ -39,7 +39,7 @@ export const CondListStatement = (props) => {
       >
         {
           lhsCandidates.map((el,index) =>{
-            return <MenuItem value={el.name}>  {el.name} </MenuItem>
+            return <MenuItem value={el.name}>  {el.name} ({el.type}) </MenuItem>
           })
         }
 
@@ -56,7 +56,7 @@ export const CondListStatement = (props) => {
       >
         {
           rhsCandidates.map((el,index) =>{
-            return <MenuItem value={el.name}>  {el.name} </MenuItem>
+            return <MenuItem value={el.name}>  {el.name} ({el.type}) </MenuItem>
           })
         }
 

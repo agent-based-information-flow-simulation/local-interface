@@ -36,7 +36,7 @@ export const RemNElemsStatement = (props) => {
         {
           variables.map((el, index) => {
             if(el === undefined) return <></>;
-            return <MenuItem value={el.name}> {el.name} </MenuItem>;
+            return <MenuItem value={el.name}> {el.name} ({el.type}) </MenuItem>;
           })
         }
         </Select>
