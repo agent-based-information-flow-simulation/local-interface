@@ -1,7 +1,6 @@
 import React, { useEffect } from "react";
 import Stack from "@mui/material/Stack";
-import DisplayList from "../components/DisplayList";
-import { Button } from "@mui/material";
+import { Button, TextField, Alert } from "@mui/material";
 import { useSelector } from "react-redux";
 import {
   selectAgents,
@@ -9,151 +8,185 @@ import {
   selectGraph,
 } from "../simulationSlice";
 
+import SimulationDisplay from "./SimulationDisplay";
+
+import { pingpong, benchmark } from "./assm_presets";
+
+const presetMap = {
+  "pingpong": pingpong,
+  "benchmark": benchmark,
+}
+
+
 export function VisualizationTab() {
-  const [runningSimulations, setRunningSimulations] = React.useState([]);
-  const [simulationsOutput, setSimulationsOutput] = React.useState({});
-  const [selectedSimulationId, setSelectedSimulationId] = React.useState("");
+
+
+  const [simId, setSimId] = React.useState(-1);
+
   const messages = useSelector(selectMessageTypes);
   const agents = useSelector(selectAgents);
   const graph = useSelector(selectGraph);
 
-  const [code, setCode] = React.useState("");
+  const [code, setCode] = React.useState([]);
+  const [generatedCode, setGeneratedCode] = React.useState([]);
+  const [codeFilled, setCodeFilled] = React.useState(false);
+  const [codeGenerated, setCodeGenerated] = React.useState(false);
+
+  const [custom, setCustom] = React.useState(false);
+  const [customCode, setCustomCode] = React.useState("");
+
+  const [error, setError] = React.useState(false);
+  const [errorText, setErrorText] = React.useState("");
 
   const generateCode = () => {
-    let tmp_code = "";
-    messages.forEach((el) => (tmp_code += el.code + "\n"));
-    agents.forEach((el) => (tmp_code += el.code + "\n"));
-    tmp_code += graph.code;
-    setCode(tmp_code);
-  };
+    let tmp_code = [];
+    messages.forEach((el) => {
+      if(el.code !== undefined){
+        el.code.split("\n").forEach((line) => tmp_code.push(line))
+      }
+    })
+    agents.forEach((el) => {
+      if(el.code !== undefined){
+        el.code.split("\n").forEach((line) => tmp_code.push(line))
+      }
+    })
 
-  useEffect(() => {
-    generateCode()
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
-
-  useEffect(() => {
-    const runningSimulationsWebsocket = new WebSocket(
-      "ws://localhost:8000/simulations"
-    );
-    console.debug("opened running simulations websocket");
-    runningSimulationsWebsocket.onmessage = (message) => {
-      const data = JSON.parse(message.data);
-      setRunningSimulations(data.running_simulations);
-    };
-    runningSimulationsWebsocket.onclose = () => {
-      console.debug("closing running simulations websocket");
-    };
-  }, []);
-
-  const getSimulationOutput = (simulationId) => {
-    return simulationId in simulationsOutput
-      ? simulationsOutput[simulationId]
-      : [];
-  };
-
-  const startNewSimulation = async () => {
-    const url = "http://localhost:3002/api/simulations";
-    //tmp
-    const code_lines = [
-      "MESSAGE m1,Inform",
-      "PRM p1,float",
-      "EMESSAGE",
-      "",
-      "AGENT a1",
-      "PRM p1,float,init,0",
-      "BEHAV b1, cyclic,10",
-      "ACTION a1,modify_self",
-      "ADD     p1,p1",
-      "EACTION",
-      "EBEHAV",
-      "EAGENT",
-      "",
-      "GRAPH statistical",
-      "SIZE 100",
-      "DEFG a1, 100%, 10",
-      "EGRAPH",
-      "",
-    ];
-
-    const response = await fetch(url, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({"aasm_code_lines" : code_lines})
-    });
-
-    console.log("Got response: ", response);
-    const data = await response.json();
-
-    // TODO websockets
-    console.log(data);
-    if ("id" in data) {
-      const simulationId = data.id;
-      setSelectedSimulationId(simulationId);
-      setSimulationsOutput((prevState) => ({
-        ...prevState,
-        [simulationId]: [],
-      }));
-      const simulationOutputWebsocket = new WebSocket(
-        `ws://localhost:8000/simulations/${simulationId}`
-      );
-      console.debug(`opened ${simulationId} websocket`);
-      simulationOutputWebsocket.onmessage = (message) => {
-        const data = JSON.parse(message.data);
-        const simulationId = data.id;
-        const outputLine = data.line;
-        setSimulationsOutput((prevState) => ({
-          ...prevState,
-          [simulationId]: [...prevState[simulationId], outputLine],
-        }));
-      };
-      simulationOutputWebsocket.onclose = () => {
-        console.debug(`closing ${simulationId} websocket`);
-      };
+    if(graph.code !== undefined){
+      const graph_lines = graph.code.split("\n")
+      tmp_code = [...tmp_code, ...graph_lines]
+      console.log(tmp_code)
+      setGeneratedCode(tmp_code);
+      setCode(tmp_code);
+      setCodeFilled(true);
+      setCodeGenerated(true);
+    }
+    else{
+      setCode([])
+      setCodeGenerated(false);
+      setCodeFilled(false);
     }
   };
 
-  const deleteSimulation = async (simulationId) => {
-    const url = `http://localhost:8000/simulations/${simulationId}`;
-    await fetch(url, { method: "DELETE" });
-    setSimulationsOutput((prevState) => ({
-      ...prevState,
-      [simulationId]: [],
-    }));
-  };
+  useEffect(() => {
+    generateCode();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const startSimulationFromCode = async (code_lines) => {
+    console.log(code_lines)
+    const url = "http://localhost:3002/api/simulations";
+    const response = await fetch(url, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ aasm_code_lines: code_lines }),
+    });
+    console.log("Got response: ", response);
+    const data = await response.json();
+    console.log(data);
+    if(response.status !== 201){
+      setError(true);
+      setErrorText(`${response.status}: ${data}`)
+    }else{
+      setSimId(data["simulation_id"]);
+    }
+  }
+
+  const loadSimulationPreset = (presetName) => {
+    setCustom(false);
+    setCode(presetMap[presetName]);
+    setCodeFilled(true);
+  }
+
+  const clearPreset = () => {
+    setCustom(false);
+    if(codeGenerated){
+      setCode(generatedCode);
+      setCodeFilled(true);
+    }
+    else{
+      setCode([])
+      setCodeFilled(false);
+    }
+  }
+
+  const startSimButtonClick = () => {
+    if(custom){
+      console.log("Custom start")
+      const custom_code_lines = customCode.split("\n");
+      startSimulationFromCode(custom_code_lines);
+    }else if(codeFilled){
+      console.log("Filled code start")
+      startSimulationFromCode(code);
+    }else{
+      setError(true);
+      setErrorText("Couldn't start simulation with above code, check if everything is correct")
+    }
+  }
+
+  const clearError = () => {
+    setError(false);
+    setErrorText("");
+  }
 
   return (
     <div>
       <Stack direction="row" spacing={2}>
         <Stack direction="column" spacing={2}>
-          <DisplayList
-            name="Running simulations"
-            collection={runningSimulations}
-            onItemClick={setSelectedSimulationId}
-          />
-          <Button onClick={startNewSimulation}>Start new simulation</Button>
-          <Button onClick={() => deleteSimulation(selectedSimulationId)}>
-            Delete selected simulation
-          </Button>
-        </Stack>
-        <DisplayList
-          name="Output"
-          collection={getSimulationOutput(selectedSimulationId)}
-        />
-        <Stack sx={{ textAlign: "left", p: 3 }}>
-          {code.split("\n").map((el, index) => {
-            return <div key={index}> {el} </div>;
-          })}
-          <Button
-            onClick={(e) => {
-              generateCode();
-            }}
-          >
-            {" "}
-            Generate code{" "}
-          </Button>
+          <h1> Simulation Settings</h1>
+          {
+            codeFilled && !custom ?
+            <>
+            <h3> Code to be run: </h3>
+            <Stack sx={{ textAlign: "left", p: 3, maxHeight: "50%", overflow: "auto"}}>
+              {code.map((el, index) => {
+                return <div key={index}> {el} </div>;
+              })}
+            </Stack>
+            </>
+            :
+            custom ?
+            <></>
+            :
+            <p> Your code will show up here when you fill out the forms</p>
+          }
+          {
+            custom ?
+            <TextField
+              multiline
+              rows="23"
+              margin="normal"
+              placeholder="Write your aasm code here"
+              value={customCode}
+              onChange={(e) => setCustomCode(e.target.value)}
+            />
+            :
+            <></>
+
+          }
+          <h3> Simulation presets: </h3>
+          <Stack direction="row" spacing={3}>
+            <Button variant="contained" onClick={(e) => {loadSimulationPreset("pingpong")}}> Ping-Pong </Button>
+            <Button variant="contained" onClick={(e) => {loadSimulationPreset("benchmark")}}> Benchmark </Button>
+            <Button variant="contained" onClick={(e) => {setCustom(true)}}> Custom </Button>
+            <Button variant="contained" onClick={clearPreset}> Clear </Button>
+          </Stack>
+          <Button onClick={startSimButtonClick}> Start simulation with the code above </Button>
+          {
+            error ?
+            <Alert severity="error" onClose={clearError}> {errorText} </Alert>
+            :
+            <></>
+          }
+
         </Stack>
         <Stack direction="column" spacing={2}>
+          <h1> Simulation data </h1>
+          {
+            simId < 0 ?
+            <p> Start a simulation to get the data </p>
+            :
+            <SimulationDisplay simId={simId} />
+          }
         </Stack>
       </Stack>
     </div>

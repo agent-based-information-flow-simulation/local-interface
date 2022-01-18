@@ -102,6 +102,18 @@ function publish() {
   fi
 }
 
+function reload() {
+  if [ -z "${1}" ]; then
+    echo "missing service name"
+    usage
+  fi
+
+  docker-compose -f docker-compose.dev.swarm.yml build "${1}" && \
+  docker-compose -f docker-compose.dev.swarm.yml push
+
+  docker service update li_"${1}" --force
+}
+
 case "${1}" in
   init) init ;;
   join) join "${2}" "{3}" ;;
@@ -112,5 +124,6 @@ case "${1}" in
   stats) stats ;;
   services) services ;;
   publish) publish "${2}" ;;
+  reload) reload "${2}" ;;
   *) usage ;;
 esac
