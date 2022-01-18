@@ -51,6 +51,7 @@ const ActionEditor = (props) => {
   };
 
   const reset = () => {
+    dispatch(resetScope);
     setActionType("modify_self")
     setSelectedParam(-1);
     setBlockError(false);
@@ -58,11 +59,11 @@ const ActionEditor = (props) => {
     setNameError(false);
     setStatements([]);
     setActionOperations([]);
-    dispatch(resetScope);
   }
 
   // TODO: Add checking for empty instructions
   const saveAction = () => {
+    console.log(messages)
     let error_flag = false;
     setSendError(false);
     setNameError(false);
@@ -83,12 +84,15 @@ const ActionEditor = (props) => {
       setNameError(true);
       error_flag = true;
     }
+    let code = "ACTION " + actionName + ',' + actionType;
     if( actionType === "send_msg" ){
       if(messages[sndMsg] === undefined){
         error_flag = true;
         setSendError(true);
       }
+      code += ", " + messages[sndMsg].name + ", " + messages[sndMsg].type;
     }
+    code += "\n";
     if(error_flag) return;
     let parsedOpArr = [];
     const rawOpArr = [...actionOperations];
@@ -98,7 +102,6 @@ const ActionEditor = (props) => {
       rawOpArr.splice(index, 1);
     }
     rawOpArr.forEach((el) => parsedOpArr.push(el));
-    let code = "ACTION " + actionName + ',' + actionType + "\n";
     parsedOpArr.forEach((el) => (code += el + "\n"));
     code += "EACTION\n";
     let script = statements.join('\n');
@@ -185,11 +188,11 @@ const ActionEditor = (props) => {
     if (props.param === undefined) return <></>;
     switch (props.param.type) {
       case "float":
-        return <FloatParamEditor save={save} />;
+        return <FloatParamEditor save={save} rcvMsg={rcvMsg} />;
       case "enum":
-        return <EnumParamEditor save={save}  />;
+        return <EnumParamEditor save={save} rcvMsg={rcvMsg} />;
       case "list":
-        return <ListParamEditor save={save} />;
+        return <ListParamEditor save={save} rcvMsg={rcvMsg} />;
       default:
         return <></>;
     }

@@ -14,6 +14,7 @@ export const editorSlice = createSlice({
       state.scopeVars.push(action.payload);
     },
     resetScope: (state, action) => {
+      console.log("resetting")
       state.scopeVars = []
     },
     resetActions: (state, action) => {

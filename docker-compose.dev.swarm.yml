@@ -1,0 +1,39 @@
+version: '3.9'
+
+services:
+  user-interface:
+    stdin_open: true
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+    image: 127.0.0.1:5000/user-interface
+    build:
+      dockerfile: Dockerfile.dev
+      context: ./user-interface
+    volumes:
+      - /user-interface/node_modules
+      - ./:/user-interface
+    ports:
+      - 3001:3001
+    networks:
+      - li-net
+      - external-li-sre-net
+  proxy:
+    build:
+      dockerfile: Dockerfile.dev
+      context: ./proxy
+    depends_on:
+      - user-interface
+    image: 127.0.0.1:5000/li-proxy
+    ports:
+      - "3002:80"
+    networks:
+      - li-net
+      - external-li-sre-net
+
+
+
+networks:
+  li-net:
+  external-li-sre-net:
+    external: true
+    name: li-sre

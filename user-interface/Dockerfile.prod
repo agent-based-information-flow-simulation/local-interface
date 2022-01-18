@@ -1,0 +1,16 @@
+FROM node:16.13-alpine AS builder
+WORKDIR /app
+ENV PATH=/app/node_modules/.bin:$PATH
+ENV PORT=3001
+COPY package.json ./
+COPY yarn.lock ./
+RUN yarn install --silent
+RUN yarn add react-scripts@4.0.3 --silent
+COPY . ./
+RUN yarn build
+
+FROM gcr.io/distroless/nodejs:16
+WORKDIR /app
+COPY --from=build-env /app/build .
+COPY --from=build-env /app/package.json .
+CMD [ "index.js" ]

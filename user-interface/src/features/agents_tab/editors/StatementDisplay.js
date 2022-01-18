@@ -52,13 +52,15 @@ export const StatementDisplay = (props) => {
   const rcvJid = {name: "RCV.sender", type: "jid"};
   const rcvVar = {name: "RCV", type: "msg"};
   const sendVar = {name: "SEND", type: "msg"};
-  const connectionsVar = {name: "Connections", type: "list", mode: "conn"}
+  const connectionsVar = {name: "connections", type: "list", mode: "conn"}
 
 
   useEffect(()=>{
-    let toSetMutFloats = [...scopeVars];
+    const floatParams = params.filter((el, index) => el.type === "float");
+    let toSetMutFloats = [...scopeVars, ...floatParams];
     let toSetListItems = [...listItems];
     if(sndMsg){
+      console.log("SEND available")
       toSetListItems = [...toSetListItems, sendVar];
       let tmpArr = sndMsg.params.map((el,index)=>{
         return {
@@ -75,6 +77,7 @@ export const StatementDisplay = (props) => {
     }
     setMutFloats(toSetMutFloats);
     let toSetFloats = [...toSetMutFloats, ...read_only];
+    console.log(rcvMsg)
     if(rcvMsg){
       console.log(rcvMsg)
       toSetListItems = [...toSetListItems, rcvVar, rcvJid];
@@ -87,8 +90,6 @@ export const StatementDisplay = (props) => {
       rcvParams = rcvParams.filter((el) => el.type === "float");
       toSetFloats = [...toSetFloats, ...rcvParams];
     }
-    console.info(rcvMsg)
-    console.info(Boolean(rcvMsg))
     setListItems(toSetListItems);
     setFloats(toSetFloats);
     let tmpEnums = params.filter((el) => el.type === "enum");

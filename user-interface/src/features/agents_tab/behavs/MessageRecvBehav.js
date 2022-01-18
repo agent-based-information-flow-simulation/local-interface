@@ -57,7 +57,7 @@ export const MessageRecvBehav = (props) => {
       let code =
         "BEHAV " +
         behavName +
-        ",msg_recv," +
+        ",msg_rcv," +
         messages[selectedMsg].name +
         "," +
         messages[selectedMsg].type +
