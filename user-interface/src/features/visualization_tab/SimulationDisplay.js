@@ -56,6 +56,7 @@ export const SimulationDisplay = (props) => {
           <tr>
             <th> Key </th>
             <th> Status </th>
+            <th> Simulation ID </th>
             <th> Agents# </th>
             <th> API Mem usage [MiB] </th>
             <th> Sim Mem usage [MiB] </th>
