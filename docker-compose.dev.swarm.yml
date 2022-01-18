@@ -2,35 +2,32 @@ version: '3.9'
 
 services:
   user-interface:
-    stdin_open: true
+    build:
+      context: ./user-interface
+      dockerfile: Dockerfile.dev
     environment:
       - CHOKIDAR_USEPOLLING=true
-    image: 127.0.0.1:5000/user-interface
-    build:
-      dockerfile: Dockerfile.dev
-      context: ./user-interface
-    volumes:
-      - /user-interface/node_modules
-      - ./:/user-interface
-    ports:
-      - 3001:3001
+      - PORT=3001
+    image: 127.0.0.1:5000/li-user-interface
     networks:
       - li-net
       - external-li-sre-net
+    ports:
+      - 3001:3001
+    volumes:
+      - /app/node_modules
+      - ./user-interface/src:/app/src
+
   proxy:
     build:
-      dockerfile: Dockerfile.dev
       context: ./proxy
-    depends_on:
-      - user-interface
+      dockerfile: Dockerfile.dev
     image: 127.0.0.1:5000/li-proxy
     ports:
       - "3002:80"
     networks:
       - li-net
       - external-li-sre-net
-
-
 
 networks:
   li-net:
