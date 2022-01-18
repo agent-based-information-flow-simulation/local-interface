@@ -36,6 +36,8 @@ export const SimulationDisplay = (props) => {
       ) : (
         <p> {simId} </p>
       )}
+      {
+        /*
       <div>
         <NeoGraph
           width={400}
@@ -44,9 +46,21 @@ export const SimulationDisplay = (props) => {
           neo4jUri={"http://localhost:7687"}
         />
       </div>
+
+        */
+      }
       <h3> Status </h3>
       <Button onClick={getStatus}> Get status </Button>
       <table>
+        <thead>
+          <tr>
+            <th> Key </th>
+            <th> Status </th>
+            <th> Agents# </th>
+            <th> API Mem usage [MiB] </th>
+            <th> Sim Mem usage [MiB] </th>
+          </tr>
+        </thead>
         <tbody>
           {instances.map((el, index) => {
             return (
