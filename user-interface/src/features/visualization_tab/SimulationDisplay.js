@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { Stack, Button } from "@mui/material";
-
-import NeoGraph from "./NeoGraph";
+import NeoGraph, {ResizableGraph} from "./NeoGraph";
 
 export const SimulationDisplay = (props) => {
   const { simId } = props;
@@ -31,24 +30,19 @@ export const SimulationDisplay = (props) => {
 
   return (
     <Stack direction="column" spacing={2}>
-      {simId < 0 ? (
+      {simId === "" ? (
         <p> Start a simulation to get the data </p>
       ) : (
         <p> {simId} </p>
       )}
-      {
-        /*
       <div>
         <NeoGraph
-          width={400}
-          height={300}
+          width={600}
+          height={500}
           containerId={"graph1"}
-          neo4jUri={"http://localhost:7687"}
+          neo4jUri={"bolt://localhost:7687"}
         />
       </div>
-
-        */
-      }
       <h3> Status </h3>
       <Button onClick={getStatus}> Get status </Button>
       <table>

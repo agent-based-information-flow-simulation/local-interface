@@ -21,7 +21,7 @@ const presetMap = {
 export function VisualizationTab() {
 
 
-  const [simId, setSimId] = React.useState(-1);
+  const [simId, setSimId] = React.useState("");
 
   const messages = useSelector(selectMessageTypes);
   const agents = useSelector(selectAgents);
