@@ -27,7 +27,7 @@ export const NeoGraph = (props) => {
           thickness: "count",
         }
       },
-      initial_cypher: "MATH (a: Agent) RETURN a",
+      initial_cypher: "MATCH (a: Agent) OPTIONAL MATCH (a)-[r]->() RETURN a, r",
     };
     const graph = new Neovis(config);
     graph.render();
