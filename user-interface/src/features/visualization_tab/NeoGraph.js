@@ -1,6 +1,6 @@
 import React, {useEffect, useRef} from "react";
 import PropTypes from "prop-types"
-import Neovis from "neovis.js/dist/neovis.js"
+import NeoVis from "neovis.js/dist/neovis.js"
 
 import useResizeAware from "react-resize-aware";
 import { Button } from "@mui/material";
@@ -19,6 +19,32 @@ export const NeoGraph = (props) => {
 
   useEffect(() => {
     const config = {
+      visNetworkConfig:{
+        nodes: {
+          font: {
+            size: 26,
+            strokeWidth: 7
+          },
+          scaling: {
+          }
+        },
+        edges: {
+          arrows: {
+            to: { enabled: false }
+          },
+          length: 200
+        },
+        layout: {
+          improvedLayout: false,
+          hierarchical: {
+            enabled: false,
+            sortMethod: 'hubsize'
+          }
+        },
+        physics: {
+          enabled: false,
+        }
+      },
       container_id: graphRef.current.id,
       server_url: neo4jUri,
       server_user: "",
@@ -34,8 +60,9 @@ export const NeoGraph = (props) => {
       },
       initial_cypher: "MATCH (a: Agent {simulation_id: '"+ simId +"'}) OPTIONAL MATCH (a)-[r]->() RETURN a, r",
     };
-    graph = new Neovis(config);
+    const graph = new NeoVis(config);
     graph.render();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [neo4jUri])
 
   return (
