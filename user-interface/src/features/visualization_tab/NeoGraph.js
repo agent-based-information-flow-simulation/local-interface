@@ -3,7 +3,7 @@ import PropTypes from "prop-types"
 import Neovis from "neovis.js/dist/neovis.js"
 
 import useResizeAware from "react-resize-aware";
-import { sliderClasses } from "@mui/material";
+import { Button } from "@mui/material";
 
 export const NeoGraph = (props) => {
   const {
@@ -11,9 +11,11 @@ export const NeoGraph = (props) => {
     height,
     containerId,
     neo4jUri,
+    simId,
   } = props;
 
   const graphRef = useRef();
+  let graph;
 
   useEffect(() => {
     const config = {
@@ -30,13 +32,14 @@ export const NeoGraph = (props) => {
           thickness: "count",
         }
       },
-      initial_cypher: "MATCH (a: Agent) OPTIONAL MATCH (a)-[r]->() RETURN a, r",
+      initial_cypher: "MATCH (a: Agent {simulation_id: '"+ simId +"'}) OPTIONAL MATCH (a)-[r]->() RETURN a, r",
     };
-    const graph = new Neovis(config);
+    graph = new Neovis(config);
     graph.render();
   }, [neo4jUri])
 
   return (
+    <>
     <div
       id={containerId}
       ref={graphRef}
@@ -46,6 +49,8 @@ export const NeoGraph = (props) => {
         backgroundColor: "white"
       }}
     />
+    <Button onClick={() => graph.stabilize()}> Stabilize </Button>
+    </>
   )
 }
 
@@ -59,6 +64,7 @@ NeoGraph.propTypes = {
   height: PropTypes.number.isRequired,
   containerId: PropTypes.string.isRequired,
   neo4jUri: PropTypes.string.isRequired,
+  simId: PropTypes.string.isRequired,
 };
 
 export const ResizableGraph = (props) => {
@@ -77,6 +83,7 @@ export const ResizableGraph = (props) => {
 ResizableGraph.propTypes = {
   containerId: PropTypes.string.isRequired,
   neo4jUri: PropTypes.string.isRequired,
+  simId: PropTypes.string.isRequired
 };
 
 export default NeoGraph;

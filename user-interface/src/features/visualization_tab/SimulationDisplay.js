@@ -30,17 +30,12 @@ export const SimulationDisplay = (props) => {
 
   return (
     <Stack direction="column" spacing={2}>
-      {simId === "" ? (
-        <p> Start a simulation to get the data </p>
-      ) : (
-        <p> {simId} </p>
-      )}
+      <p> {simId} </p>
       <div>
-        <NeoGraph
-          width={600}
-          height={500}
+        <ResizableGraph
           containerId={"graph1"}
           neo4jUri={"bolt://localhost:7687"}
+          simId={simId}
         />
       </div>
       <h3> Status </h3>

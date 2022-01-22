@@ -77,7 +77,10 @@ export function VisualizationTab() {
     const url = "http://localhost:3002/api/simulations";
     const response = await fetch(url, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "*"
+      },
       body: JSON.stringify({ aasm_code_lines: code_lines }),
     });
     console.log("Got response: ", response);
@@ -182,7 +185,7 @@ export function VisualizationTab() {
         <Stack direction="column" spacing={2}>
           <h1> Simulation data </h1>
           {
-            simId < 0 ?
+            simId === "" ?
             <p> Start a simulation to get the data </p>
             :
             <SimulationDisplay simId={simId} />
