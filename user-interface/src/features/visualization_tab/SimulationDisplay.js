@@ -8,12 +8,12 @@ export const SimulationDisplay = (props) => {
   const [instances, setInstances] = useState([]);
 
   const deleteSimulation = async () => {
-    const url = `http://localhost:3002/api/simulations/${simId}`;
+    const url = `http://localhost/api/simulations/${simId}`;
     await fetch(url, { method: "DELETE" });
   };
 
   const getStatus = async () => {
-    const url = `http://localhost:3002/api/simulations/`;
+    const url = `http://localhost/api/simulations`;
     //GET method here
     const response = await fetch(url, {
       method: "GET",
@@ -36,7 +36,7 @@ export const SimulationDisplay = (props) => {
           width={530}
           height={350}
           containerId={"graph1"}
-          neo4jUri={"bolt://localhost:7687"}
+          neo4jUri={"bolt://localhost:8008"}
           simId={simId}
         />
       </div>
