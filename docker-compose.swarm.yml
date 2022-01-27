@@ -4,7 +4,7 @@ services:
   user-interface:
     build:
       context: ./user-interface
-      dockerfile: Dockerfile.dev
+      dockerfile: Dockerfile.prod
     environment:
       - PORT=80
     image: madpeh/li-user-interface
