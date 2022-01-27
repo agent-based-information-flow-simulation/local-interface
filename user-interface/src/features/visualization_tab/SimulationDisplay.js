@@ -29,10 +29,12 @@ export const SimulationDisplay = (props) => {
   };
 
   return (
-    <Stack direction="column" spacing={2}>
+    <Stack direction="column" spacing={2} flex>
       <p> {simId} </p>
       <div>
-        <ResizableGraph
+        <NeoGraph
+          width={530}
+          height={350}
           containerId={"graph1"}
           neo4jUri={"bolt://localhost:7687"}
           simId={simId}

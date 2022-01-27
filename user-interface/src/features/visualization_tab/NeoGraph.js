@@ -22,8 +22,8 @@ export const NeoGraph = (props) => {
       visNetworkConfig:{
         nodes: {
           font: {
-            size: 26,
-            strokeWidth: 7
+            size: 20,
+            strokeWidth: 0
           },
           scaling: {
           }
@@ -32,17 +32,17 @@ export const NeoGraph = (props) => {
           arrows: {
             to: { enabled: false }
           },
-          length: 200
         },
         layout: {
           improvedLayout: false,
-          hierarchical: {
-            enabled: false,
-            sortMethod: 'hubsize'
-          }
+          randomSeed: undefined,
+          // hierarchical: {
+          //   enabled: false,
+          //   sortMethod: 'hubsize'
+          // }
         },
         physics: {
-          enabled: false,
+          enabled: true,
         }
       },
       container_id: graphRef.current.id,
@@ -60,7 +60,7 @@ export const NeoGraph = (props) => {
       },
       initial_cypher: "MATCH (a: Agent {simulation_id: '"+ simId +"'}) OPTIONAL MATCH (a)-[r]->() RETURN a, r",
     };
-    const graph = new NeoVis(config);
+    var graph = new NeoVis(config);
     graph.render();
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [neo4jUri])
@@ -71,19 +71,19 @@ export const NeoGraph = (props) => {
       id={containerId}
       ref={graphRef}
       style={{
-        width: {width},
-        height: {height},
+        width: width,
+        height: height,
         backgroundColor: "white"
       }}
     />
-    <Button onClick={() => graph.stabilize()}> Stabilize </Button>
+    <Button onClick={() => graph.reload()}> Stabilize </Button>
     </>
   )
 }
 
 NeoGraph.defaultProps = {
-  width: 600,
-  height: 600,
+  width: 900,
+  height: 900,
 };
 
 NeoGraph.propTypes = {
