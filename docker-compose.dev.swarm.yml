@@ -12,7 +12,7 @@ services:
     networks:
       - proxy-net
     volumes:
-      - /app/node_modules
+      - user-interface-data:/app/node_modules
       - ./user-interface/src:/app/src
 
   proxy:
@@ -30,3 +30,6 @@ networks:
   external-li-sre-net:
     external: true
     name: li-sre
+
+volumes:
+  user-interface-data:
