@@ -1,16 +1,10 @@
-FROM node:16.13-alpine AS builder
+FROM node:16.3.0-alpine3.13 as build-env
 WORKDIR /app
-ENV PATH=/app/node_modules/.bin:$PATH
-ENV PORT=3001
-COPY package.json ./
-COPY yarn.lock ./
-RUN yarn install --silent
-RUN yarn add react-scripts@4.0.3 --silent
-COPY . ./
-RUN yarn build
+COPY . .
+RUN npm ci && npm run build
 
-FROM gcr.io/distroless/nodejs:16
+FROM node:16.3.0-alpine3.13
 WORKDIR /app
-COPY --from=build-env /app/build .
-COPY --from=build-env /app/package.json .
-CMD [ "index.js" ]
+COPY --from=build-env /app/build /app/build
+RUN npm install -g serve@13.0.2
+CMD [ "sh", "-c", "serve build --single --listen ${PORT}" ]

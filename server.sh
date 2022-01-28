@@ -55,7 +55,7 @@ function start() {
   fi
 
   if docker stack deploy -c ./"$COMPOSE_FILE" li; then
-    echo "Interface can be accessed on port 3001"
+    echo "Interface can be accessed on port 80"
   else
     echo ""
     echo "failed to start local interface"
