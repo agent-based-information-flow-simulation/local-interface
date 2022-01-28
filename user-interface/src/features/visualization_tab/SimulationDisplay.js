@@ -1,11 +1,12 @@
 import React, { useState } from "react";
-import { Stack, Button } from "@mui/material";
+import { Stack, Button, Box } from "@mui/material";
 import NeoGraph, {ResizableGraph} from "./NeoGraph";
 
 export const SimulationDisplay = (props) => {
   const { simId } = props;
 
   const [instances, setInstances] = useState([]);
+  const [simulations, setSimulations] = useState([]);
 
   const deleteSimulation = async () => {
     const url = `http://localhost:3002/api/simulations/${simId}`;
@@ -25,23 +26,30 @@ export const SimulationDisplay = (props) => {
       console.log("ERRRERP"); // TODO add error handling
     } else {
       setInstances(data["instances"]);
+      setSimulations(data["simulations"])
     }
   };
 
   return (
     <Stack direction="column" spacing={2} flex>
-      <p> {simId} </p>
-      <div>
-        <NeoGraph
-          width={530}
-          height={350}
-          containerId={"graph1"}
-          neo4jUri={"bolt://localhost:7687"}
-          simId={simId}
-        />
-      </div>
-      <h3> Status </h3>
-      <Button onClick={getStatus}> Get status </Button>
+      {
+        simId === "" ?
+        <></> :
+        <Box>
+        <h3> {simId} Status</h3>
+        <div>
+          <NeoGraph
+            width={530}
+            height={350}
+            containerId={"graph1"}
+            neo4jUri={"bolt://localhost:7687"}
+            simId={simId}
+          />
+        </div>
+        </Box>
+      }
+      <h3> SLB Status </h3>
+      <Stack direction="row" spacing={2}>
       <table>
         <thead>
           <tr>
@@ -68,7 +76,26 @@ export const SimulationDisplay = (props) => {
           })}
         </tbody>
       </table>
-      <Button onClick={deleteSimulation}> Delete simulation </Button>
+      <table>
+        <thead>
+          <th> Simulation Key </th>
+          <th> Status </th>
+        </thead>
+        {
+          simulations.map((el, index) => {
+            return (
+              <tr>
+                <td> {el.key} </td>
+                <td> {el.status} </td>
+              </tr>
+            )
+          })
+        }
+      </table>
+
+      </Stack>
+      <Button onClick={getStatus}> Get status </Button>
+      <Button onClick={deleteSimulation}> Delete Current simulation </Button>
     </Stack>
   );
 };
