@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { Stack, Button, Box } from "@mui/material";
-import NeoGraph, {ResizableGraph} from "./NeoGraph";
+import NeoGraph, { ResizableGraph } from "./NeoGraph";
+import InstanceStatusTable from "./InstanceStatusTable";
+import SimulationStatusManager from "./SimulationStatusManager";
 
 export const SimulationDisplay = (props) => {
   const { simId } = props;
@@ -8,8 +10,8 @@ export const SimulationDisplay = (props) => {
   const [instances, setInstances] = useState([]);
   const [simulations, setSimulations] = useState([]);
 
-  const deleteSimulation = async () => {
-    const url = `http://localhost/api/simulations/${simId}`;
+  const deleteSimulation = async (sim_id) => {
+    const url = `http://localhost/api/simulations/${sim_id}`;
     await fetch(url, { method: "DELETE" });
   };
 
@@ -19,83 +21,45 @@ export const SimulationDisplay = (props) => {
     const response = await fetch(url, {
       method: "GET",
     });
-    console.log("Got response: ", response);
     const data = await response.json();
     console.log(data);
     if (response.status !== 200) {
       console.log("ERRRERP"); // TODO add error handling
     } else {
+      console.log("Data of instances:", data["instances"]);
       setInstances(data["instances"]);
-      setSimulations(data["simulations"])
+      setSimulations(data["simulations"]);
     }
   };
 
   return (
     <Stack direction="column" spacing={2} flex>
-      {
-        simId === "" ?
-        <></> :
+      {simId === "" ? (
+        <></>
+      ) : (
         <Box>
-        <h3> {simId} Status</h3>
-        <div>
-          <NeoGraph
-            width={530}
-            height={350}
-            containerId={"graph1"}
-            neo4jUri={"bolt://localhost:8008"}
-            simId={simId}
-          />
-        </div>
+          <h3> {simId} Status</h3>
+          <div>
+            <NeoGraph
+              width={530}
+              height={350}
+              containerId={"graph1"}
+              neo4jUri={"bolt://localhost:8008"}
+              simId={simId}
+            />
+          </div>
+          <Button onClick={(e) => deleteSimulation(simId)}>
+            {" "}
+            Delete Current simulation{" "}
+          </Button>
         </Box>
-      }
+      )}
       <h3> SLB Status </h3>
       <Stack direction="row" spacing={2}>
-      <table>
-        <thead>
-          <tr>
-            <th> Key </th>
-            <th> Status </th>
-            <th> Simulation ID </th>
-            <th> Agents# </th>
-            <th> API Mem usage [MiB] </th>
-            <th> Sim Mem usage [MiB] </th>
-          </tr>
-        </thead>
-        <tbody>
-          {instances.map((el, index) => {
-            return (
-              <tr>
-                <td>{el.key}</td>
-                <td>{el.status}</td>
-                <td>{el.simulation_id}</td>
-                <td>{el.num_agents}</td>
-                <td>{el.api_memory_usage_MiB}</td>
-                <td>{el.simulation_memory_usage_MiB}</td>
-              </tr>
-            );
-          })}
-        </tbody>
-      </table>
-      <table>
-        <thead>
-          <th> Simulation Key </th>
-          <th> Status </th>
-        </thead>
-        {
-          simulations.map((el, index) => {
-            return (
-              <tr>
-                <td> {el.key} </td>
-                <td> {el.status} </td>
-              </tr>
-            )
-          })
-        }
-      </table>
-
+        <InstanceStatusTable instanceData={instances} />
+        <SimulationStatusManager simulationData={simulations} />
       </Stack>
       <Button onClick={getStatus}> Get status </Button>
-      <Button onClick={deleteSimulation}> Delete Current simulation </Button>
     </Stack>
   );
 };

@@ -69,7 +69,6 @@ export function MessageTab() {
 
   const addMessageClick = () => {
     let err_flag = false;
-    console.log(validateMessageName(msgName, FIPACommActs[fipaType]));
     if (validateMessageName(msgName, FIPACommActs[fipaType]) !== 0) {
       let err_code = validateMessageName(msgName, FIPACommActs[fipaType]);
       let error = errorCodes.find((el) => el.code === err_code);

@@ -52,18 +52,17 @@ const ActionEditor = (props) => {
 
   const reset = () => {
     dispatch(resetScope);
-    setActionType("modify_self")
+    setActionType("modify_self");
     setSelectedParam(-1);
     setBlockError(false);
-    setActionName("")
+    setActionName("");
     setNameError(false);
     setStatements([]);
     setActionOperations([]);
-  }
+  };
 
   // TODO: Add checking for empty instructions
   const saveAction = () => {
-    console.log(messages)
     let error_flag = false;
     setSendError(false);
     setNameError(false);
@@ -73,27 +72,27 @@ const ActionEditor = (props) => {
       setBlockError(true);
       error_flag = true;
     }
-    if(statements.length === 0){
+    if (statements.length === 0) {
       setStatementError(true);
       error_flag = true;
     }
     if (actionName === "" || !isNaN(actionName)) {
       setNameError(true);
       error_flag = true;
-    }else if( existingActions.find((el => el.name === actionName))){
+    } else if (existingActions.find((el) => el.name === actionName)) {
       setNameError(true);
       error_flag = true;
     }
-    let code = "ACTION " + actionName + ',' + actionType;
-    if( actionType === "send_msg" ){
-      if(messages[sndMsg] === undefined){
+    let code = "ACTION " + actionName + "," + actionType;
+    if (actionType === "send_msg") {
+      if (messages[sndMsg] === undefined) {
         error_flag = true;
         setSendError(true);
       }
       code += ", " + messages[sndMsg].name + ", " + messages[sndMsg].type;
     }
     code += "\n";
-    if(error_flag) return;
+    if (error_flag) return;
     let parsedOpArr = [];
     const rawOpArr = [...actionOperations];
     while (rawOpArr.findIndex((el) => el.startsWith("DECL")) !== -1) {
@@ -104,12 +103,12 @@ const ActionEditor = (props) => {
     rawOpArr.forEach((el) => parsedOpArr.push(el));
     parsedOpArr.forEach((el) => (code += el + "\n"));
     code += "EACTION\n";
-    let script = statements.join('\n');
+    let script = statements.join("\n");
     const ret_action = {
       name: actionName,
       code: code,
       script: script,
-    }
+    };
     reset();
     onClose(ret_action);
   };
@@ -117,7 +116,7 @@ const ActionEditor = (props) => {
   const cancel = () => {
     reset();
     onClose(null);
-  }
+  };
 
   const findUnmatchedIndexes = () => {
     let end_indexes = statements.reduce((arr, e, i) => {
@@ -135,17 +134,17 @@ const ActionEditor = (props) => {
     let stack = [];
     let bad_ends = [];
 
-    statements.forEach((el, index)=> {
-      if(if_indexes.find(ind => ind === index) !== undefined){
+    statements.forEach((el, index) => {
+      if (if_indexes.find((ind) => ind === index) !== undefined) {
         stack.push(index);
       }
-      if(end_indexes.find(ind => ind === index) !== undefined){
-        if(stack.length === 0){
+      if (end_indexes.find((ind) => ind === index) !== undefined) {
+        if (stack.length === 0) {
           bad_ends.push(index);
         }
-        stack.pop()
+        stack.pop();
       }
-    })
+    });
     return [...stack, ...bad_ends];
   };
 
@@ -173,7 +172,10 @@ const ActionEditor = (props) => {
           }
           return (
             <li
-              style={{ marginLeft: Math.max(indentLevel + correct, 0) + "em", color: color }}
+              style={{
+                marginLeft: Math.max(indentLevel + correct, 0) + "em",
+                color: color,
+              }}
             >
               {" "}
               {value}{" "}
@@ -233,7 +235,12 @@ const ActionEditor = (props) => {
                   <em>param...</em>
                 </MenuItem>
                 {params.map((param, index) => {
-                  return <MenuItem value={index}> {param.name} ({param.type}) </MenuItem>;
+                  return (
+                    <MenuItem value={index}>
+                      {" "}
+                      {param.name} ({param.type}){" "}
+                    </MenuItem>
+                  );
                 })}
               </Select>
               <FormHelperText>
@@ -246,19 +253,28 @@ const ActionEditor = (props) => {
             <>
               <TextField
                 value={sndMsg}
-                onChange={(e) =>{ setSndMsg(e.target.value)}}
+                onChange={(e) => {
+                  setSndMsg(e.target.value);
+                }}
                 label="Send message type"
                 select
-                sx={{marginTop: 1}}
+                sx={{ marginTop: 1 }}
               >
-                {
-                  messages.map((el, index) => {
-                    return <MenuItem value={index}> {el.name}_{el.type} </MenuItem>;
-                  })
-                }
+                {messages.map((el, index) => {
+                  return (
+                    <MenuItem value={index}>
+                      {" "}
+                      {el.name}_{el.type}{" "}
+                    </MenuItem>
+                  );
+                })}
               </TextField>
               <StatementsList />
-              <SendMessageEditor save={save} rcvMsg={rcvMsg} sndMsg={messages[sndMsg]} />
+              <SendMessageEditor
+                save={save}
+                rcvMsg={rcvMsg}
+                sndMsg={messages[sndMsg]}
+              />
             </>
           )}
         </FormGroup>
@@ -272,37 +288,32 @@ const ActionEditor = (props) => {
         )}
         {nameError ? (
           <Alert severity="error" onClose={(e) => setNameError(false)}>
-            Error saving! You need to set a unique name for the action, and it cannot
-            be a number!{" "}
+            Error saving! You need to set a unique name for the action, and it
+            cannot be a number!{" "}
           </Alert>
         ) : (
           <></>
         )}
-        {
-          sendError ? (
-            <Alert severity="error" onClose={(e) => setSendError(false)}>
-              Error saving! Please choose a message type to send!
-            </Alert>
-          ) : (
-            <></>
-          )
-        }
-        {
-          statementError ? (
-            <Alert severity="error" onClose={(e) => setStatementError(false)}>
-              Error saving! Action needs to contain some statements!
-            </Alert>
-          ) : (
-            <></>
-          )
-
-        }
+        {sendError ? (
+          <Alert severity="error" onClose={(e) => setSendError(false)}>
+            Error saving! Please choose a message type to send!
+          </Alert>
+        ) : (
+          <></>
+        )}
+        {statementError ? (
+          <Alert severity="error" onClose={(e) => setStatementError(false)}>
+            Error saving! Action needs to contain some statements!
+          </Alert>
+        ) : (
+          <></>
+        )}
 
         <Button variant="contained" onClick={saveAction}>
           {" "}
           Save action{" "}
         </Button>
-        <Button variant="outlined" onClick={cancel} sx={{margin: 2}}>
+        <Button variant="outlined" onClick={cancel} sx={{ margin: 2 }}>
           Cancel
         </Button>
       </Container>

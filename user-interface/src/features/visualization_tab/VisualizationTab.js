@@ -13,14 +13,11 @@ import SimulationDisplay from "./SimulationDisplay";
 import { pingpong, benchmark } from "./assm_presets";
 
 const presetMap = {
-  "pingpong": pingpong,
-  "benchmark": benchmark,
-}
-
+  pingpong: pingpong,
+  benchmark: benchmark,
+};
 
 export function VisualizationTab() {
-
-
   const [simId, setSimId] = React.useState("");
 
   const messages = useSelector(selectMessageTypes);
@@ -41,27 +38,25 @@ export function VisualizationTab() {
   const generateCode = () => {
     let tmp_code = [];
     messages.forEach((el) => {
-      if(el.code !== undefined){
-        el.code.split("\n").forEach((line) => tmp_code.push(line))
+      if (el.code !== undefined) {
+        el.code.split("\n").forEach((line) => tmp_code.push(line));
       }
-    })
+    });
     agents.forEach((el) => {
-      if(el.code !== undefined){
-        el.code.split("\n").forEach((line) => tmp_code.push(line))
+      if (el.code !== undefined) {
+        el.code.split("\n").forEach((line) => tmp_code.push(line));
       }
-    })
+    });
 
-    if(graph.code !== undefined){
-      const graph_lines = graph.code.split("\n")
-      tmp_code = [...tmp_code, ...graph_lines]
-      console.log(tmp_code)
+    if (graph.code !== undefined) {
+      const graph_lines = graph.code.split("\n");
+      tmp_code = [...tmp_code, ...graph_lines];
       setGeneratedCode(tmp_code);
       setCode(tmp_code);
       setCodeFilled(true);
       setCodeGenerated(true);
-    }
-    else{
-      setCode([])
+    } else {
+      setCode([]);
       setCodeGenerated(false);
       setCodeFilled(false);
     }
@@ -73,87 +68,88 @@ export function VisualizationTab() {
   }, []);
 
   const startSimulationFromCode = async (code_lines) => {
-    console.log(code_lines)
     const url = "http://localhost/api/simulations";
     const response = await fetch(url, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*"
+        "Access-Control-Allow-Origin": "*",
       },
       body: JSON.stringify({ aasm_code_lines: code_lines }),
     });
-    console.log("Got response: ", response);
     const data = await response.json();
     console.log(data);
-    if(response.status !== 201){
+    if (response.status !== 201) {
       setError(true);
-      setErrorText(`${response.status}: ${data}`)
-    }else{
+      setErrorText(`${response.status}: ${data}`);
+    } else {
       setSimId(data["simulation_id"]);
     }
-  }
+  };
 
   const loadSimulationPreset = (presetName) => {
     setCustom(false);
     setCode(presetMap[presetName]);
     setCodeFilled(true);
-  }
+  };
 
   const clearPreset = () => {
     setCustom(false);
-    if(codeGenerated){
+    if (codeGenerated) {
       setCode(generatedCode);
       setCodeFilled(true);
-    }
-    else{
-      setCode([])
+    } else {
+      setCode([]);
       setCodeFilled(false);
     }
-  }
+  };
 
   const startSimButtonClick = () => {
-    if(custom){
-      console.log("Custom start")
+    if (custom) {
       const custom_code_lines = customCode.split("\n");
       startSimulationFromCode(custom_code_lines);
-    }else if(codeFilled){
-      console.log("Filled code start")
+    } else if (codeFilled) {
       startSimulationFromCode(code);
-    }else{
+    } else {
       setError(true);
-      setErrorText("Couldn't start simulation with above code, check if everything is correct")
+      setErrorText(
+        "Couldn't start simulation with above code, check if everything is correct"
+      );
     }
-  }
+  };
 
   const clearError = () => {
     setError(false);
     setErrorText("");
-  }
+  };
 
   return (
     <div>
       <Stack direction="row" spacing={2}>
         <Stack direction="column" spacing={2}>
           <h1> Simulation Settings</h1>
-          {
-            codeFilled && !custom ?
+          {codeFilled && !custom ? (
             <>
-            <h3> Code to be run: </h3>
-            <Stack sx={{ textAlign: "left", p: 3, maxHeight: "50%", overflow: "auto"}}>
-              {code.map((el, index) => {
-                return <div key={index}> {el} </div>;
-              })}
-            </Stack>
+              <h3> Code to be run: </h3>
+              <Stack
+                sx={{
+                  textAlign: "left",
+                  p: 3,
+                  maxHeight: "50%",
+                  overflow: "auto",
+                }}
+              >
+                {code.map((el, index) => {
+                  return <div key={index}> {el} </div>;
+                })}
+              </Stack>
             </>
-            :
-            custom ?
+          ) : custom ? (
             <></>
-            :
+          ) : (
             <p> Your code will show up here when you fill out the forms</p>
-          }
-          {
-            custom ?
+          )}
+          {custom ? (
             <TextField
               multiline
               rows="23"
@@ -162,34 +158,59 @@ export function VisualizationTab() {
               value={customCode}
               onChange={(e) => setCustomCode(e.target.value)}
             />
-            :
+          ) : (
             <></>
-
-          }
+          )}
           <h3> Simulation presets: </h3>
           <Stack direction="row" spacing={3}>
-            <Button variant="contained" onClick={(e) => {loadSimulationPreset("pingpong")}}> Ping-Pong </Button>
-            <Button variant="contained" onClick={(e) => {loadSimulationPreset("benchmark")}}> Benchmark </Button>
-            <Button variant="contained" onClick={(e) => {setCustom(true)}}> Custom </Button>
-            <Button variant="contained" onClick={clearPreset}> Clear </Button>
+            <Button
+              variant="contained"
+              onClick={(e) => {
+                loadSimulationPreset("pingpong");
+              }}
+            >
+              {" "}
+              Ping-Pong{" "}
+            </Button>
+            <Button
+              variant="contained"
+              onClick={(e) => {
+                loadSimulationPreset("benchmark");
+              }}
+            >
+              {" "}
+              Benchmark{" "}
+            </Button>
+            <Button
+              variant="contained"
+              onClick={(e) => {
+                setCustom(true);
+              }}
+            >
+              {" "}
+              Custom{" "}
+            </Button>
+            <Button variant="contained" onClick={clearPreset}>
+              {" "}
+              Clear{" "}
+            </Button>
           </Stack>
-          <Button onClick={startSimButtonClick}> Start simulation with the code above </Button>
-          {
-            error ?
-            <Alert severity="error" onClose={clearError}> {errorText} </Alert>
-            :
+          <Button onClick={startSimButtonClick}>
+            {" "}
+            Start simulation with the code above{" "}
+          </Button>
+          {error ? (
+            <Alert severity="error" onClose={clearError}>
+              {" "}
+              {errorText}{" "}
+            </Alert>
+          ) : (
             <></>
-          }
-
+          )}
         </Stack>
         <Stack direction="column" spacing={2}>
           <h1> Simulation data </h1>
-          {
-            simId === "" ?
-            <p> Start a simulation to get the data </p>
-            :
-            <SimulationDisplay simId={simId} />
-          }
+          <SimulationDisplay simId={simId} />
         </Stack>
       </Stack>
     </div>

@@ -42,7 +42,7 @@ export const NeoGraph = (props) => {
           // }
         },
         physics: {
-          enabled: true,
+          enabled: false,
         }
       },
       container_id: graphRef.current.id,
