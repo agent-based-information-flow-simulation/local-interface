@@ -11,14 +11,14 @@ import {
 import SimulationOptionsCell from "./SimulationOptionsCell";
 
 export const SimulationStatusManager = (props) => {
-  const { simulationData } = props;
+  const { simulationData, deleteCallback } = props;
 
   return (
     <TableContainer component={Paper}>
       <Table>
         <TableHead>
           <TableRow>
-            <TableCell align="center" colspan={3}>
+            <TableCell align="center" colSpan={3}>
               <b> Simulation Status </b>
             </TableCell>
           </TableRow>
@@ -34,7 +34,10 @@ export const SimulationStatusManager = (props) => {
               <TableRow key={el.key}>
                 <TableCell> {el.simulation_id}</TableCell>
                 <TableCell> {el.status}</TableCell>
-                <SimulationOptionsCell simulation={el} />
+                <SimulationOptionsCell
+                  simulation={el}
+                  deleteCallback={deleteCallback}
+                />
               </TableRow>
             );
           })}
