@@ -22,10 +22,20 @@ export const SimulationDisplay = (props) => {
     setSnackOpen(false);
   };
 
+  const simulationRestartCallback = (sim_id, status, info) => {
+    setSnackSeverity(status);
+    if (status === "success") {
+      setSnackText(`Succesfully restarted ${sim_id}`);
+    } else {
+      setSnackText(`Failed to restart ${sim_id}: reason: ${info}`);
+    }
+    setSnackOpen(true);
+  };
+
   const simulationDeleteCallback = (sim_id, status, info) => {
     setSnackSeverity(status);
     if (status === "success") {
-      setSnackText(`Succesfully deteleted ${sim_id}`);
+      setSnackText(`Succesfully deleted ${sim_id}`);
     } else {
       setSnackText(`Failed to detele ${sim_id}: reason: ${info}`);
     }
@@ -57,34 +67,14 @@ export const SimulationDisplay = (props) => {
   };
 
   return (
-    <Stack direction="column" spacing={2} flex>
-      {
-        //simId === "" ? (
-        // <></>
-        // ) : (
-        // <Box>
-        //   <h3> {simId} Status</h3>
-        //   <div>
-        //     <NeoGraph
-        //       width={530}
-        //       height={350}
-        //       containerId={"graph1"}
-        //       neo4jUri={"bolt://localhost:8008"}
-        //       simId={simId}
-        //     />
-        //   </div>
-        //   <Button onClick={(e) => deleteSimulation(simId)}>
-        //     {" "}
-        //     Delete Current simulation{" "}
-        //   </Button>
-        // </Box>)
-      }
+    <Stack direction="column" spacing={2} flex sx={{ width: "100%" }}>
       <h3> SLB Status </h3>
       <Stack direction="row" spacing={2}>
         <InstanceStatusTable instanceData={instances} />
         <SimulationStatusManager
           simulationData={simulations}
           deleteCallback={simulationDeleteCallback}
+          restartCallback={simulationRestartCallback}
         />
       </Stack>
       <Snackbar open={snackOpen} autoHideDuration={6000} onClose={snackClose}>

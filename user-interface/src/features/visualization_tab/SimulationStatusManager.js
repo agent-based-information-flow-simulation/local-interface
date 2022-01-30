@@ -12,7 +12,7 @@ import SimulationOptionsCell from "./SimulationOptionsCell";
 import SimulationReportDialog from "./SimulationReportDialog";
 
 export const SimulationStatusManager = (props) => {
-  const { simulationData, deleteCallback } = props;
+  const { simulationData, deleteCallback, restartCallback } = props;
 
   const [reportOpen, setReportOpen] = useState(false);
   const [reportSimId, setSimId] = useState("");
@@ -28,8 +28,8 @@ export const SimulationStatusManager = (props) => {
 
   return (
     <>
-      <TableContainer component={Paper}>
-        <Table>
+      <TableContainer component={Paper} style={{ maxHeight: 400 }}>
+        <Table stickyHeader>
           <TableHead>
             <TableRow>
               <TableCell align="center" colSpan={3}>
@@ -52,6 +52,7 @@ export const SimulationStatusManager = (props) => {
                     simulation={el}
                     deleteCallback={deleteCallback}
                     reportCallback={reportCallback}
+                    restartCallback={restartCallback}
                   />
                 </TableRow>
               );

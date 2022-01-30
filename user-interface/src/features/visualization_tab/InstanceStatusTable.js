@@ -14,8 +14,8 @@ export const InstanceStatusTable = (props) => {
 
   return (
     <>
-      <TableContainer component={Paper}>
-        <Table>
+      <TableContainer component={Paper} style={{ maxHeight: 400 }}>
+        <Table stickyHeader>
           <TableHead>
             <TableRow>
               <TableCell align="center" colSpan={6}>
@@ -27,7 +27,6 @@ export const InstanceStatusTable = (props) => {
               <TableCell align="right"> Status </TableCell>
               <TableCell align="right"> Simulation ID</TableCell>
               <TableCell align="right"> Agents # </TableCell>
-              <TableCell align="right"> Api Mem usage [MiB] </TableCell>
               <TableCell align="right"> Sim Mem usage [MiB] </TableCell>
             </TableRow>
           </TableHead>
@@ -40,7 +39,6 @@ export const InstanceStatusTable = (props) => {
                   <TableCell>{el.status}</TableCell>
                   <TableCell>{el.simulation_id}</TableCell>
                   <TableCell>{el.num_agents}</TableCell>
-                  <TableCell>{el.api_memory_usage_MiB}</TableCell>
                   <TableCell>{el.simulation_memory_usage_MiB}</TableCell>
                 </TableRow>
               );

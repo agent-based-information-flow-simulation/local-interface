@@ -35,6 +35,8 @@ export function VisualizationTab() {
   const [error, setError] = React.useState(false);
   const [errorText, setErrorText] = React.useState("");
 
+  const [success, setSuccess] = React.useState(false);
+
   const generateCode = () => {
     let tmp_code = [];
     messages.forEach((el) => {
@@ -84,6 +86,7 @@ export function VisualizationTab() {
           setError(true);
           setErrorText(`Encountered http error: ${response.status}`);
         }
+        setSuccess(true);
         return response.json();
       })
       .then((data) => {
@@ -131,6 +134,10 @@ export function VisualizationTab() {
   const clearError = () => {
     setError(false);
     setErrorText("");
+  };
+
+  const clearSuccess = () => {
+    setSuccess(false);
   };
 
   return (
@@ -217,8 +224,15 @@ export function VisualizationTab() {
           ) : (
             <></>
           )}
+          {success ? (
+            <Alert severity="success" onClose={clearSuccess}>
+              Correctly created simulation. Get status to see the state.
+            </Alert>
+          ) : (
+            <></>
+          )}
         </Stack>
-        <Stack direction="column" spacing={2}>
+        <Stack direction="column" spacing={2} sx={{ width: "100%" }}>
           <h1> Simulation Management </h1>
           <SimulationDisplay simId={simId} />
         </Stack>
