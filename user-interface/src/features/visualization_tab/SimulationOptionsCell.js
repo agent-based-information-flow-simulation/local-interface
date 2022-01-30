@@ -5,7 +5,7 @@ import RemoveCircleIcon from "@mui/icons-material/RemoveCircle";
 import AssessmentOutlinedIcon from "@mui/icons-material/AssessmentOutlined";
 
 export const SimulationOptionsCell = (props) => {
-  const { simulation, deleteCallback } = props;
+  const { simulation, deleteCallback, reportCallback } = props;
 
   const deleteSimulation = async () => {
     const url = `http://localhost/api/simulations/${simulation.simulation_id}`;
@@ -22,12 +22,20 @@ export const SimulationOptionsCell = (props) => {
       });
   };
 
+  const openSimulationReport = () => {
+    reportCallback(simulation.simulation_id);
+  };
+
   return (
     <TableCell>
       <IconButton sx={{ p: "10px" }} color="primary" onClick={deleteSimulation}>
         <RemoveCircleIcon sx={{ fontSize: "30px" }} />
       </IconButton>
-      <IconButton sx={{ p: "10px" }} color="primary">
+      <IconButton
+        sx={{ p: "10px" }}
+        color="primary"
+        onClick={openSimulationReport}
+      >
         <AssessmentOutlinedIcon sx={{ fontSize: "30px" }} />
       </IconButton>
     </TableCell>

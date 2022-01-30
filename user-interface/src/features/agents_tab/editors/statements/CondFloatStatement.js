@@ -7,20 +7,17 @@ import {
   IconButton,
   TextField,
   Select,
-} from "@mui/material"
+} from "@mui/material";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 
-
 import { useDispatch } from "react-redux";
-import {
-  openBlock
-} from "../editorSlice";
+import { openBlock } from "../editorSlice";
 
 const FloatCondOps = [
   { opcode: "ILT  ", label: "<" },
   { opcode: "IGT  ", label: ">" },
-  { opcode: "ILTE ", label: ">=" },
-  { opcode: "IGTE ", label: ">=" },
+  { opcode: "ILTEQ", label: ">=" },
+  { opcode: "IGTEQ", label: ">=" },
   { opcode: "IEQ  ", label: "==" },
   { opcode: "INEQ ", label: "!=" },
 ];
@@ -34,7 +31,6 @@ export const CondFloatStatement = (props) => {
   const [curRhs, setCurRhs] = useState("");
   const [rhsError, setRhsError] = useState(false);
   const [curOpCode, setCurOpCode] = useState(FloatCondOps[0].opcode);
-
 
   const handleLhsChange = (value) => {
     setCurLhs(value);
@@ -81,7 +77,7 @@ export const CondFloatStatement = (props) => {
     <Stack direction="row">
       <Autocomplete
         freeSolo
-        options={variables.map((el,index)=>el.name)}
+        options={variables.map((el, index) => el.name)}
         renderInput={(params) => <TextField {...params} />}
         sx={{ width: "200px" }}
         error={lhsError}
@@ -97,7 +93,7 @@ export const CondFloatStatement = (props) => {
       </Select>
       <Autocomplete
         freeSolo
-        options={variables.map((el,index)=>el.name)}
+        options={variables.map((el, index) => el.name)}
         renderInput={(params) => <TextField {...params} />}
         sx={{ width: "200px" }}
         error={rhsError}
@@ -116,10 +112,12 @@ export const CondFloatStatement = (props) => {
 CondFloatStatement.propTypes = {
   save: PropTypes.func.isRequired,
   setEditOn: PropTypes.func.isRequired,
-  variables: PropTypes.arrayOf(PropTypes.shape({
-    name: PropTypes.string,
-    type: PropTypes.string,
-  })).isRequired,
-}
+  variables: PropTypes.arrayOf(
+    PropTypes.shape({
+      name: PropTypes.string,
+      type: PropTypes.string,
+    })
+  ).isRequired,
+};
 
 export default CondFloatStatement;

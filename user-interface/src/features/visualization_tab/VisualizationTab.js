@@ -69,22 +69,32 @@ export function VisualizationTab() {
 
   const startSimulationFromCode = async (code_lines) => {
     const url = "http://localhost/api/simulations";
-    const response = await fetch(url, {
+
+    await fetch(url, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
         "Access-Control-Allow-Origin": "*",
       },
       body: JSON.stringify({ aasm_code_lines: code_lines }),
-    });
-    const data = await response.json();
-    console.log(data);
-    if (response.status !== 201) {
-      setError(true);
-      setErrorText(`${response.status}: ${data}`);
-    } else {
-      setSimId(data["simulation_id"]);
-    }
+    })
+      .then((response) => {
+        if (response.status !== 201) {
+          console.log(response);
+          setError(true);
+          setErrorText(`Encountered http error: ${response.status}`);
+        }
+        return response.json();
+      })
+      .then((data) => {
+        if (data["simulation_id"]) {
+          setSimId(data["simulation_id"]);
+        }
+      })
+      .catch((error) => {
+        setError(true);
+        setErrorText(`Unexpected error: ${error}`);
+      });
   };
 
   const loadSimulationPreset = (presetName) => {
@@ -209,7 +219,7 @@ export function VisualizationTab() {
           )}
         </Stack>
         <Stack direction="column" spacing={2}>
-          <h1> Simulation data </h1>
+          <h1> Simulation Management </h1>
           <SimulationDisplay simId={simId} />
         </Stack>
       </Stack>

@@ -58,26 +58,27 @@ export const SimulationDisplay = (props) => {
 
   return (
     <Stack direction="column" spacing={2} flex>
-      {simId === "" ? (
-        <></>
-      ) : (
-        <Box>
-          <h3> {simId} Status</h3>
-          <div>
-            <NeoGraph
-              width={530}
-              height={350}
-              containerId={"graph1"}
-              neo4jUri={"bolt://localhost:8008"}
-              simId={simId}
-            />
-          </div>
-          <Button onClick={(e) => deleteSimulation(simId)}>
-            {" "}
-            Delete Current simulation{" "}
-          </Button>
-        </Box>
-      )}
+      {
+        //simId === "" ? (
+        // <></>
+        // ) : (
+        // <Box>
+        //   <h3> {simId} Status</h3>
+        //   <div>
+        //     <NeoGraph
+        //       width={530}
+        //       height={350}
+        //       containerId={"graph1"}
+        //       neo4jUri={"bolt://localhost:8008"}
+        //       simId={simId}
+        //     />
+        //   </div>
+        //   <Button onClick={(e) => deleteSimulation(simId)}>
+        //     {" "}
+        //     Delete Current simulation{" "}
+        //   </Button>
+        // </Box>)
+      }
       <h3> SLB Status </h3>
       <Stack direction="row" spacing={2}>
         <InstanceStatusTable instanceData={instances} />

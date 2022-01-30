@@ -16,6 +16,7 @@
     "neovis.js": "github:agent-based-information-flow-simulation/neovis.js#1.6.0-add-vis-interface",
     "prop-types": "^15.7.2",
     "react": "^17.0.2",
+    "react-chartjs-2": "^4.0.1",
     "react-dom": "^17.0.2",
     "react-redux": "^7.2.3",
     "react-resize-aware": "^3.1.1",

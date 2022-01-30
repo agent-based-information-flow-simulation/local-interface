@@ -9373,6 +9373,11 @@ react-app-polyfill@^2.0.0:
     regenerator-runtime "^0.13.7"
     whatwg-fetch "^3.4.1"
 
+react-chartjs-2@^4.0.1:
+  version "4.0.1"
+  resolved "https://registry.yarnpkg.com/react-chartjs-2/-/react-chartjs-2-4.0.1.tgz#38ed1d5b6e2f789408450c981e9e8e1d78b2e015"
+  integrity sha512-q8bgWzKoFvBvD7YcjT/hXG8jt55TaMAuJ1dmI3tKFJ7CijUWYz4pIfOhkTI6PBTwqu/pmeWsClBRd/7HiWzN1g==
+
 react-dev-utils@^11.0.3:
   version "11.0.4"
   resolved "https://registry.yarnpkg.com/react-dev-utils/-/react-dev-utils-11.0.4.tgz#a7ccb60257a1ca2e0efe7a83e38e6700d17aa37a"
