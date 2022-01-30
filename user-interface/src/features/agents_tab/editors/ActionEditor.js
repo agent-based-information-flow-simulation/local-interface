@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import { useSelector, useDispatch } from "react-redux";
 import { selectParameters } from "../agentsTabSlice";
@@ -43,6 +43,10 @@ const ActionEditor = (props) => {
   const params = useSelector(selectParameters);
   const block_lvl = useSelector(selectBlockLvl);
   const messages = useSelector(selectMessageTypes);
+
+  useEffect(() => {
+    dispatch(resetScope);
+  });
 
   const save = (statement, operation) => {
     setStatements([...statements, statement]);
@@ -90,6 +94,7 @@ const ActionEditor = (props) => {
       }
       code += ", " + messages[sndMsg].name + ", " + messages[sndMsg].type;
     }
+    dispatch(resetScope);
     code += "\n";
     if (error_flag) return;
     let parsedOpArr = [];

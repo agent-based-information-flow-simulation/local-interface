@@ -81,13 +81,13 @@ export function VisualizationTab() {
       body: JSON.stringify({ aasm_code_lines: code_lines }),
     })
       .then((response) => {
-        if (response.status !== 201) {
-          console.log(response);
+        if (response.status === 201) {
+          setSuccess(true);
+          return response.json();
+        } else {
           setError(true);
           setErrorText(`Encountered http error: ${response.status}`);
         }
-        setSuccess(true);
-        return response.json();
       })
       .then((data) => {
         if (data["simulation_id"]) {

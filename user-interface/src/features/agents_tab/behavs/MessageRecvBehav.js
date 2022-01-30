@@ -1,15 +1,14 @@
 import React, { useState } from "react";
-import {
-  FormControl,
-  TextField,
-  Button,
-  MenuItem,
-  Alert,
-} from "@mui/material";
+import { FormControl, TextField, Button, MenuItem, Alert } from "@mui/material";
 
 import ActionEditor from "../editors/ActionEditor";
 import { useDispatch, useSelector } from "react-redux";
-import { addAction, resetScope, selectActions, resetActions } from "../editors/editorSlice";
+import {
+  addAction,
+  resetScope,
+  selectActions,
+  resetActions,
+} from "../editors/editorSlice";
 import { selectMessageTypes, addName } from "../../simulationSlice";
 import { addBehav } from "../agentsTabSlice";
 import { validateBehavName, errorCodes } from "../../../app/utils";
@@ -29,10 +28,10 @@ export const MessageRecvBehav = (props) => {
   const actions = useSelector(selectActions);
   const messages = useSelector(selectMessageTypes);
   const onActionDialogClose = (action) => {
+    dispatch(resetScope());
     if (action !== null) {
       dispatch(addAction(action));
     }
-    dispatch(resetScope);
     setActionDialogOpen(false);
   };
 
@@ -49,7 +48,7 @@ export const MessageRecvBehav = (props) => {
       err_flag = true;
       setActionError(true);
     }
-    if(messages[selectedMsg] === undefined){
+    if (messages[selectedMsg] === undefined) {
       err_flag = true;
       setMessageError(true);
     }
@@ -116,30 +115,27 @@ export const MessageRecvBehav = (props) => {
       {actions.map((el, index) => {
         return <p> {el.name} </p>;
       })}
-    {
-      nameError ?
+      {nameError ? (
         <Alert severity="error" onClose={(e) => setNameError(false)}>
           Name Error! {nameErrorText}
         </Alert>
-      :
-      <></>
-    }
-    {
-      actionError ?
+      ) : (
+        <></>
+      )}
+      {actionError ? (
         <Alert severity="error" onClose={(e) => setActionError(false)}>
           Error saving! Please add some actions!
         </Alert>
-      :
-      <></>
-    }
-    {
-      messageError ?
+      ) : (
+        <></>
+      )}
+      {messageError ? (
         <Alert severity="error" onClose={(e) => setMessageError(false)}>
           Erro saving! Please select a valid message type!
         </Alert>
-      :
-      <></>
-    }
+      ) : (
+        <></>
+      )}
 
       <Button onClick={(e) => setActionDialogOpen(true)}> Add Action </Button>
       <Button onClick={saveBehaviour}> Add Behaviour </Button>

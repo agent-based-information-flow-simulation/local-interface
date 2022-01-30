@@ -1,6 +1,5 @@
-import React, {useState, useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
-
 
 import ExprStatement from "./statements/ExprStatement";
 import DeclStatement from "./statements/DeclStatement";
@@ -20,13 +19,9 @@ import SendStatement from "./statements/SendStatement";
 import GetLenStatement from "./statements/GetLenStatement";
 import { SubsetListStatement } from "./statements/SubsetListStatement";
 
-import {
-  selectParameters,
-} from "../agentsTabSlice";
+import { selectParameters } from "../agentsTabSlice";
 
-import {
-  selectScopeVars
-} from "./editorSlice";
+import { selectScopeVars } from "./editorSlice";
 
 const read_only = [
   { name: "connCount", type: "float" },
@@ -35,34 +30,33 @@ const read_only = [
 ];
 
 export const StatementDisplay = (props) => {
-  const { save, editOn, setEditOn, statementType, sndMsg, rcvMsg} = props;
+  const { save, editOn, setEditOn, statementType, sndMsg, rcvMsg } = props;
 
   const params = useSelector(selectParameters);
   const scopeVars = useSelector(selectScopeVars);
 
-  const [mutFloats, setMutFloats ] = useState([]);
+  const [mutFloats, setMutFloats] = useState([]);
   const [floats, setFloats] = useState([]);
   const [enums, setEnums] = useState([]);
-  const [connLists, setConnLists] = useState([])
+  const [connLists, setConnLists] = useState([]);
   // msgLists currently not used, but as they exist as a separate data type
   // eslint-disable-next-line no-unused-vars
-  const [msgLists, setMsgLists] = useState([])
-  const [lists, setLists] = useState([])
-  const [listItems, setListItems] = useState([])
-  const rcvJid = {name: "RCV.sender", type: "jid"};
-  const rcvVar = {name: "RCV", type: "msg"};
-  const sendVar = {name: "SEND", type: "msg"};
-  const connectionsVar = {name: "connections", type: "list", mode: "conn"}
+  const [msgLists, setMsgLists] = useState([]);
+  const [lists, setLists] = useState([]);
+  const [listItems, setListItems] = useState([]);
+  const rcvJid = { name: "RCV.sender", type: "jid" };
+  const rcvVar = { name: "RCV", type: "msg" };
+  const sendVar = { name: "SEND", type: "msg" };
+  const connectionsVar = { name: "connections", type: "list", mode: "conn" };
 
-
-  useEffect(()=>{
+  useEffect(() => {
     const floatParams = params.filter((el, index) => el.type === "float");
     let toSetMutFloats = [...scopeVars, ...floatParams];
     let toSetListItems = [...listItems];
-    if(sndMsg){
-      console.log("SEND available")
+    if (sndMsg) {
+      console.log("SEND available");
       toSetListItems = [...toSetListItems, sendVar];
-      let tmpArr = sndMsg.params.map((el,index)=>{
+      let tmpArr = sndMsg.params.map((el, index) => {
         return {
           name: "SEND." + el.name,
           type: el.type,
@@ -70,23 +64,19 @@ export const StatementDisplay = (props) => {
       });
       tmpArr = tmpArr.filter((el) => el.type === "float");
       toSetMutFloats = [...toSetMutFloats, ...tmpArr];
-
-    }else{
-      let tmpArr = params.filter((el) => el.type === "float");
-      toSetMutFloats = [...toSetMutFloats, ...tmpArr];
     }
     setMutFloats(toSetMutFloats);
     let toSetFloats = [...toSetMutFloats, ...read_only];
-    console.log(rcvMsg)
-    if(rcvMsg){
-      console.log(rcvMsg)
+    console.log(rcvMsg);
+    if (rcvMsg) {
+      console.log(rcvMsg);
       toSetListItems = [...toSetListItems, rcvVar, rcvJid];
       let rcvParams = rcvMsg.params.map((el, index) => {
         return {
           name: "RCV." + el.name,
           type: el.type,
-        }
-      })
+        };
+      });
       rcvParams = rcvParams.filter((el) => el.type === "float");
       toSetFloats = [...toSetFloats, ...rcvParams];
     }
@@ -96,7 +86,7 @@ export const StatementDisplay = (props) => {
     setEnums(tmpEnums);
     // first lets get lists:
     let lists = params.filter((el) => el.type === "list");
-    lists = [...lists, connectionsVar]
+    lists = [...lists, connectionsVar];
     setLists(lists);
     //then list subtypes
     let tmpArr = [];
@@ -104,8 +94,8 @@ export const StatementDisplay = (props) => {
     setConnLists(tmpArr);
     tmpArr = lists.filter((el) => el.mode === "msg");
     setMsgLists(tmpArr);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [scopeVars])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [scopeVars]);
 
   if (!editOn) return <></>;
   switch (statementType) {
@@ -118,13 +108,15 @@ export const StatementDisplay = (props) => {
           rhsCandidates={lists}
           numCandidates={floats}
         />
-      )
+      );
     case "send":
       return (
         <SendStatement
           save={save}
           setEditOn={setEditOn}
-          connLists={Object.values({...(rcvMsg !== undefined ? [...connLists, rcvJid] : [...connLists])})}
+          connLists={Object.values({
+            ...(rcvMsg !== undefined ? [...connLists, rcvJid] : [...connLists]),
+          })}
         />
       );
     case "get_len":
@@ -135,7 +127,7 @@ export const StatementDisplay = (props) => {
           lhsCandidates={mutFloats}
           rhsCandidates={lists}
         />
-      )
+      );
     case "assign_enum":
       return (
         <AssignEnumStatement
@@ -207,11 +199,7 @@ export const StatementDisplay = (props) => {
       );
     case "decl":
       return (
-        <DeclStatement
-          save={save}
-          setEditOn={setEditOn}
-          variables={floats}
-        />
+        <DeclStatement save={save} setEditOn={setEditOn} variables={floats} />
       );
     case "cond_float":
       return (

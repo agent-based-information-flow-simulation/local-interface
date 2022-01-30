@@ -1,6 +1,6 @@
-import React from "react";
-import {useDispatch} from "react-redux";
-import {resetActions} from "./editors/editorSlice";
+import React, { useEffect } from "react";
+import { useDispatch } from "react-redux";
+import { resetActions, resetScope } from "./editors/editorSlice";
 import PropTypes from "prop-types";
 import { Container, Dialog, DialogTitle } from "@mui/material";
 import OnSetupBehav from "./behavs/OnSetupBehav";
@@ -12,27 +12,30 @@ const BehavDialog = (props) => {
   const { handleClose, open, type } = props;
   const dispatch = useDispatch();
 
+  useEffect(() => {
+    dispatch(resetScope());
+  });
+
   const saveCallback = () => {
-    dispatch(resetActions())
+    dispatch(resetActions());
     handleClose(false);
-  }
+  };
 
-  const wrappedHandleClose = () =>  {
-    dispatch(resetActions())
+  const wrappedHandleClose = () => {
+    dispatch(resetActions());
     handleClose();
-
-  }
+  };
 
   const ModeDisplay = () => {
     switch (type) {
       case "onSetup":
-        return <OnSetupBehav onClose={saveCallback}/>;
+        return <OnSetupBehav onClose={saveCallback} />;
       case "oneTime":
-        return <OneTimeBehav onClose={saveCallback}/>;
+        return <OneTimeBehav onClose={saveCallback} />;
       case "cyclic":
-        return <CyclicBehav onClose={saveCallback}/>;
+        return <CyclicBehav onClose={saveCallback} />;
       case "onMessageReceive":
-        return <MessageRecvBehav onClose={saveCallback}/>;
+        return <MessageRecvBehav onClose={saveCallback} />;
       default:
         return <></>;
     }

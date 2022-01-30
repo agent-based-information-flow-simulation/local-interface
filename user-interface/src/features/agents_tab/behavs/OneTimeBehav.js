@@ -1,9 +1,13 @@
 import React, { useState } from "react";
 import {
-  FormControl, TextField, Button, InputAdornment, Alert
-} from "@mui/material"
+  FormControl,
+  TextField,
+  Button,
+  InputAdornment,
+  Alert,
+} from "@mui/material";
 
-import ActionEditor from '../editors/ActionEditor';
+import ActionEditor from "../editors/ActionEditor";
 import { useDispatch, useSelector } from "react-redux";
 import { addAction, resetScope, selectActions } from "../editors/editorSlice";
 import { addBehav } from "../agentsTabSlice";
@@ -11,8 +15,8 @@ import { validateBehavName, errorCodes } from "../../../app/utils";
 import { addName } from "../../simulationSlice";
 
 export const OneTimeBehav = (props) => {
-  const {onClose} = props;
-  const [behavName, setBehavName] = useState("")
+  const { onClose } = props;
+  const [behavName, setBehavName] = useState("");
   const [delay, setDelay] = useState(0);
   const [actionDialogOpen, setActionDialogOpen] = useState(false);
 
@@ -20,98 +24,94 @@ export const OneTimeBehav = (props) => {
   const [nameErrorText, setNameErrorText] = useState("");
   const [actionError, setActionError] = useState(false);
 
-
   const dispatch = useDispatch();
   const actions = useSelector(selectActions);
 
-  const onActionDialogClose = (action) =>{
-    if(action !== null){
+  const onActionDialogClose = (action) => {
+    dispatch(resetScope());
+    if (action !== null) {
       dispatch(addAction(action));
     }
-    dispatch(resetScope);
     setActionDialogOpen(false);
-  }
+  };
 
   const saveBehaviour = () => {
     let err_flag = false;
-    if(validateBehavName(behavName) !== 0){
+    if (validateBehavName(behavName) !== 0) {
       err_flag = true;
       const code = validateBehavName(behavName);
       const error = errorCodes.find((el) => el.code === code);
       setNameErrorText(error.info);
       setNameError(true);
     }
-    if(actions.length === 0){
+    if (actions.length === 0) {
       err_flag = true;
       setActionError(true);
     }
-    if(!err_flag){
-      let code = "BEHAV " + behavName + ", one_time," + delay +"\n";
-      actions.forEach(el => code+=el.code);
+    if (!err_flag) {
+      let code = "BEHAV " + behavName + ", one_time," + delay + "\n";
+      actions.forEach((el) => (code += el.code));
       code += "EBEHAV\n";
       let behav = {
         name: behavName,
         actions: [...actions],
         code: code,
-      }
+      };
       dispatch(addBehav(behav));
       dispatch(resetScope);
       dispatch(addName(behavName));
       onClose();
     }
-  }
+  };
 
   return (
     <>
-    <ActionEditor open={actionDialogOpen} onClose={onActionDialogClose} />
+      <ActionEditor open={actionDialogOpen} onClose={onActionDialogClose} />
 
-    <FormControl fullWidth>
-      <TextField
-        variant="outlined"
-        label="Name"
-        id="behav_name"
-        value={behavName}
-        onChange={(e)=>setBehavName(e.target.value)}
-      />
-      <TextField
-        sx={{marginTop: 2}}
-        label="Delay"
-        id="behav_delay"
-        type="number"
-        value={delay}
-        onChange={(e)=>setDelay(e.target.value)}
-        InputProps={{
-          startAdornment: <InputAdornment position="start">s</InputAdornment>,
-        }}
-      />
-    </FormControl>
-    <p><b>Actions: </b></p>
-    {
-      actions.map((el,index) => {
+      <FormControl fullWidth>
+        <TextField
+          variant="outlined"
+          label="Name"
+          id="behav_name"
+          value={behavName}
+          onChange={(e) => setBehavName(e.target.value)}
+        />
+        <TextField
+          sx={{ marginTop: 2 }}
+          label="Delay"
+          id="behav_delay"
+          type="number"
+          value={delay}
+          onChange={(e) => setDelay(e.target.value)}
+          InputProps={{
+            startAdornment: <InputAdornment position="start">s</InputAdornment>,
+          }}
+        />
+      </FormControl>
+      <p>
+        <b>Actions: </b>
+      </p>
+      {actions.map((el, index) => {
         return <p> {el.name} </p>;
-      })
-    }
-    {
-      nameError ?
+      })}
+      {nameError ? (
         <Alert severity="error" onClose={(e) => setNameError(false)}>
           Name Error! {nameErrorText}
         </Alert>
-      :
-      <></>
-    }
-    {
-      actionError ?
+      ) : (
+        <></>
+      )}
+      {actionError ? (
         <Alert severity="error" onClose={(e) => setActionError(false)}>
           Error saving! Please add some actions!
         </Alert>
-      :
-      <></>
-
-    }
-    <Button onClick={(e)=>setActionDialogOpen(true)}> Add Action </Button>
-    <Button onClick={saveBehaviour}> Add Behaviour </Button>
+      ) : (
+        <></>
+      )}
+      <Button onClick={(e) => setActionDialogOpen(true)}> Add Action </Button>
+      <Button onClick={saveBehaviour}> Add Behaviour </Button>
     </>
   );
-}
+};
 
 export default OneTimeBehav;
