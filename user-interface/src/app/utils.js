@@ -117,7 +117,7 @@ export const errorCodes = [
   },
   {
     code: 106,
-    info: "Name cannot be empty!"
+    info: "Name cannot be empty!",
   },
   {
     code: 201,
@@ -125,33 +125,32 @@ export const errorCodes = [
   },
   {
     code: 301,
-    info: "Invalid value for a float"
+    info: "Invalid value for a float",
   },
   {
     code: 401,
-    info: "Invalid distribution name!"
+    info: "Invalid distribution name!",
   },
   {
     code: 402,
-    info: "Invalid distribution arguments!"
+    info: "Invalid distribution arguments!",
   },
   {
     code: 501,
-    info: "Too few enum values! At least two enum values are required!"
+    info: "Too few enum values! At least two enum values are required!",
   },
   {
     code: 502,
-    info: "The sum of percentages must be 100!"
+    info: "The sum of percentages must be 100!",
   },
   {
     code: 503,
-    info: "Invalid init value!"
-
+    info: "Invalid init value!",
   },
   {
     code: 901,
-    info: "Unexpected error: Invalid param type! Contact the developers"
-  }
+    info: "Unexpected error: Invalid param type! Contact the developers",
+  },
 ];
 
 export const validateGeneralNameRules = (name) => {
@@ -161,30 +160,33 @@ export const validateGeneralNameRules = (name) => {
     return 103;
   } else if (format.test(name)) {
     return 104;
-  } else if (reserved_names.find((el) => el === name.toLowerCase()) !== undefined) {
+  } else if (
+    reserved_names.find((el) => el === name.toLowerCase()) !== undefined
+  ) {
     return 105;
-  } else if (name.length === 0){
+  } else if (name.length === 0) {
     return 106;
   }
   return 0;
-}
-
+};
 
 export const validateAgentName = (name) => {
   const state = store.getState();
   const res = validateGeneralNameRules(name);
-  if( res !== 0) return res;
+  if (res !== 0) return res;
   //check if agent with the same name exists
-  else if(state.simulation.agent_types.find((el) => el.name === name) !== undefined){
+  else if (
+    state.simulation.agent_types.find((el) => el.name === name) !== undefined
+  ) {
     return 101;
   }
   return 0;
-}
+};
 
 export const validateMessageName = (name, performative) => {
   const state = store.getState();
   const res = validateGeneralNameRules(name);
-  if( res !== 0) return res;
+  if (res !== 0) return res;
   //check if agent with the same name exists
   else if (
     state.simulation.message_types.find(
@@ -196,12 +198,12 @@ export const validateMessageName = (name, performative) => {
     return 201;
   }
   return 0;
-}
+};
 
 export const validateBehavName = (name) => {
   const state = store.getState();
   const res = validateGeneralNameRules(name);
-  if( res !== 0) return res;
+  if (res !== 0) return res;
   else if (state.agentsTab.behaviours.find((el) => el.name === name)) {
     return 101;
   }
@@ -266,6 +268,21 @@ export const distributionsDict = {
       return true;
     },
   },
+  uniform: {
+    name: "Uniform",
+    arg_count: 2,
+    param_names: ["a", "b"],
+    validate: (args) => {
+      if (args.length !== distributionsDict["exp"].arg_count) {
+        return false;
+      }
+      if (args[0] >= args[1]) {
+        // a < b!
+        return false;
+      }
+      return true;
+    },
+  },
 };
 
 export const validateFloatParam = (paramData) => {
@@ -273,24 +290,24 @@ export const validateFloatParam = (paramData) => {
   const name = paramData.name;
   const state = store.getState();
   const res = validateGeneralNameRules(name);
-  if( res !== 0) return res;
+  if (res !== 0) return res;
   else if (state.agentsTab.parameters.find((el) => el.name === name)) {
     return 101;
   }
-  switch(paramData.type){
+  switch (paramData.type) {
     case "initVal":
-      if(isNaN(parseFloat(paramData.initVal))){
+      if (isNaN(parseFloat(paramData.initVal))) {
         return 301;
       }
       break;
     case "distribution":
-      console.log(typeof(paramData.distribution))
-      console.log(paramData.distribution)
-      if(distributionsDict[paramData.distribution] === undefined){
+      console.log(typeof paramData.distribution);
+      console.log(paramData.distribution);
+      if (distributionsDict[paramData.distribution] === undefined) {
         return 401;
-      }else{
+      } else {
         const dist = distributionsDict[paramData.distribution];
-        if(!dist.validate(paramData.distribution_args)){
+        if (!dist.validate(paramData.distribution_args)) {
           return 402;
         }
       }
@@ -299,41 +316,43 @@ export const validateFloatParam = (paramData) => {
       return 901;
   }
   return 0;
-}
+};
 
 export const validateEnumParam = (paramData) => {
   const name = paramData.name;
   const state = store.getState();
   const res = validateGeneralNameRules(name);
-  if( res !== 0) return res;
+  if (res !== 0) return res;
   else if (state.agentsTab.parameters.find((el) => el.name === name)) {
     return 101;
   }
-  switch(paramData.type){
+  switch (paramData.type) {
     case "new":
       const values = paramData.enumVals;
-      if(values.length < 2){
+      if (values.length < 2) {
         return 501;
       }
-      switch(paramData.state){
+      switch (paramData.state) {
         case "init":
           //valid if and only if there exists 1 ev with percentage 100%
-          if(values.filter(el => parseFloat(el.percentage) === 100).length !== 1){
+          if (
+            values.filter((el) => parseFloat(el.percentage) === 100).length !==
+            1
+          ) {
             return 503;
           }
           break;
         case "percentages":
           let sum = 0;
-          for(let i=0; i<values.length; i++){
+          for (let i = 0; i < values.length; i++) {
             sum += parseFloat(values[i].percentage);
           }
-          if(sum !== 100){
+          if (sum !== 100) {
             return 502;
           }
           break;
         default:
           return 901;
-
       }
       break;
     case "existing":
@@ -342,16 +361,15 @@ export const validateEnumParam = (paramData) => {
       return 901;
   }
   return 0;
-}
+};
 
 export const validateListParam = (paramData) => {
   const name = paramData.name;
   const state = store.getState();
   const res = validateGeneralNameRules(name);
-  if( res !== 0) return res;
+  if (res !== 0) return res;
   else if (state.agentsTab.parameters.find((el) => el.name === name)) {
     return 101;
   }
   return 0;
-
-}
+};

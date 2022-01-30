@@ -1,11 +1,21 @@
 import React, { useState, useEffect } from "react";
-import { FormControl, Select, MenuItem, TextField, Button, Alert } from "@mui/material";
-import PropTypes from "prop-types"
-import {distributionsDict, validateFloatParam, errorCodes} from "../../app/utils"
+import {
+  FormControl,
+  Select,
+  MenuItem,
+  TextField,
+  Button,
+  Alert,
+} from "@mui/material";
+import PropTypes from "prop-types";
+import {
+  distributionsDict,
+  validateFloatParam,
+  errorCodes,
+} from "../../app/utils";
 
 export const FloatParam = (props) => {
-
-  const {save} = props
+  const { save } = props;
 
   const [floatType, setFloatType] = useState("initVal");
   const [initVal, setInitVal] = useState(0);
@@ -14,7 +24,7 @@ export const FloatParam = (props) => {
   );
   const [distributionArgs, setDistributionArgs] = useState([]);
   const [paramName, setParamName] = useState("");
-  const [paramData, setParamData] = useState({})
+  const [paramData, setParamData] = useState({});
 
   const [displayError, setDisplayError] = useState(false);
   const [errorText, setErrorText] = useState("");
@@ -42,18 +52,18 @@ export const FloatParam = (props) => {
   const handleInitValChange = (value) => {
     setInitVal(value);
     updateParamData();
-  }
+  };
 
   const saveButtonClick = () => {
     let code = validateFloatParam(paramData);
-    if(code !== 0){
+    if (code !== 0) {
       let error = errorCodes.find((el) => el.code === code);
       setDisplayError(true);
       setErrorText(error.info);
-    }else{
+    } else {
       save(paramData);
     }
-  }
+  };
 
   const updateParamData = () => {
     let newParamData = {};
@@ -73,9 +83,9 @@ export const FloatParam = (props) => {
     setParamData(newParamData);
   };
   // I have no idea why this works
-  useEffect(()=>{
-    updateParamData()
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+  useEffect(() => {
+    updateParamData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [paramName, floatType, distribution, distributionArgs]);
 
   return (
@@ -101,6 +111,7 @@ export const FloatParam = (props) => {
           <TextField
             type="number"
             id="init_val_float"
+            key="field_del_text_float_paramo"
             value={initVal}
             onChange={(e) => handleInitValChange(e.target.value)}
           />
@@ -111,7 +122,10 @@ export const FloatParam = (props) => {
           >
             {Object.keys(distributionsDict).map((key) => {
               return (
-                <MenuItem key={key} value={key}> {distributionsDict[key].name} </MenuItem>
+                <MenuItem key={key} value={key}>
+                  {" "}
+                  {distributionsDict[key].name}{" "}
+                </MenuItem>
               );
             })}
           </Select>
@@ -125,6 +139,7 @@ export const FloatParam = (props) => {
                 <TextField
                   label={distributionsDict[distribution].param_names[index]}
                   type="number"
+                  key={`${key}_${index}`}
                   value={distributionArgs[index]}
                   onChange={(e) => {
                     handleDistributionArgChange(e.target.value, e.target.id);
@@ -140,12 +155,14 @@ export const FloatParam = (props) => {
           <></>
         )}
       </FormControl>
-      {
-        displayError ?
-        <Alert severity="error" onClose={(e) => setDisplayError(false)}> {errorText} </Alert>
-        :
+      {displayError ? (
+        <Alert severity="error" onClose={(e) => setDisplayError(false)}>
+          {" "}
+          {errorText}{" "}
+        </Alert>
+      ) : (
         <></>
-      }
+      )}
       <Button onClick={saveButtonClick}> Add parameter </Button>
     </>
   );

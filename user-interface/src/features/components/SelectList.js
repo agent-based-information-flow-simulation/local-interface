@@ -1,5 +1,5 @@
-import React from "react";
-import PropTypes from "prop-types"
+import React, { useState } from "react";
+import PropTypes from "prop-types";
 import {
   Box,
   List,
@@ -10,10 +10,19 @@ import {
   InputLabel,
   Select,
   MenuItem,
-} from "@mui/material"
+} from "@mui/material";
 
 export const SelectList = (props) => {
-  const {name, collection, options, handleParamTypeChange, collectionItemClick, collectionDisplayFunction} = props
+  const {
+    name,
+    collection,
+    options,
+    handleParamTypeChange,
+    collectionItemClick,
+    collectionDisplayFunction,
+  } = props;
+
+  const [selectVal, setSelectVal] = useState("");
 
   let itemDisplay = (item) => {
     return item.name;
@@ -41,9 +50,19 @@ export const SelectList = (props) => {
         >
           {collection.map((item, index) => {
             return (
-              <ListItem key={index} disablePadding onClick={(e)=>collectionItemClick(index)}>
-                <ListItemButton >
-                  <ListItemText primary={collectionDisplayFunction === undefined ? itemDisplay(item) : collectionDisplayFunction(item)} />
+              <ListItem
+                key={`select_${name}_${index}`}
+                disablePadding
+                onClick={(e) => collectionItemClick(index)}
+              >
+                <ListItemButton>
+                  <ListItemText
+                    primary={
+                      collectionDisplayFunction === undefined
+                        ? itemDisplay(item)
+                        : collectionDisplayFunction(item)
+                    }
+                  />
                 </ListItemButton>
               </ListItem>
             );
@@ -51,16 +70,22 @@ export const SelectList = (props) => {
         </List>
         <FormControl fullWidth sx={{ marginTop: 2 }}>
           <InputLabel> Select type </InputLabel>
-          <Select label="Select type">
-            {
-              options.map((item) => {
-                return (
-                  <MenuItem value={item.value} onClick={handleParamTypeChange}>
-                    {item.display}
-                  </MenuItem>
-                )
-              })
-            }
+          <Select
+            label="Select type"
+            value={selectVal}
+            onChange={(e) => setSelectVal(e.target.value)}
+          >
+            {options.map((item) => {
+              return (
+                <MenuItem
+                  value={item.value}
+                  key={item.value}
+                  onClick={handleParamTypeChange}
+                >
+                  {item.display}
+                </MenuItem>
+              );
+            })}
           </Select>
         </FormControl>
       </nav>
@@ -73,14 +98,16 @@ SelectList.propTypes = {
   collection: PropTypes.arrayOf(
     PropTypes.shape({
       name: PropTypes.string.isRequired,
-    })).isRequired,
+    })
+  ).isRequired,
   options: PropTypes.arrayOf(
     PropTypes.shape({
       value: PropTypes.string.isRequired,
       display: PropTypes.string.isRequired,
-    })).isRequired,
+    })
+  ).isRequired,
   handleParamTypeChange: PropTypes.func.isRequired,
   collectionItemClick: PropTypes.func.isRequired,
-}
+};
 
 export default SelectList;

@@ -1,8 +1,7 @@
-import React from 'react';
+import React from "react";
 import Box from "@mui/material/Box";
 import PropTypes from "prop-types";
 import Typography from "@mui/material/Typography";
-
 
 export function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -17,7 +16,9 @@ export function TabPanel(props) {
     >
       {value === index && (
         <Box sx={{ p: 2 }}>
-          <Typography>{children}</Typography>
+          <Typography component={"span"} variant={"body2"}>
+            {children}
+          </Typography>
         </Box>
       )}
     </div>

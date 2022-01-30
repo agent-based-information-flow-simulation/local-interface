@@ -32,25 +32,25 @@ export function VisualizationTab() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  useEffect(() => {
-    const runningSimulationsWebsocket = new WebSocket(
-      "ws://localhost:8000/simulations"
-    );
-    console.debug("opened running simulations websocket");
-    runningSimulationsWebsocket.onmessage = (message) => {
-      const data = JSON.parse(message.data);
-      setRunningSimulations(data.running_simulations);
-    };
-    runningSimulationsWebsocket.onclose = () => {
-      console.debug("closing running simulations websocket");
-    };
-  }, []);
+  // useEffect(() => {
+  //   const runningSimulationsWebsocket = new WebSocket(
+  //     "ws://localhost:8000/simulations"
+  //   );
+  //   console.debug("opened running simulations websocket");
+  //   runningSimulationsWebsocket.onmessage = (message) => {
+  //     const data = JSON.parse(message.data);
+  //     setRunningSimulations(data.running_simulations);
+  //   };
+  //   runningSimulationsWebsocket.onclose = () => {
+  //     console.debug("closing running simulations websocket");
+  //   };
+  // }, []);
 
-  const getSimulationOutput = (simulationId) => {
-    return simulationId in simulationsOutput
-      ? simulationsOutput[simulationId]
-      : [];
-  };
+  // const getSimulationOutput = (simulationId) => {
+  //   return simulationId in simulationsOutput
+  //     ? simulationsOutput[simulationId]
+  //     : [];
+  // };
 
   const startNewSimulation = async () => {
     const url = "http://localhost:3002/api/simulations";
