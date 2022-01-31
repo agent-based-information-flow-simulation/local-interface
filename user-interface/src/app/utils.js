@@ -273,10 +273,10 @@ export const distributionsDict = {
     arg_count: 2,
     param_names: ["a", "b"],
     validate: (args) => {
-      if (args.length !== distributionsDict["exp"].arg_count) {
+      if (args.length !== distributionsDict["uniform"].arg_count) {
         return false;
       }
-      if (args[0] >= args[1]) {
+      if (parseFloat(args[0]) >= parseFloat(args[1])) {
         // a < b!
         return false;
       }

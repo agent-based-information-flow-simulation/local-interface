@@ -17,7 +17,8 @@ import ClearListStatement from "./statements/ClearListStatement";
 import AssignEnumStatement from "./statements/AssignEnumStatement";
 import SendStatement from "./statements/SendStatement";
 import GetLenStatement from "./statements/GetLenStatement";
-import { SubsetListStatement } from "./statements/SubsetListStatement";
+import RandStatement from "./statements/RandStatement";
+import SubsetListStatement from "./statements/SubsetListStatement";
 
 import { selectParameters } from "../agentsTabSlice";
 
@@ -99,6 +100,14 @@ export const StatementDisplay = (props) => {
 
   if (!editOn) return <></>;
   switch (statementType) {
+    case "rand":
+      return (
+        <RandStatement
+          variables={mutFloats}
+          save={save}
+          setEditOn={setEditOn}
+        />
+      );
     case "subset":
       return (
         <SubsetListStatement

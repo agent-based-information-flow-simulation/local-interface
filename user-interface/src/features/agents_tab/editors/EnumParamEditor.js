@@ -1,4 +1,4 @@
-import React, {useState } from "react";
+import React, { useState } from "react";
 import {
   Stack,
   Box,
@@ -6,13 +6,12 @@ import {
   MenuItem,
   FormHelperText,
   IconButton,
-} from "@mui/material"
+} from "@mui/material";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import StatementDisplay from "./StatementDisplay";
 
 export const EnumParamEditor = (props) => {
-
-  const {save, rcvMsg} = props;
+  const { save, rcvMsg } = props;
   const [editOn, setEditOn] = useState(false);
 
   const [statementType, setStatementType] = useState("expr");
@@ -26,14 +25,21 @@ export const EnumParamEditor = (props) => {
             onChange={(e) => setStatementType(e.target.value)}
           >
             <MenuItem value={"assign_float"}> Assignment (number) </MenuItem>
+            <MenuItem value={"rand"}> Assignment (random number) </MenuItem>
             <MenuItem value={"assign_enum"}> Assignment (enum) </MenuItem>
             <MenuItem value={"expr"}> Math Expression </MenuItem>
             <MenuItem value={"decl"}> Declaration </MenuItem>
             <MenuItem value={"cond_float"}> Conditional (number) </MenuItem>
             <MenuItem value={"cond_enum"}> Conditional (enum) </MenuItem>
             <MenuItem value={"cond_list"}> Conditional (list) </MenuItem>
-            <MenuItem value={"while_float"}> Do while Condition (number) </MenuItem>
-            <MenuItem value={"while_enum"}> Do while Condition (enum) </MenuItem>
+            <MenuItem value={"while_float"}>
+              {" "}
+              Do while Condition (number){" "}
+            </MenuItem>
+            <MenuItem value={"while_enum"}>
+              {" "}
+              Do while Condition (enum){" "}
+            </MenuItem>
             <MenuItem value={"endb"}> End Block (condition/while) </MenuItem>
           </Select>
           <FormHelperText> Choose statement type </FormHelperText>
@@ -47,9 +53,15 @@ export const EnumParamEditor = (props) => {
           <AddCircleIcon sx={{ fontSize: "45px" }} />
         </IconButton>
       </Stack>
-      <StatementDisplay save={save} editOn={editOn} setEditOn={setEditOn} statementType={statementType} rcvMsg={rcvMsg}/>
+      <StatementDisplay
+        save={save}
+        editOn={editOn}
+        setEditOn={setEditOn}
+        statementType={statementType}
+        rcvMsg={rcvMsg}
+      />
     </>
   );
-}
+};
 
 export default EnumParamEditor;

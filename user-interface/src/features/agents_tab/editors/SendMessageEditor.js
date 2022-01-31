@@ -27,6 +27,7 @@ export const SendMessageEditor = (props) => {
             onChange={(e) => setStatementType(e.target.value)}
           >
             <MenuItem value={"assign_float"}> Assignment (number) </MenuItem>
+            <MenuItem value={"rand"}> Assignment (random number) </MenuItem>
             <MenuItem value={"expr"}> Math Expression </MenuItem>
             <MenuItem value={"decl"}> Declaration </MenuItem>
             <MenuItem value={"cond_float"}> Conditional (number) </MenuItem>
