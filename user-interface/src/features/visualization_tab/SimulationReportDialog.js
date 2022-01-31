@@ -1,5 +1,12 @@
 import React, { useState } from "react";
-import { Dialog, Container, DialogTitle, Stack, Box } from "@mui/material";
+import {
+  Dialog,
+  Container,
+  DialogTitle,
+  Stack,
+  Box,
+  Alert,
+} from "@mui/material";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -8,7 +15,6 @@ import {
   Title,
   Tooltip,
   Legend,
-  Alert,
 } from "chart.js";
 import { Bar } from "react-chartjs-2";
 import NeoGraph from "./NeoGraph";
