@@ -16,7 +16,7 @@ import { openBlock } from "../editorSlice";
 const FloatCondOps = [
   { opcode: "ILT  ", label: "<" },
   { opcode: "IGT  ", label: ">" },
-  { opcode: "ILTEQ", label: ">=" },
+  { opcode: "ILTEQ", label: "<=" },
   { opcode: "IGTEQ", label: ">=" },
   { opcode: "IEQ  ", label: "==" },
   { opcode: "INEQ ", label: "!=" },

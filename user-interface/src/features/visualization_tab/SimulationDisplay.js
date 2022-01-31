@@ -56,11 +56,8 @@ export const SimulationDisplay = (props) => {
       method: "GET",
     });
     const data = await response.json();
-    console.log(data);
     if (response.status !== 200) {
-      console.log("ERRRERP"); // TODO add error handling
     } else {
-      console.log("Data of instances:", data["instances"]);
       setInstances(data["instances"]);
       setSimulations(data["simulations"]);
     }

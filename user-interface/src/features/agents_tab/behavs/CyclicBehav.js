@@ -33,7 +33,8 @@ export const CyclicBehav = (props) => {
   };
 
   const handleOpenAction = () => {
-    dispatch(resetScope);
+    setActionDialogOpen(true);
+    dispatch(resetScope());
   };
 
   const saveBehaviour = () => {

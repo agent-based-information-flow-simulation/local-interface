@@ -27,7 +27,6 @@ export const SimulationOptionsCell = (props) => {
     const url = `http://localhost/api/simulations/${simulation.simulation_id}`;
     await fetch(url, { method: "POST" })
       .then((response) => {
-        console.log(response);
         if (response.status === 201) {
           restartCallback(simulation.simulation_id, "success", "");
         } else {

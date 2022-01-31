@@ -8,6 +8,7 @@ import {
   Title,
   Tooltip,
   Legend,
+  Alert,
 } from "chart.js";
 import { Bar } from "react-chartjs-2";
 import NeoGraph from "./NeoGraph";
@@ -30,6 +31,9 @@ export const SimulationReportDialog = (props) => {
     datasets: [{}],
   });
 
+  const [queryError, setQueryError] = useState(false);
+  const [errorText, setErrorText] = useState("");
+
   //left for consistency, maybe add options later
   const barOptions = {
     indexAxis: "y",
@@ -40,23 +44,21 @@ export const SimulationReportDialog = (props) => {
   };
 
   const queryCallback = async (searchString, label) => {
+    setQueryError(false);
     const url =
       `http://localhost/api/simulations/${simId}/statistics/` + searchString;
-
-    console.log("Fetching ", url);
 
     await fetch(url, {
       method: "GET",
     })
       .then((response) => {
         if (response.status !== 200) {
-          console.log("error status", response.status);
-          //TODO erros
+          setQueryError(true);
+          setErrorText("HTTP error getting query: " + response.status);
         }
         return response.json();
       })
       .then((data) => {
-        console.log(data);
         setBarData({
           labels: data["labels"],
           datasets: [
@@ -70,8 +72,8 @@ export const SimulationReportDialog = (props) => {
         });
       })
       .catch((error) => {
-        // TODO errors
-        console.log(error);
+        setQueryError(true);
+        setErrorText("Unkown error getting query");
       });
   };
 
@@ -93,6 +95,13 @@ export const SimulationReportDialog = (props) => {
             <h3> Simulation data </h3>
             <Bar options={barOptions} data={barData} />
             <QueryCreator queryCallback={queryCallback} />
+            {queryError ? (
+              <Alert severity="error" onClose={(e) => setQueryError(false)}>
+                {errorText}
+              </Alert>
+            ) : (
+              <></>
+            )}
           </Box>
         </Stack>
       </Container>

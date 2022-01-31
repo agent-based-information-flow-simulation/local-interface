@@ -72,7 +72,6 @@ const ActionEditor = (props) => {
     setBlockError(false);
     setStatementError(false);
     if (block_lvl) {
-      setBlockError(true);
       error_flag = true;
     }
     if (statements.length === 0) {

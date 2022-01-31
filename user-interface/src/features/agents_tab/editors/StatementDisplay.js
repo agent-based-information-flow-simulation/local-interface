@@ -55,7 +55,6 @@ export const StatementDisplay = (props) => {
     let toSetMutFloats = [...scopeVars, ...floatParams];
     let toSetListItems = [...listItems];
     if (sndMsg) {
-      console.log("SEND available");
       toSetListItems = [...toSetListItems, sendVar];
       let tmpArr = sndMsg.params.map((el, index) => {
         return {
@@ -68,9 +67,7 @@ export const StatementDisplay = (props) => {
     }
     setMutFloats(toSetMutFloats);
     let toSetFloats = [...toSetMutFloats, ...read_only];
-    console.log(rcvMsg);
     if (rcvMsg) {
-      console.log(rcvMsg);
       toSetListItems = [...toSetListItems, rcvVar, rcvJid];
       let rcvParams = rcvMsg.params.map((el, index) => {
         return {

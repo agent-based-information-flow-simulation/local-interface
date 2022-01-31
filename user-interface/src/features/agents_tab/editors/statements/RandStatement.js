@@ -15,9 +15,7 @@ export const RandStatement = (props) => {
   const [distribution, setDistribution] = useState("normal");
   const [argError, setArgError] = useState(false);
 
-  useEffect(() => {
-    console.log(distributionsDict);
-  });
+  useEffect(() => {});
 
   const addRandStatement = () => {
     setArgError(false);
@@ -25,8 +23,6 @@ export const RandStatement = (props) => {
     //validate the distribution
     let dist = distributionsDict[distribution];
     if (!dist.validate(distArgs)) {
-      console.log("Args:", distArgs);
-      console.log("validate:", dist.validate(distArgs));
       err_flag = true;
       setArgError(true);
     }

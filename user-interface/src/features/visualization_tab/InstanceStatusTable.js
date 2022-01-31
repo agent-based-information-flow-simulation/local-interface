@@ -32,7 +32,6 @@ export const InstanceStatusTable = (props) => {
           </TableHead>
           <TableBody>
             {instanceData.map((el, index) => {
-              console.log("INSTANCE DATA", instanceData);
               return (
                 <TableRow key={el.key}>
                   <TableCell>{el.key}</TableCell>

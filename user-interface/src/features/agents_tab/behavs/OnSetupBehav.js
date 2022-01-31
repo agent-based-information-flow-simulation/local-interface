@@ -20,7 +20,6 @@ export const OnSetupBehav = (props) => {
   const actions = useSelector(selectActions);
 
   const onActionDialogClose = (action) => {
-    console.log("RUUUUU");
     dispatch(resetScope());
     if (action !== null) {
       dispatch(addAction(action));
