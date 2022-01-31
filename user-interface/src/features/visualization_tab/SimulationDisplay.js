@@ -45,12 +45,12 @@ export const SimulationDisplay = (props) => {
   const simulationReportCallback = (sim_id) => {};
 
   const deleteSimulation = async (sim_id) => {
-    const url = `http://localhost/api/simulations/${sim_id}`;
+    const url = `http://localhost:8000/api/simulations/${sim_id}`;
     await fetch(url, { method: "DELETE" });
   };
 
   const getStatus = async () => {
-    const url = `http://localhost/api/simulations`;
+    const url = `http://localhost:8000/api/simulations`;
     //GET method here
     const response = await fetch(url, {
       method: "GET",
