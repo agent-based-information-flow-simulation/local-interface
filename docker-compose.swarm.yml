@@ -6,7 +6,7 @@ services:
       context: ./user-interface
       dockerfile: Dockerfile.prod
     environment:
-      - PORT=80
+      - PORT=8000
     image: madpeh/li-user-interface
     networks:
       - proxy-net
@@ -17,7 +17,7 @@ services:
     build: ./proxy
     image: madpeh/li-proxy
     ports:
-      - "80:80"
+      - "8000:8000"
       - "8008:7687"
     networks:
       - proxy-net
