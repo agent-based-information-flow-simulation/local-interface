@@ -1,0 +1,33 @@
+version: '3.9'
+
+services:
+  user-interface:
+    build:
+      context: ./user-interface
+      dockerfile: Dockerfile.prod
+    environment:
+      - PORT=80
+    image: madpeh/li-user-interface
+    networks:
+      - proxy-net
+    volumes:
+      - user-interface-data:/app/node_modules
+
+  proxy:
+    build: ./proxy
+    image: madpeh/li-proxy
+    ports:
+      - "80:80"
+      - "8008:7687"
+    networks:
+      - proxy-net
+      - external-li-sre-net
+
+networks:
+  proxy-net:
+  external-li-sre-net:
+    external: true
+    name: li-sre
+
+volumes:
+  user-interface-data:
