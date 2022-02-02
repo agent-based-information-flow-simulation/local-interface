@@ -1,7 +1,16 @@
 #!/bin/bash
 
 function usage() {
-  echo "Usage: $0 {init}"
+  echo "Usage: $0 {init|join|network|start|stop|clean|stats|services|publish}"
+  echo "       init: initialize the swarm cluster"
+  echo "       join TOKEN IP:PORT: join the swarm cluster"
+  echo "       network (REQUIRES SWARM CLUSTER): create shared networks for the swarm cluster"
+  echo "       start [-n <N=1>: N xmpp servers] [-d: dev mode [-p: publish]] (REQUIRES SWARM CLUSTER): start the server"
+  echo "       stop: stop the server"
+  echo "       clean: stop the server and remove all docker data"
+  echo "       stats: print stats from all services"
+  echo "       services: print all services"
+  echo "       publish [-d: dev mode (REQUIRES SWARM CLUSTER)]: publish the images to a registry"
 }
 
 function init() {
