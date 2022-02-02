@@ -1,20 +1,21 @@
 #!/bin/bash
 
 function usage() {
-  echo "Usage: $0 {init|join|network|start|stop|clean|stats|services|publish}"
+  echo "Usage: $0 {init|join|network|start|stop|clean|stats|services|publish|reload}"
   echo "       init: initialize the swarm cluster"
   echo "       join TOKEN IP:PORT: join the swarm cluster"
   echo "       network (REQUIRES SWARM CLUSTER): create shared networks for the swarm cluster"
-  echo "       start [-n <N=1>: N xmpp servers] [-d: dev mode [-p: publish]] (REQUIRES SWARM CLUSTER): start the server"
+  echo "       start [-d: dev mode [-p: publish]] (REQUIRES SWARM CLUSTER): start the server"
   echo "       stop: stop the server"
   echo "       clean: stop the server and remove all docker data"
   echo "       stats: print stats from all services"
   echo "       services: print all services"
   echo "       publish [-d: dev mode (REQUIRES SWARM CLUSTER)]: publish the images to a registry"
+  echo "       reload SERVICE (REQUIRES DEV MODE): rebuild and update the service"
 }
 
 function init() {
-  if docker swarm init; then\
+  if docker swarm init; then
     echo "swarm cluster initialized"
   else
     echo "failed to initialize swarm cluster"
@@ -67,8 +68,15 @@ function start() {
     echo "Interface can be accessed on port 80"
   else
     echo ""
-    echo "failed to start local interface"
+    echo "failed to start the server"
     echo ""
+    echo "if you see the following error:"
+    echo "failed to create service X: Error response from daemon: network Y not found"
+    echo "then restart docker daemon (i.e. sudo systemctl restart docker) and run ./server.sh clean"
+    echo ""
+    echo "if you see the following error:"
+    echo "network X is declared as external, but could not be found"
+    echo "run the script with the network option to create the required networks"
   fi
 }
 
@@ -88,6 +96,11 @@ function stats() {
 
 function services() {
   docker service ls
+  echo ""
+  echo "if you notice that some of the services are not up"
+  echo "then stop the server, publish the images, create the shared networks, and start the server again"
+  echo ""
+  echo "sre_kafka-topic-creator is expected to run only once"
 }
 
 function publish() {
@@ -125,8 +138,7 @@ function reload() {
   fi
 
   docker-compose -f docker-compose.dev.swarm.yml build "${1}" && \
-  docker-compose -f docker-compose.dev.swarm.yml push
-
+  docker-compose -f docker-compose.dev.swarm.yml push && \
   docker service update li_"${1}" --force
 }
 
