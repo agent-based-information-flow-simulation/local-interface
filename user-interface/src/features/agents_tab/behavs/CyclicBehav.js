@@ -80,8 +80,8 @@ export const CyclicBehav = (props) => {
         />
         <TextField
           sx={{ marginTop: 2 }}
-          label="Delay"
-          id="behav_delay"
+          label="Cycle"
+          id="behav_cycle"
           type="number"
           value={cycle}
           onChange={(e) => setCycle(e.target.value)}
