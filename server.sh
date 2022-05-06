@@ -124,17 +124,29 @@ function publish() {
     else
         echo "registry already exists"
     fi
-    docker-compose -f docker-compose.dev.swarm.yml build --parallel
+    docker-compose -f docker-compose.dev.swarm.yml build --parallel && \
     docker-compose -f docker-compose.dev.swarm.yml push
   else
-    source .env
-    read -p "Publish version ${VERSION} to registry? [y/n] " -r ANSWER
-    if [ "$ANSWER" != "y" ]; then
+    source .version
+    read -p "Publish version ${VERSION} to registry? [y/n] " -r VERSION_ANSWER
+    read -p "Publish version latest to registry? [y/n] " -r LATEST_ANSWER
+
+    if [ "$VERSION_ANSWER" != "y" ] && [ "$LATEST_ANSWER" != "y" ]; then
       echo "aborting"
       exit 1
     fi
-    docker-compose -f docker-compose.swarm.yml build --parallel
-    docker-compose -f docker-compose.swarm.yml push
+
+    if [ "$VERSION_ANSWER" == "y" ]; then
+      env VERSION="${VERSION}" docker-compose -f docker-compose.swarm.yml build --parallel && \
+      env VERSION="${VERSION}" docker-compose -f docker-compose.swarm.yml push && \
+      echo "published version ${VERSION}"
+    fi
+
+    if [ "$LATEST_ANSWER" == "y" ]; then
+      env VERSION=latest docker-compose -f docker-compose.swarm.yml build --parallel && \
+      env VERSION=latest docker-compose -f docker-compose.swarm.yml push && \
+      echo "published version latest"
+    fi
   fi
 }
 
