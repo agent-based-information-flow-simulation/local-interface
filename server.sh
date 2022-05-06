@@ -64,8 +64,9 @@ function start() {
     COMPOSE_FILE=docker-compose.swarm.yml
   fi
 
-  source .env
+  source .version
   if env VERSION="${VERSION}" docker stack deploy -c ./"$COMPOSE_FILE" li; then
+    echo "Version: ${VERSION}"
     echo "Interface can be accessed on port 80"
   else
     echo ""
