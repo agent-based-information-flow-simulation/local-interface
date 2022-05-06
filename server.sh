@@ -64,7 +64,8 @@ function start() {
     COMPOSE_FILE=docker-compose.swarm.yml
   fi
 
-  if docker stack deploy -c ./"$COMPOSE_FILE" li; then
+  source .env
+  if env VERSION="${VERSION}" docker stack deploy -c ./"$COMPOSE_FILE" li; then
     echo "Interface can be accessed on port 80"
   else
     echo ""
@@ -126,6 +127,12 @@ function publish() {
     docker-compose -f docker-compose.dev.swarm.yml build --parallel
     docker-compose -f docker-compose.dev.swarm.yml push
   else
+    source .env
+    read -p "Publish version ${VERSION} to registry? [y/n] " -r ANSWER
+    if [ "$ANSWER" != "y" ]; then
+      echo "aborting"
+      exit 1
+    fi
     docker-compose -f docker-compose.swarm.yml build --parallel
     docker-compose -f docker-compose.swarm.yml push
   fi
