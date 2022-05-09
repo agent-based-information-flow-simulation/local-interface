@@ -27,38 +27,6 @@ export const SimulationStatusManager = (props) => {
     setReportOpen(true);
   };
 
-  // https://stackoverflow.com/questions/40939380/how-to-get-file-name-from-content-disposition
-  const getTimeseriesFilename = async (response) => {
-    const contentDisposition = response.headers.get('content-disposition');
-    if (contentDisposition && contentDisposition.indexOf('attachment') !== -1) {
-      const filenameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
-      const matches = filenameRegex.exec(contentDisposition);
-      if (matches !== null && matches[1]) {
-        return matches[1].replace(/['"]/g, '');
-      }
-    } else {
-      return "timeseries.json";
-    }
-  }
-
-  const downloadTimeseries = async (simulationId) => {
-    const url = `http://localhost/api/simulations/${simulationId}/timeseries`;
-    const response = await fetch(url);
-
-    if (response.status === 400) {
-      const body = await response.json();
-      console.error(body['detail']);
-      return;
-    } else if (response.status !== 200) {
-      console.error("Error downloading timeseries");
-      return;
-    }
-
-    const filename = await getTimeseriesFilename(response);
-    const fileStream = streamSaver.createWriteStream(filename);
-    await response.body.pipeTo(fileStream);
-  }
-
   return (
     <>
       <TableContainer component={Paper} style={{ maxHeight: 400 }}>
@@ -98,12 +66,6 @@ export const SimulationStatusManager = (props) => {
         onClose={handleReportClose}
         simId={reportSimId}
       />
-
-      {/* TODO: remove this button */}
-      <button onClick={() => downloadTimeseries("7167312a-e")}>
-        click
-      </button>
-
     </>
   );
 };
