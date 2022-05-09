@@ -10,6 +10,7 @@ import {
 } from "@mui/material";
 import SimulationOptionsCell from "./SimulationOptionsCell";
 import SimulationReportDialog from "./SimulationReportDialog";
+import streamSaver from 'streamsaver';
 
 export const SimulationStatusManager = (props) => {
   const { simulationData, deleteCallback, restartCallback } = props;
