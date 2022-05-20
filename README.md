@@ -10,8 +10,8 @@
 
 ## About <a name = "about"></a>
 
-Local Interface for simulation definition, management and analysis.
-Local Interface is apart of the [Agents Assembly](https://agents-assembly.com) ecosystem.
+Local Interface for simulation definition, management, and analysis.
+Local Interface is a part of the [Agents Assembly](https://agents-assembly.com) ecosystem.
 Other applications are:
 - [Simulation Run Environment](https://github.com/agent-base-information-flow-simulation/simulation-run-environment) - scalable run environment for Agents Assembly.
 - [Communication Server](https://github.com/agent-based-information-flow-simulation/communication-server) - cluster of servers used for XMPP communication.
