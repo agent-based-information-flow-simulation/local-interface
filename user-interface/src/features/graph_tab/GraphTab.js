@@ -1,86 +1,18 @@
-import React, { useState } from "react";
-import { useDispatch } from "react-redux";
-import { Stack, Divider, Button, Grid, Alert, TextField } from "@mui/material";
-import DisplayList from "../components/DisplayList";
-import StatisticalDescEditor from "./editors/StatisticalDescEditor";
+import React, { useState } from 'react'
+import { Stack, Divider } from '@mui/material'
+import DisplayList from '../components/DisplayList'
+import StatisticalContainer from './containers/StatisticalContainer'
+import ManualContainer from './containers/manual_container/ManualContainer'
 
-import { setGraph } from "../simulationSlice";
+const stat_desc_name = 'Statistical Description'
+const manual_setup_name = 'Manual Setup'
 
-const graphDescTypes = ["Statistical description", "Custom method"]
+const graphDescTypes = [stat_desc_name, manual_setup_name]
 
-export const GraphTab = (props) => {
-
-  const dispatch = useDispatch();
-
-  const [modeIndex, setModeIndex] = useState(0);
-  const [defgCode, setDefgCode] = useState("");
-  const [error, setError] = useState(false);
-  const [success, setSuccess] = useState(false);
-  const [alertText, setAlertText] = useState("");
-  const [alertDisplay, setAlertDisplay] = useState(false);
-  const [codeSet, setCodeSet] = useState(false);
-  const [graphSize, setGraphSize] = useState("");
-  const [showError, setShowError] = useState(false);
-  const [graphData, setGraphData] = useState({})
-
+export const GraphTab = () => {
+  const [modeIndex, setModeIndex] = useState(0)
   const clickedMode = (el, index) => {
     setModeIndex(index)
-  }
-
-  const codeCallback = (code, info, data) => {
-    setAlertDisplay(false)
-    setAlertText(info);
-    setGraphData(data);
-    setError(false);
-    setSuccess(false);
-    setCodeSet(false);
-    if(code === "ERROR"){
-      setError(true);
-    }else{
-      setDefgCode(code);
-      setSuccess(true);
-      setCodeSet(true);
-    }
-  }
-
-  const alertClose = () => {
-    setError(false);
-    setSuccess(false);
-    setAlertDisplay(false);
-  }
-
-  const saveGraph = () => {
-    setShowError(true);
-    setAlertDisplay(true)
-    switch(modeIndex) {
-      case 0:
-        if(codeSet){
-          if(isNaN(parseInt(graphSize))){
-            setSuccess(false);
-            setError(true);
-            setAlertText("Specify graph size!!!");
-            break;
-          }
-          setSuccess(true);
-          let code = "GRAPH statistical\n";
-          code += "SIZE " + graphSize + "\n";
-          code += defgCode;
-          code += "EGRAPH\n";
-          let graph = {
-            type: "statistical",
-            size: graphSize,
-            agents: graphData.agentData,
-            code: code,
-          }
-          dispatch(setGraph(graph));
-        }
-        break;
-      case 1:
-        break;
-      default:
-        break;
-    }
-
   }
 
   return (
@@ -91,7 +23,7 @@ export const GraphTab = (props) => {
         <Divider
           orientation="vertical"
           flexItem
-          sx={{ color: "black", borderWidth: 1 }}
+          sx={{ color: 'black', borderWidth: 1 }}
         />
       }
       spacing={2}
@@ -102,33 +34,14 @@ export const GraphTab = (props) => {
         onItemClick={clickedMode}
         selectedItem={modeIndex}
       />
-      <Grid container
-      direction="column"
-      >
-        <Grid item sx={2}>
-          <TextField label="Graph Size" value={graphSize} onChange={(e) => setGraphSize(e.target.value)}/>
-        </Grid>
-        <Grid item sx={11}>
-        <StatisticalDescEditor codeCallback={codeCallback} displayError={showError} />
-        </Grid>
-        <Grid item sx={1}>
-          {
-            alertDisplay ? (
-              error ? (
-                <Alert severity="error" onClose={alertClose}> {alertText}</Alert>
-              ) : success ? (
-                <Alert severity="success" onClose={alertClose}> Saved sucessfully! </Alert>
-              ) : <> </>
-            ) : <></>
-          }
-        </Grid>
-        <Grid item sx={1}>
-        <Button variant="contained" onClick={saveGraph} sx={{margin: 5}}> Save Graph Description </Button>
-        </Grid>
-      </Grid>
+      {
+        modeIndex === graphDescTypes.indexOf(stat_desc_name) ? <StatisticalContainer /> : <></>
+      }{
+        modeIndex === graphDescTypes.indexOf(manual_setup_name) ? <ManualContainer /> : <></>
+      }
     </Stack>
     </>
-  );
-};
+  )
+}
 
-export default GraphTab;
+export default GraphTab

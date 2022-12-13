@@ -1,24 +1,24 @@
-import React from "react";
-import Tabs from "@mui/material/Tabs";
-import Tab from "@mui/material/Tab";
-import Box from "@mui/material/Box";
-import "./App.css";
-import { TabPanel, a11yProps } from "./features/tab_panel/TabPanel";
-import { AgentsTab } from "./features/agents_tab/AgentsTab";
-import { MessageTab } from "./features/message_tab/MessageTab";
-import GraphTab from "./features/graph_tab/GraphTab";
-import { VisualizationTab } from "./features/visualization_tab/VisualizationTab";
+import React from 'react'
+import Tabs from '@mui/material/Tabs'
+import Tab from '@mui/material/Tab'
+import Box from '@mui/material/Box'
+import './App.css'
+import { TabPanel, a11yProps } from './features/tab_panel/TabPanel'
+import { AgentsTab } from './features/agents_tab/AgentsTab'
+import { MessageTab } from './features/message_tab/MessageTab'
+import GraphTab from './features/graph_tab/GraphTab'
+import { VisualizationTab } from './features/visualization_tab/VisualizationTab'
 
-function App() {
-  const [value, setValue] = React.useState(0);
+function App () {
+  const [value, setValue] = React.useState(0)
 
   const handleChange = (event, newValue) => {
-    setValue(newValue);
-  };
+    setValue(newValue)
+  }
 
   return (
     <div className="App">
-      <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+      <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
         <Tabs
           value={value}
           onChange={handleChange}
@@ -43,7 +43,7 @@ function App() {
         <VisualizationTab />
       </TabPanel>
     </div>
-  );
+  )
 }
 
-export default App;
+export default App

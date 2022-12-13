@@ -1,51 +1,51 @@
-import React, { useState } from "react";
-import PropTypes from "prop-types";
+import React, { useState } from 'react'
+import PropTypes from 'prop-types'
 import {
   Stack,
   Autocomplete,
   TextField,
   IconButton,
   Select,
-  MenuItem,
-} from "@mui/material";
-import AddCircleIcon from "@mui/icons-material/AddCircle";
-import InlineText from "../InlineText";
+  MenuItem
+} from '@mui/material'
+import AddCircleIcon from '@mui/icons-material/AddCircle'
+import InlineText from '../InlineText'
 
 export const AssignEnumStatement = (props) => {
-  const { save, setEditOn, variables } = props;
+  const { save, setEditOn, variables } = props
 
-  const [curLhs, setCurLhs] = useState("");
-  const [curRhs, setCurRhs] = useState("");
-  const [rhsError, setRhsError] = useState(false);
-  const [rhsCandidates, setRhsCandidates] = useState([]);
+  const [curLhs, setCurLhs] = useState('')
+  const [curRhs, setCurRhs] = useState('')
+  const [rhsError, setRhsError] = useState(false)
+  const [rhsCandidates, setRhsCandidates] = useState([])
 
   const addAssignStatement = () => {
-    //validate RHS
-    let err_flag = false;
+    // validate RHS
+    let err_flag = false
     if (
       rhsCandidates.findIndex((el) => el === curRhs) === -1 ||
       !isNaN(parseFloat(curRhs))
     ) {
-      setRhsError(true);
-      err_flag = true;
+      setRhsError(true)
+      err_flag = true
     }
     if (!err_flag) {
-      let statement = curLhs + " = " + curRhs;
-      let operation = "SET     " + curLhs + "," + curRhs;
-      save(statement, operation);
-      setEditOn(false);
-      setRhsError(false);
+      const statement = curLhs + ' = ' + curRhs
+      const operation = 'SET     ' + curLhs + ',' + curRhs
+      save(statement, operation)
+      setEditOn(false)
+      setRhsError(false)
     }
-  };
+  }
   const handleLhsChange = (value) => {
-    setCurLhs(value);
-    let val = variables.find((el) => el.name === value);
-    setRhsCandidates(val.values.map((el, index) => el.name));
-  };
+    setCurLhs(value)
+    const val = variables.find((el) => el.name === value)
+    setRhsCandidates(val.values.map((el, index) => el.name))
+  }
 
   const handleRhsChange = (value) => {
-    setCurRhs(value);
-  };
+    setCurRhs(value)
+  }
 
   return (
     <Stack direction="row">
@@ -53,32 +53,32 @@ export const AssignEnumStatement = (props) => {
         {variables.map((el, index) => {
           return (
             <MenuItem value={el.name}>
-              {" "}
-              {el.name} ({el.type}){" "}
+              {' '}
+              {el.name} ({el.type}){' '}
             </MenuItem>
-          );
+          )
         })}
       </Select>
       <InlineText text="=" />
       <Select
         value={curRhs}
         onChange={(e) => setCurRhs(e.target.value)}
-        disabled={curLhs === ""}
+        disabled={curLhs === ''}
       >
         {rhsCandidates.map((el, index) => {
-          return <MenuItem value={el}> {el} (enum value) </MenuItem>;
+          return <MenuItem value={el}> {el} (enum value) </MenuItem>
         })}
       </Select>
       <IconButton
-        sx={{ p: "10px" }}
+        sx={{ p: '10px' }}
         color="primary"
         onClick={addAssignStatement}
       >
-        <AddCircleIcon sx={{ fontSize: "30px" }} />
+        <AddCircleIcon sx={{ fontSize: '30px' }} />
       </IconButton>
     </Stack>
-  );
-};
+  )
+}
 
 AssignEnumStatement.propTypes = {
   save: PropTypes.func.isRequired,
@@ -89,11 +89,11 @@ AssignEnumStatement.propTypes = {
       type: PropTypes.string,
       values: PropTypes.arrayOf(
         PropTypes.shape({
-          name: PropTypes.string.isRequired,
+          name: PropTypes.string.isRequired
         })
-      ),
+      )
     })
-  ).isRequired,
-};
+  ).isRequired
+}
 
-export default AssignEnumStatement;
+export default AssignEnumStatement

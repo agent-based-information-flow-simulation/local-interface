@@ -1,9 +1,9 @@
-import React from "react";
-import { Box } from "@mui/material";
+import React from 'react'
+import { Box } from '@mui/material'
 
 const FloatInit = (props) => {
-  return (<div>Value: {props.value}</div>);
-};
+  return (<div>Value: {props.value}</div>)
+}
 
 const FloatDistribution = (props) => {
   return (
@@ -15,12 +15,12 @@ const FloatDistribution = (props) => {
         <div>
           Argument {index}: {arg}
         </div>
-      );
+      )
     })
   }
   </>
-  );
-};
+  )
+}
 
 const EnumInit = (props) => {
   return (
@@ -31,7 +31,7 @@ const EnumInit = (props) => {
       props.values.map((val, index) => {
         return (
           <div> {val.name} </div>
-        );
+        )
       })
     }
     </>
@@ -46,7 +46,7 @@ const EnumPercentages = (props) => {
       props.values.map((val, index) => {
         return (
           <div> {val.name} : {val.percentage}% </div>
-        );
+        )
       })
     }
     </>
@@ -55,41 +55,41 @@ const EnumPercentages = (props) => {
 
 const renderParam = (param) => {
   switch (param.type) {
-    case "float":
-      if(param.mode === "init"){
-        return <FloatInit value={param.value} />;
-      }else{
+    case 'float':
+      if (param.mode === 'init') {
+        return <FloatInit value={param.value} />
+      } else {
         return <FloatDistribution distribution={param.distribution} distribution_args={param.distribution_args}/>
       }
-    case "enum":
-      if(param.mode.contains('init')){
+    case 'enum':
+      if (param.mode.contains('init')) {
         return <EnumInit values={param.values} selectedIndex={param.selectedInit} />
-      }else{
+      } else {
         return <EnumPercentages values={param.values}/>
       }
     default:
-      return (<></>);
+      return (<></>)
   }
-};
+}
 
 export const ParamInspector = (props) => {
-  const { param } = props;
+  const { param } = props
   return (
     <Box
       sx={{
-        width: "100%",
+        width: '100%',
         height: 700,
-        bgcolor: "background.paper",
-        display: "inline-block",
+        bgcolor: 'background.paper',
+        display: 'inline-block',
         paddingTop: 9,
-        marginLeft: 10,
+        marginLeft: 10
       }}
     >
       <h1> {param.name} </h1>
       <h2> {param.type} </h2>
       {renderParam(param)}
     </Box>
-  );
-};
+  )
+}
 
-export default ParamInspector;
+export default ParamInspector

@@ -1,58 +1,57 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice } from '@reduxjs/toolkit'
 
 const initialState = {
   agents: [],
   current_selected: -1,
   parameters: [],
   behaviours: [],
-  actions: [],
-};
+  actions: []
+}
 
 export const agentsTabSlice = createSlice({
-  name: "agentsTab",
+  name: 'agentsTab',
   initialState,
   reducers: {
     addParam: (state, action) => {
-      state.param_count += 1;
-      let newArr = JSON.parse(JSON.stringify(state.parameters));
-      newArr.push(action.payload);
-      state.parameters = newArr;
+      state.param_count += 1
+      const newArr = JSON.parse(JSON.stringify(state.parameters))
+      newArr.push(action.payload)
+      state.parameters = newArr
     },
     addBehav: (state, action) => {
-      state.behaviours.push(action.payload);
+      state.behaviours.push(action.payload)
     },
     addAction: (state, action) => {
-      state.actions.push(action.payload);
+      state.actions.push(action.payload)
     },
     reset: (state, action) => {
-      state.parameters = [];
-      state.behaviours = [];
-    },
-  },
-});
+      state.parameters = []
+      state.behaviours = []
+    }
+  }
+})
 
-export const { addParam, addBehav, reset } = agentsTabSlice.actions;
+export const { addParam, addBehav, reset } = agentsTabSlice.actions
 
 export const selectCurrentAgent = (state) => {
-  if (state.current_selected !== -1)
-    return state.agents[state.current_selected];
-  //TODO Else, deselect, return something magical
-};
+  if (state.current_selected !== -1) { return state.agents[state.current_selected] }
+  // TODO Else, deselect, return something magical
+}
 
 export const selectAgents = (state) => {
-  return state.agentsTab.agents;
-};
+  return state.agentsTab.agents
+}
 
 export const selectActions = (state) => {
-  return state.agentsTab.actions;
-};
+  return state.agentsTab.actions
+}
 
 export const selectParameters = (state) => {
-  return state.agentsTab.parameters;
-};
+  return state.agentsTab.parameters
+}
 
 export const selectBehaviours = (state) => {
-  return state.agentsTab.behaviours;
-};
+  return state.agentsTab.behaviours
+}
 
-export default agentsTabSlice.reducer;
+export default agentsTabSlice.reducer

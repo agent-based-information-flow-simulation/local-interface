@@ -1,39 +1,39 @@
-import React from "react";
-import DialogTitle from "@mui/material/DialogTitle";
-import Dialog from "@mui/material/Dialog";
-import { Container } from "@mui/material";
-import { validateQualifiedName } from "../../app/utils";
-import MessageFloatParam from "./MessageFloatParam";
+import React from 'react'
+import DialogTitle from '@mui/material/DialogTitle'
+import Dialog from '@mui/material/Dialog'
+import { Container } from '@mui/material'
+import { validateQualifiedName } from '../../app/utils'
+import MessageFloatParam from './MessageFloatParam'
 
-import {useDispatch} from "react-redux"
+import { useDispatch } from 'react-redux'
 
 export const MessageParamsDialog = (props) => {
-  const { onClose, open, type, addParam} = props;
-  const dispatch = useDispatch();
+  const { onClose, open, type, addParam } = props
+  const dispatch = useDispatch()
 
   const handleClose = (event, reason) => {
-    onClose(false);
-  };
+    onClose(false)
+  }
 
   const save = (paramData) => {
-    let param = {};
-    if(!validateQualifiedName(paramData.name)) onClose(true);
+    const param = {}
+    if (!validateQualifiedName(paramData.name)) onClose(true)
     else {
-      param.name = paramData.name;
-      param.type = paramData.type;
-      dispatch(addParam(param));
-      onClose(false);
+      param.name = paramData.name
+      param.type = paramData.type
+      dispatch(addParam(param))
+      onClose(false)
     }
   }
 
   const ModeDisplay = () => {
     switch (type) {
-      case "float":
-        return <MessageFloatParam save={save}/>;
+      case 'float':
+        return <MessageFloatParam save={save}/>
       default:
-        return <></>;
+        return <></>
     }
-  };
+  }
 
   return (
     <Dialog
@@ -47,5 +47,5 @@ export const MessageParamsDialog = (props) => {
         <ModeDisplay />
       </Container>
     </Dialog>
-  );
+  )
 }

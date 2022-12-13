@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from "react";
-import { useSelector } from "react-redux";
-import PropTypes from "prop-types"
+import React, { useState, useEffect } from 'react'
+import { useSelector } from 'react-redux'
+import PropTypes from 'prop-types'
 
 import {
   FormControl,
@@ -13,139 +13,139 @@ import {
   TextField,
   Button,
   Alert
-} from "@mui/material";
+} from '@mui/material'
 
-import {selectEnums} from "./enumSlice";
+import { selectEnums } from './enumSlice'
 
-import NewEnumVal from "./NewEnumVal";
-import EnumVal from "./EnumVal";
-import { errorCodes, validateEnumParam } from "../../app/utils";
+import NewEnumVal from './NewEnumVal'
+import EnumVal from './EnumVal'
+import { errorCodes, validateEnumParam } from '../../app/utils'
 
 const EnumParam = (props) => {
-  const {save} = props
-  const [enumType, setEnumType] = useState("new");
-  const [enumState, setEnumState] = useState("init");
+  const { save } = props
+  const [enumType, setEnumType] = useState('new')
+  const [enumState, setEnumState] = useState('init')
 
-  const [selectedExistingEnum, setSelectedExistingEnum] = useState(0);
-  const enums = useSelector(selectEnums);
+  const [selectedExistingEnum, setSelectedExistingEnum] = useState(0)
+  const enums = useSelector(selectEnums)
 
-  const [enumVals, setEnumVals] = useState([]);
-  const [enumValName, setEnumValName] = useState("");
-  const [enumValNameError, setEnumValNameError] = useState(false);
-  const [percentageError, setPrecentageError] = useState(false);
-  const [selectedIndex, setSelectedIndex] = useState(0);
-  const [paramName, setParamName] = useState("");
-  const [paramData, setParamData] = useState({});
+  const [enumVals, setEnumVals] = useState([])
+  const [enumValName, setEnumValName] = useState('')
+  const [enumValNameError, setEnumValNameError] = useState(false)
+  const [percentageError, setPrecentageError] = useState(false)
+  const [selectedIndex, setSelectedIndex] = useState(0)
+  const [paramName, setParamName] = useState('')
+  const [paramData, setParamData] = useState({})
 
-  const [displayError, setDisplayError] = useState(false);
-  const [errorText, setErrorText] = useState("");
+  const [displayError, setDisplayError] = useState(false)
+  const [errorText, setErrorText] = useState('')
 
   const addButtonClick = () => {
-    const code = validateEnumParam(paramData);
-    if(code !== 0){
-      setDisplayError(true);
-      const error = errorCodes.find(el => el.code === code);
-      setErrorText(error.info);
-      return;
-    }else{
-      save(paramData);
+    const code = validateEnumParam(paramData)
+    if (code !== 0) {
+      setDisplayError(true)
+      const error = errorCodes.find(el => el.code === code)
+      setErrorText(error.info)
+    } else {
+      save(paramData)
     }
   }
 
   const addEnumVal = () => {
-    if (enumVals.some((el) => el.name === enumValName) || enumValName === "") {
-      setEnumValNameError(true);
+    if (enumVals.some((el) => el.name === enumValName) || enumValName === '') {
+      setEnumValNameError(true)
     } else {
       const newVal = {
         name: enumValName,
-        percentage: 0,
-      };
-      setEnumVals((enumVals) => [...enumVals, newVal]);
-      setEnumValName("");
+        percentage: 0
+      }
+      setEnumVals((enumVals) => [...enumVals, newVal])
+      setEnumValName('')
     }
-    updateParamData();
-  };
+    updateParamData()
+  }
 
   const onEnumValFieldChange = (value) => {
-    setEnumValName(value);
-    setEnumValNameError(false);
-  };
+    setEnumValName(value)
+    setEnumValNameError(false)
+  }
 
   const removeEnumVal = (name) => {
-    setEnumVals(enumVals.filter((item) => item.name !== name));
-    updateParamData();
-  };
+    setEnumVals(enumVals.filter((item) => item.name !== name))
+    updateParamData()
+  }
 
   const setPercentage = (name, percentage) => {
-    let newVals = JSON.parse(JSON.stringify(enumVals));
-    let index = newVals.findIndex((el) => el.name === name);
+    const newVals = JSON.parse(JSON.stringify(enumVals))
+    const index = newVals.findIndex((el) => el.name === name)
     if (index !== -1) {
-      newVals[index].percentage = percentage;
+      newVals[index].percentage = percentage
     }
-    setEnumVals(newVals);
-    let sum = 0;
+    setEnumVals(newVals)
+    let sum = 0
     for (let i = 0; i < newVals.length; i++) {
-      sum += parseFloat(newVals[i].percentage);
+      sum += parseFloat(newVals[i].percentage)
     }
     if (sum !== 100) {
-      setPrecentageError(true);
+      setPrecentageError(true)
     } else {
-      setPrecentageError(false);
+      setPrecentageError(false)
     }
-    updateParamData();
-  };
+    updateParamData()
+  }
 
   const handleEnumStateChange = (value) => {
-    setEnumState(value);
-    updateParamData();
-  };
+    setEnumState(value)
+    updateParamData()
+  }
 
   const handleSelectionChange = (value) => {
-    setSelectedIndex(value);
-    updateParamData();
-  };
+    setSelectedIndex(value)
+    updateParamData()
+  }
 
   const updateParamData = () => {
-    let newParamData = {};
-    newParamData.type = enumType;
-    newParamData.name = paramName;
+    const newParamData = {}
+    newParamData.type = enumType
+    newParamData.name = paramName
     switch (enumType) {
-      case "new":
-        newParamData.state = enumState;
+      case 'new':
+        newParamData.state = enumState
         switch (enumState) {
-          case "init":
-            let updateVals = [...enumVals];
-            updateVals = updateVals.map((el,index) => {
-              return index === selectedIndex ? {...el, percentage: "100"} : el;
+          case 'init':
+            let updateVals = [...enumVals]
+            updateVals = updateVals.map((el, index) => {
+              return index === selectedIndex ? { ...el, percentage: '100' } : el
             })
-            newParamData.enumVals = updateVals;
-            break;
-          case "percentages":
-            newParamData.enumVals = enumVals;
-            break;
+            newParamData.enumVals = updateVals
+            break
+          case 'percentages':
+            newParamData.enumVals = enumVals
+            break
           default:
-            break;
+            break
         }
-        break;
-      case "existing":
-        newParamData.oldEnumData = enums[selectedExistingEnum];
-        break;
+        break
+      case 'existing':
+        newParamData.oldEnumData = enums[selectedExistingEnum]
+        break
       default:
-        break;
+        break
     }
-    setParamData(newParamData);
-  };
+    setParamData(newParamData)
+  }
 
   // I have no idea why this works
-  useEffect(()=>{
+  useEffect(() => {
     updateParamData()
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [paramName, enumType, enumVals]);
+  }, [paramName, enumType, enumVals])
 
   return (
     <>
     <FormControl fullWidth sx={{ marginTop: 2 }}>
-      {enumType === "new" ? (
+      {enumType === 'new'
+        ? (
         <TextField
           variant="outlined"
           label="Name"
@@ -153,14 +153,16 @@ const EnumParam = (props) => {
           value={paramName}
           onChange={(e) => setParamName(e.target.value)}
         />
-      ) : (
+          )
+        : (
         <></>
-      )}
+          )}
       <Select value={enumType} onChange={(e) => setEnumType(e.target.value)}>
-        <MenuItem value={"new"}> New enumerable </MenuItem>
-        <MenuItem value={"existing"}> Existing enumerable </MenuItem>
+        <MenuItem value={'new'}> New enumerable </MenuItem>
+        <MenuItem value={'existing'}> Existing enumerable </MenuItem>
       </Select>
-      {enumType === "new" ? (
+      {enumType === 'new'
+        ? (
         <>
           <RadioGroup
             value={enumState}
@@ -177,22 +179,24 @@ const EnumParam = (props) => {
               label="Percentages"
             />
           </RadioGroup>
-          {enumState === "init" && enumVals.length > 0 ? (
+          {enumState === 'init' && enumVals.length > 0
+            ? (
             <>
               <Select
                 value={selectedIndex}
                 onChange={(e) => handleSelectionChange(e.target.value)}
                 sx={{ margin: 1 }}
               >
-                {" "}
+                {' '}
                 {enumVals.map((key, index) => {
-                  return <MenuItem value={index}> {key.name} </MenuItem>;
+                  return <MenuItem value={index}> {key.name} </MenuItem>
                 })}
               </Select>
             </>
-          ) : (
+              )
+            : (
             <></>
-          )}
+              )}
           <List>
             {enumVals.map((key) => {
               return (
@@ -204,7 +208,7 @@ const EnumParam = (props) => {
                   removeEnumVal={removeEnumVal}
                   error={percentageError}
                 />
-              );
+              )
             })}
           </List>
           <NewEnumVal
@@ -214,7 +218,9 @@ const EnumParam = (props) => {
             error={enumValNameError}
           />
         </>
-      ) : enumType === "existing" ? (
+          )
+        : enumType === 'existing'
+          ? (
         <>
         <Select
           value={selectedExistingEnum}
@@ -222,30 +228,30 @@ const EnumParam = (props) => {
           sx={{ margin: 1 }}
         >
           {
-            enums.map((key,index)=> {
-              return <MenuItem value={index}> {key.name} </MenuItem>;
+            enums.map((key, index) => {
+              return <MenuItem value={index}> {key.name} </MenuItem>
             })
           }
 
         </Select>
         </>
-      ) : (
+            )
+          : (
         <></>
-      )}
+            )}
     </FormControl>
     {
-      displayError ?
-      <Alert severity="error" onClose={(e) => setDisplayError(false)}> {errorText} </Alert>
-      :
-      <></>
+      displayError
+        ? <Alert severity="error" onClose={(e) => setDisplayError(false)}> {errorText} </Alert>
+        : <></>
     }
     <Button onClick={addButtonClick}> Add parameter </Button>
     </>
-  );
-};
+  )
+}
 
 EnumParam.propTypes = {
-  save: PropTypes.func.isRequired,
-};
+  save: PropTypes.func.isRequired
+}
 
-export default EnumParam;
+export default EnumParam

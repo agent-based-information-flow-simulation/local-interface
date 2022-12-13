@@ -1,10 +1,10 @@
-import React from "react";
-import Box from "@mui/material/Box";
-import PropTypes from "prop-types";
-import Typography from "@mui/material/Typography";
+import React from 'react'
+import Box from '@mui/material/Box'
+import PropTypes from 'prop-types'
+import Typography from '@mui/material/Typography'
 
-export function TabPanel(props) {
-  const { children, value, index, ...other } = props;
+export function TabPanel (props) {
+  const { children, value, index, ...other } = props
 
   return (
     <div
@@ -16,24 +16,24 @@ export function TabPanel(props) {
     >
       {value === index && (
         <Box sx={{ p: 2 }}>
-          <Typography component={"span"} variant={"body2"}>
+          <Typography component={'span'} variant={'body2'}>
             {children}
           </Typography>
         </Box>
       )}
     </div>
-  );
+  )
 }
 
 TabPanel.propTypes = {
   children: PropTypes.node,
   index: PropTypes.number.isRequired,
-  value: PropTypes.number.isRequired,
-};
+  value: PropTypes.number.isRequired
+}
 
-export function a11yProps(index) {
+export function a11yProps (index) {
   return {
     id: `simple-tab-${index}`,
-    "aria-controls": `simple-tabpanel-${index}`,
-  };
+    'aria-controls': `simple-tabpanel-${index}`
+  }
 }

@@ -1,78 +1,76 @@
-import React, { useState } from "react";
-import PropTypes from "prop-types";
+import React, { useState } from 'react'
+import PropTypes from 'prop-types'
 import {
- Stack,
- Autocomplete,
- TextField,
- Select,
- MenuItem,
- IconButton
-} from "@mui/material"
-import AddCircleIcon from "@mui/icons-material/AddCircle";
+  Stack,
+  Autocomplete,
+  TextField,
+  Select,
+  MenuItem,
+  IconButton
+} from '@mui/material'
+import AddCircleIcon from '@mui/icons-material/AddCircle'
 
 const FloatExprOps = [
-  { opcode: "ADD ", label: "+=" },
-  { opcode: "SUBT", label: "-=" },
-  { opcode: "MULT", label: "*=" },
-  { opcode: "DIV ", label: "/=" },
-];
+  { opcode: 'ADD ', label: '+=' },
+  { opcode: 'SUBT', label: '-=' },
+  { opcode: 'MULT', label: '*=' },
+  { opcode: 'DIV ', label: '/=' }
+]
 
 export const ExprStatement = (props) => {
+  const { save, setEditOn, lhsCandidates, rhsCandidates } = props
 
-  const { save, setEditOn, lhsCandidates, rhsCandidates} = props;
-
-  const [curLhs, setCurLhs] = useState("");
-  const [lhsError, setLhsError] = useState(false);
-  const [curRhs, setCurRhs] = useState("");
-  const [rhsError, setRhsError] = useState(false);
-  const [curOpCode, setCurOpCode] = useState(FloatExprOps[0].opcode);
+  const [curLhs, setCurLhs] = useState('')
+  const [lhsError, setLhsError] = useState(false)
+  const [curRhs, setCurRhs] = useState('')
+  const [rhsError, setRhsError] = useState(false)
+  const [curOpCode, setCurOpCode] = useState(FloatExprOps[0].opcode)
 
   const handleLhsChange = (value) => {
-    setCurLhs(value);
-  };
+    setCurLhs(value)
+  }
 
   const handleRhsChange = (value) => {
-    setCurRhs(value);
-  };
-
+    setCurRhs(value)
+  }
 
   const addExprStatement = () => {
-    //validate LHS
-    let err_flag = false;
+    // validate LHS
+    let err_flag = false
     if (lhsCandidates.findIndex((el) => el.name === curLhs) === -1) {
-      setLhsError(true);
-      err_flag = true;
+      setLhsError(true)
+      err_flag = true
     }
-    //validate RHS
+    // validate RHS
     if (
       rhsCandidates.findIndex((el) => el.name === curRhs) === -1 &&
       isNaN(parseFloat(curRhs))
     ) {
-      setRhsError(true);
-      err_flag = true;
+      setRhsError(true)
+      err_flag = true
     }
     if (!err_flag) {
-      let statement =
+      const statement =
         curLhs +
-        " " +
+        ' ' +
         FloatExprOps.find((el) => el.opcode === curOpCode).label +
-        " " +
-        curRhs;
-      let operation = curOpCode + "    " + curLhs + "," + curRhs;
-      save(statement, operation);
-      setEditOn(false);
-      setLhsError(false);
-      setRhsError(false);
+        ' ' +
+        curRhs
+      const operation = curOpCode + '    ' + curLhs + ',' + curRhs
+      save(statement, operation)
+      setEditOn(false)
+      setLhsError(false)
+      setRhsError(false)
     }
-  };
+  }
 
   return (
     <Stack direction="row">
       <Autocomplete
         freeSolo
-        options={lhsCandidates.map((el,index)=> el===undefined ? "" : el.name)}
+        options={lhsCandidates.map((el, index) => el === undefined ? '' : el.name)}
         renderInput={(params) => <TextField {...params} />}
-        sx={{ width: "200px" }}
+        sx={{ width: '200px' }}
         error={lhsError}
         value={curLhs}
         inputValue={curLhs}
@@ -81,26 +79,26 @@ export const ExprStatement = (props) => {
       />
       <Select value={curOpCode} onChange={(e) => setCurOpCode(e.target.value)}>
         {FloatExprOps.map((op, index) => {
-          return <MenuItem value={op.opcode}> {op.label} </MenuItem>;
+          return <MenuItem value={op.opcode}> {op.label} </MenuItem>
         })}
       </Select>
       <Autocomplete
         freeSolo
-        options={rhsCandidates.map((el,index)=>el.name)}
+        options={rhsCandidates.map((el, index) => el.name)}
         renderInput={(params) => <TextField {...params} />}
-        sx={{ width: "200px" }}
+        sx={{ width: '200px' }}
         error={rhsError}
         value={curRhs}
         inputValue={curRhs}
         onInputChange={(event, value) => handleRhsChange(value)}
         helperText="RHS must be a valid property or a number"
       />
-      <IconButton sx={{ p: "10px" }} color="primary" onClick={addExprStatement}>
-        <AddCircleIcon sx={{ fontSize: "30px" }} />
+      <IconButton sx={{ p: '10px' }} color="primary" onClick={addExprStatement}>
+        <AddCircleIcon sx={{ fontSize: '30px' }} />
       </IconButton>
     </Stack>
-  );
-};
+  )
+}
 
 ExprStatement.propTypes = {
   save: PropTypes.func.isRequired,
@@ -112,8 +110,7 @@ ExprStatement.propTypes = {
   rhsCandidates: PropTypes.arrayOf(PropTypes.shape({
     name: PropTypes.string,
     type: PropTypes.string
-  })).isRequired,
+  })).isRequired
 }
 
-
-export default ExprStatement;
+export default ExprStatement

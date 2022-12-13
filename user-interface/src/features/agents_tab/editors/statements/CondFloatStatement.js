@@ -1,77 +1,77 @@
-import React, { useState } from "react";
-import PropTypes from "prop-types";
+import React, { useState } from 'react'
+import PropTypes from 'prop-types'
 import {
   Stack,
   Autocomplete,
   MenuItem,
   IconButton,
   TextField,
-  Select,
-} from "@mui/material";
-import AddCircleIcon from "@mui/icons-material/AddCircle";
+  Select
+} from '@mui/material'
+import AddCircleIcon from '@mui/icons-material/AddCircle'
 
-import { useDispatch } from "react-redux";
-import { openBlock } from "../editorSlice";
+import { useDispatch } from 'react-redux'
+import { openBlock } from '../editorSlice'
 
 const FloatCondOps = [
-  { opcode: "ILT  ", label: "<" },
-  { opcode: "IGT  ", label: ">" },
-  { opcode: "ILTEQ", label: "<=" },
-  { opcode: "IGTEQ", label: ">=" },
-  { opcode: "IEQ  ", label: "==" },
-  { opcode: "INEQ ", label: "!=" },
-];
+  { opcode: 'ILT  ', label: '<' },
+  { opcode: 'IGT  ', label: '>' },
+  { opcode: 'ILTEQ', label: '<=' },
+  { opcode: 'IGTEQ', label: '>=' },
+  { opcode: 'IEQ  ', label: '==' },
+  { opcode: 'INEQ ', label: '!=' }
+]
 
 export const CondFloatStatement = (props) => {
-  const { save, setEditOn, variables } = props;
-  const dispatch = useDispatch();
+  const { save, setEditOn, variables } = props
+  const dispatch = useDispatch()
 
-  const [curLhs, setCurLhs] = useState("");
-  const [lhsError, setLhsError] = useState(false);
-  const [curRhs, setCurRhs] = useState("");
-  const [rhsError, setRhsError] = useState(false);
-  const [curOpCode, setCurOpCode] = useState(FloatCondOps[0].opcode);
+  const [curLhs, setCurLhs] = useState('')
+  const [lhsError, setLhsError] = useState(false)
+  const [curRhs, setCurRhs] = useState('')
+  const [rhsError, setRhsError] = useState(false)
+  const [curOpCode, setCurOpCode] = useState(FloatCondOps[0].opcode)
 
   const handleLhsChange = (value) => {
-    setCurLhs(value);
-  };
+    setCurLhs(value)
+  }
 
   const handleRhsChange = (value) => {
-    setCurRhs(value);
-  };
+    setCurRhs(value)
+  }
 
   const addCondStatement = () => {
-    let err_flag = false;
+    let err_flag = false
     if (
       variables.findIndex((el) => el.name === curLhs) === -1 &&
       isNaN(parseFloat(curLhs))
     ) {
-      setLhsError(true);
-      err_flag = true;
+      setLhsError(true)
+      err_flag = true
     }
     if (
       variables.findIndex((el) => el.name === curRhs) === -1 &&
       isNaN(parseFloat(curRhs))
     ) {
-      setRhsError(true);
-      err_flag = true;
+      setRhsError(true)
+      err_flag = true
     }
     if (!err_flag) {
-      let statement =
-        "If " +
+      const statement =
+        'If ' +
         curLhs +
-        " " +
+        ' ' +
         FloatCondOps.find((el) => el.opcode === curOpCode).label +
-        " " +
-        curRhs;
-      let operation = curOpCode + "    " + curLhs + "," + curRhs;
-      dispatch(openBlock());
-      save(statement, operation);
-      setEditOn(false);
-      setLhsError(false);
-      setRhsError(false);
+        ' ' +
+        curRhs
+      const operation = curOpCode + '    ' + curLhs + ',' + curRhs
+      dispatch(openBlock())
+      save(statement, operation)
+      setEditOn(false)
+      setLhsError(false)
+      setRhsError(false)
     }
-  };
+  }
 
   return (
     <Stack direction="row">
@@ -79,7 +79,7 @@ export const CondFloatStatement = (props) => {
         freeSolo
         options={variables.map((el, index) => el.name)}
         renderInput={(params) => <TextField {...params} />}
-        sx={{ width: "200px" }}
+        sx={{ width: '200px' }}
         error={lhsError}
         value={curLhs}
         inputValue={curLhs}
@@ -88,26 +88,26 @@ export const CondFloatStatement = (props) => {
       />
       <Select value={curOpCode} onChange={(e) => setCurOpCode(e.target.value)}>
         {FloatCondOps.map((op, index) => {
-          return <MenuItem value={op.opcode}> {op.label} </MenuItem>;
+          return <MenuItem value={op.opcode}> {op.label} </MenuItem>
         })}
       </Select>
       <Autocomplete
         freeSolo
         options={variables.map((el, index) => el.name)}
         renderInput={(params) => <TextField {...params} />}
-        sx={{ width: "200px" }}
+        sx={{ width: '200px' }}
         error={rhsError}
         value={curRhs}
         inputValue={curRhs}
         onInputChange={(event, value) => handleRhsChange(value)}
         helperText="RHS must be a valid variable or a number"
       />
-      <IconButton sx={{ p: "10px" }} color="primary" onClick={addCondStatement}>
-        <AddCircleIcon sx={{ fontSize: "30px" }} />
+      <IconButton sx={{ p: '10px' }} color="primary" onClick={addCondStatement}>
+        <AddCircleIcon sx={{ fontSize: '30px' }} />
       </IconButton>
     </Stack>
-  );
-};
+  )
+}
 
 CondFloatStatement.propTypes = {
   save: PropTypes.func.isRequired,
@@ -115,9 +115,9 @@ CondFloatStatement.propTypes = {
   variables: PropTypes.arrayOf(
     PropTypes.shape({
       name: PropTypes.string,
-      type: PropTypes.string,
+      type: PropTypes.string
     })
-  ).isRequired,
-};
+  ).isRequired
+}
 
-export default CondFloatStatement;
+export default CondFloatStatement
