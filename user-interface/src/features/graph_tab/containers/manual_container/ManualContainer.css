@@ -43,3 +43,11 @@
   font-weight: bold;
   display: none;
 }
+
+.code-display {
+  overflow-y: scroll;
+  padding: 30px;
+  margin: 10px;
+  height: 100%;
+  white-space: pre;
+}

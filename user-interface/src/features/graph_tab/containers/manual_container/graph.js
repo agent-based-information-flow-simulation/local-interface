@@ -8,7 +8,7 @@ export class Vertex {
   }
 }
 
-class Graph {
+export class Graph {
   constructor () {
     this.node_map = []
     this.edge_map = {}
@@ -130,6 +130,11 @@ class Graph {
       return {
         id: index,
         label: node.label,
+        color: {
+          border: 'black',
+          background: 'white'
+
+        },
         x: node.x,
         y: node.y
       }
@@ -170,6 +175,19 @@ class Graph {
     let description = this.node_map.length + ","
     let complete_graph_labels = []
   }
+
+  get_AASM () {
+    const preamble = "GRAPH matrix\n"
+    const size = "SIZE " + this.node_map.length + "\n"
+    let code = preamble + size
+    this.matrix.forEach((row, index) => {
+      code += "DEFNODE " + this.node_map[index].label + "\nR" + row.join('') + "\n"
+    })
+    const epilogue = "EGRAPH\n"
+    code += epilogue
+    return code
+  }
 }
 
 export default Graph
+

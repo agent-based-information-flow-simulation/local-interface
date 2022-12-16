@@ -107,7 +107,11 @@ export const ManualContainer = () => {
         spacing={2}
       >
         <h3>Manual setup</h3>
-        <NodeDescription nodeCallback={nodeTypeChanged} descriptionCallback={descriptionCallback}/>
+        <NodeDescription 
+          nodeCallback={nodeTypeChanged}
+          descriptionCallback={descriptionCallback}
+          AASM_Code={graph.get_AASM()}
+        />
         <Stack style={{width: '100%'}} direction='row'>
         <div ref={visJsRef} style={{ width: '100%', height: '800px' }}></div>
           <table className='matrix' id='matrix_tab' style={{width: '800px', height: '800px', margin: '25px', font_size: '20px'}}>
