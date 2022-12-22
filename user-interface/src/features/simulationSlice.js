@@ -22,6 +22,7 @@ export const simulationSlice = createSlice({
     },
     setGraph: (state, action) => {
       state.graph = action.payload
+      console.log(state.graph)
     }
   }
 })

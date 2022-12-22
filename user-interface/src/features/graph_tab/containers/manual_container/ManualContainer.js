@@ -1,6 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { Stack, Button } from '@mui/material'
 
+import { useDispatch } from 'react-redux'
+import { setGraph } from '../../../simulationSlice'
+
 import { Network } from 'vis-network'
 import { DataSet } from 'vis-data'
 
@@ -10,7 +13,9 @@ import './ManualContainer.css'
 import Graph, { Vertex } from './graph'
 
 export const ManualContainer = () => {
-  const [graph, setGraph] = useState(new Graph())
+  const dispatch = useDispatch()
+
+  const [graph_instance, setGraphInstance] = useState(new Graph())
   const [nodes, setNodes] = useState(new DataSet([]))
   const [edges, setEdges] = useState(new DataSet([]))
 
@@ -18,7 +23,7 @@ export const ManualContainer = () => {
 
   const descriptionCallback = (description) => {
     const new_graph = Graph.graph_from_description(description)
-    setGraph(new_graph)
+    setGraphInstance(new_graph)
     setNodes(new_graph.get_nodes())
     setEdges(new_graph.get_edges())
   }
@@ -32,15 +37,15 @@ export const ManualContainer = () => {
       console.error('No node type selected')
     } else {
       console.log(nodeData)
-      const copy = Graph.copy_graph(graph)
+      const copy = Graph.copy_graph(graph_instance)
       const node = new Vertex(nodeType, nodeData.x, nodeData.y)
       copy.add_node(node)
-      setGraph(copy)
+      setGraphInstance(copy)
     }
   }
 
   const add_edge = (edgeData, _) => {
-    const copy = Graph.copy_graph(graph)
+    const copy = Graph.copy_graph(graph_instance)
     if(edgeData.from > edgeData.to) {
       const id = Graph.get_edge_id(edgeData.from, edgeData.to)
       copy.add_edge(edgeData.from, edgeData.to, id)
@@ -48,22 +53,22 @@ export const ManualContainer = () => {
       const id = Graph.get_edge_id(edgeData.to, edgeData.from)
       copy.add_edge(edgeData.from, edgeData.to, id)
     }
-    setGraph(copy)
+    setGraphInstance(copy)
   }
 
   const delete_node = (data, callback) => {
     console.log(data)
-    const copy = Graph.copy_graph(graph)
+    const copy = Graph.copy_graph(graph_instance)
     copy.delete_node(data.nodes[0])
-    setGraph(copy)
+    setGraphInstance(copy)
     callback(null)
   }
 
   const delete_edge = (data, callback) => {
     console.log(data)
-    const copy = Graph.copy_graph(graph)
+    const copy = Graph.copy_graph(graph_instance)
     copy.delete_edge(data.edges[0])
-    setGraph(copy)
+    setGraphInstance(copy)
     callback(null)
   }
 
@@ -94,9 +99,15 @@ export const ManualContainer = () => {
   }, [visJsRef, nodes, edges, options])
 
   useEffect(() => {
-    setNodes(graph.get_nodes())
-    setEdges(graph.get_edges())
-  }, [graph])
+    setNodes(graph_instance.get_nodes())
+    setEdges(graph_instance.get_edges())
+    const graph_data = {
+      type: 'matrix',
+      size: graph_instance.node_map.length,
+      code: graph_instance.get_AASM()
+    }
+    dispatch(setGraph(graph_data))
+  }, [graph_instance])
 
   const nodeTypeChanged = (nodeType) => {
     setNodeType('Agent')
@@ -110,13 +121,13 @@ export const ManualContainer = () => {
         <NodeDescription 
           nodeCallback={nodeTypeChanged}
           descriptionCallback={descriptionCallback}
-          AASM_Code={graph.get_AASM()}
+          AASM_Code={graph_instance.get_AASM()}
         />
         <Stack style={{width: '100%'}} direction='row'>
         <div ref={visJsRef} style={{ width: '100%', height: '800px' }}></div>
           <table className='matrix' id='matrix_tab' style={{width: '800px', height: '800px', margin: '25px', font_size: '20px'}}>
         {
-          graph.matrix.map((row, i) => {
+          graph_instance.matrix.map((row, i) => {
             return (
               <tr className='matrix' key={i}>
                 {row.map((col, j) => {
