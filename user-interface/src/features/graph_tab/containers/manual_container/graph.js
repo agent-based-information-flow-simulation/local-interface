@@ -1,5 +1,3 @@
-import { DataSet } from 'vis-data'
-
 export class Vertex {
   constructor (label, x, y) {
     this.label = label
@@ -126,7 +124,7 @@ export class Graph {
   }
 
   get_nodes () {
-    return new DataSet(this.node_map.map((node, index) => {
+    return this.node_map.map((node, index) => {
       return {
         id: index,
         label: node.label,
@@ -138,7 +136,7 @@ export class Graph {
         x: node.x,
         y: node.y
       }
-    }))
+    })
   }
 
   get_edges () {
@@ -154,7 +152,7 @@ export class Graph {
         }
       })
     })
-    return new DataSet(edges)
+    return edges
   }
 
   add_complete_graph (edge_list) {
