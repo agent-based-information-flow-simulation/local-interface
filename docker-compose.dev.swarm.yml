@@ -16,7 +16,9 @@ services:
       - ./user-interface/src:/app/src
 
   proxy:
-    build: ./proxy
+    build: 
+      context: ./proxy
+      dockerfile: Dockerfile.dev
     image: 127.0.0.1:5000/li-proxy
     ports:
       - "80:80"
