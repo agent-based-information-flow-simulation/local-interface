@@ -68,7 +68,7 @@ The structure of the local interface is presented below.
 ### User interface
 React.js app used as GUI. It handles user interaction with the system.
 
-[Docker Hub](https://hub.docker.com/r/madpeh/li-user-interface)
+[Docker Hub](https://hub.docker.com/r/aasm/li-user-interface)
 
 Environment variables:
 * `CHOKIDAR_USEPOLLING` - reload application after detecting a change in source files (i.e., true); if set to true, it requires the following volume attached: user-interface/src:/app/src
@@ -77,7 +77,7 @@ Environment variables:
 ### Proxy
 Nginx instance that provides a gateway to the Simulation Run Environment.
 
-[Docker Hub](https://hub.docker.com/r/madpeh/li-proxy)
+[Docker Hub](https://hub.docker.com/r/aasm/li-proxy)
 
 Host port mapping:
 * port `80` - access to user interface and simulation run environment API (`/api`)
