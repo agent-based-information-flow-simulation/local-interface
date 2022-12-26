@@ -2,17 +2,11 @@
 
 ## Table of Contents
 
-- [Local Interface](#local-interface)
-  - [Table of Contents](#table-of-contents)
-  - [About ](#about-)
-  - [Getting Started ](#getting-started-)
-    - [Prerequisites](#prerequisites)
-    - [Installing](#installing)
-  - [Usage ](#usage-)
-  - [Structure ](#structure-)
-    - [User interface](#user-interface)
-    - [Proxy](#proxy)
-  - [Contributing ](#contributing-)
+- [About](#about)
+- [Getting Started](#getting_started)
+- [Usage](#usage)
+- [Structure](#structure)
+- [Contributing](#contributing)
 
 ## About <a name = "about"></a>
 
