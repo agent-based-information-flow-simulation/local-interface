@@ -14,7 +14,9 @@ services:
       - user-interface-data:/app/node_modules
 
   proxy:
-    build: ./proxy
+    build: 
+      context: ./proxy
+      dockerfile: Dockerfile.prod
     image: "madpeh/li-proxy:${VERSION}"
     ports:
       - "80:80"

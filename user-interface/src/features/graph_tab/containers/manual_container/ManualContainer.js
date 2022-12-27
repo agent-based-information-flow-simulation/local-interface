@@ -5,7 +5,6 @@ import { useDispatch } from 'react-redux'
 import { setGraph } from '../../../simulationSlice'
 
 import { Network } from 'vis-network'
-import { DataSet } from 'vis-data'
 
 import NodeDescription from './NodeDescription'
 
@@ -16,8 +15,8 @@ export const ManualContainer = () => {
   const dispatch = useDispatch()
 
   const [graph_instance, setGraphInstance] = useState(new Graph())
-  const [nodes, setNodes] = useState(new DataSet([]))
-  const [edges, setEdges] = useState(new DataSet([]))
+  const [nodes, setNodes] = useState([])
+  const [edges, setEdges] = useState([])
 
   const [nodeType, setNodeType] = useState('Agent')
 

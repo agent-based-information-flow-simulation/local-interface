@@ -22,8 +22,7 @@
     "react-resize-aware": "^3.1.1",
     "react-scripts": "^5.0.1",
     "streamsaver": "^2.0.6",
-    "vis-data": "^7.1.4",
-    "vis-network": "^9.1.2"
+    "vis-network": "^7.10.2"
   },
   "scripts": {
     "start": "react-scripts start",
