@@ -27,7 +27,7 @@ http {
     }
 
     location / {
-      set $user_interface http://li_user-interface:80;
+      set $user_interface http://lde_user-interface:80;
       proxy_pass $user_interface;
     }
   }
