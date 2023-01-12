@@ -7,7 +7,7 @@ import PropTypes from 'prop-types'
 export class NDConfiguration {
     constructor() {
         this.gdl = false;
-        this.code = true;
+        this.code = false;
     }
 }
 

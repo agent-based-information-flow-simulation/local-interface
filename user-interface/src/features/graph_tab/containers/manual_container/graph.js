@@ -179,7 +179,7 @@ export class Graph {
     const size = "SIZE " + this.node_map.length + "\n"
     let code = preamble + size
     this.matrix.forEach((row, index) => {
-      code += "DEFNODE " + this.node_map[index].label + "\nR" + row.join('') + "\n"
+      code += "DEFNODE " + this.node_map[index].label + ", R" + row.join('') + "\n"
     })
     const epilogue = "EGRAPH\n"
     code += epilogue

@@ -28,6 +28,7 @@ export const NodeDescription = (props) => {
   }
 
   useEffect(() => {
+    console.log(nodeType)
     nodeCallback(nodeType)
   }, [nodeType])
 
