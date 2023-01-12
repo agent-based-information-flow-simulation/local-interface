@@ -70,7 +70,7 @@ export function VisualizationTab() {
   }, []);
 
   const startSimulationFromCode = async (code_lines) => {
-    const url = "http://localhost/api/simulations";
+    const url = "http://localhost/api/simulation";
 
     await fetch(url, {
       method: "POST",
@@ -96,7 +96,7 @@ export function VisualizationTab() {
       })
       .catch((error) => {
         setError(true);
-        setErrorText(`Unexpected error: ${error}`);
+        setErrorText(`Unexpected error: ${error.message}`);
       });
   };
 
