@@ -7,15 +7,17 @@ services:
       dockerfile: Dockerfile.prod
     environment:
       - PORT=80
-    image: "madpeh/li-user-interface:${VERSION}"
+    image: "aasm/li-user-interface:${VERSION}"
     networks:
       - proxy-net
     volumes:
       - user-interface-data:/app/node_modules
 
   proxy:
-    build: ./proxy
-    image: "madpeh/li-proxy:${VERSION}"
+    build: 
+      context: ./proxy
+      dockerfile: Dockerfile.prod
+    image: "aasm/li-proxy:${VERSION}"
     ports:
       - "80:80"
       - "8008:7687"

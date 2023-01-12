@@ -16,6 +16,7 @@ Other applications are:
 - [Simulation Run Environment](https://github.com/agent-base-information-flow-simulation/simulation-run-environment) - scalable run environment for Agents Assembly.
 - [Communication Server](https://github.com/agent-based-information-flow-simulation/communication-server) - cluster of servers used for XMPP communication.
 - [Agents Assembly Translator](https://github.com/agent-based-information-flow-simulation/agents-assembly-translator) - translator for Agents Assembly code.
+- [Local Development Environment](https://github.com/agent-based-information-flow-simulation/local-development-environment) - simple environment for running agent-based simulations.
 
 ![aasm_vis](.readme-images/ui_vis_tab_example.png)
 
@@ -67,7 +68,7 @@ The structure of the local interface is presented below.
 ### User interface
 React.js app used as GUI. It handles user interaction with the system.
 
-[Docker Hub](https://hub.docker.com/r/madpeh/li-user-interface)
+[Docker Hub](https://hub.docker.com/r/aasm/li-user-interface)
 
 Environment variables:
 * `CHOKIDAR_USEPOLLING` - reload application after detecting a change in source files (i.e., true); if set to true, it requires the following volume attached: user-interface/src:/app/src
@@ -76,7 +77,7 @@ Environment variables:
 ### Proxy
 Nginx instance that provides a gateway to the Simulation Run Environment.
 
-[Docker Hub](https://hub.docker.com/r/madpeh/li-proxy)
+[Docker Hub](https://hub.docker.com/r/aasm/li-proxy)
 
 Host port mapping:
 * port `80` - access to user interface and simulation run environment API (`/api`)

@@ -1,0 +1,4 @@
+FROM nginx:1.23.3-alpine-slim
+RUN rm /usr/share/nginx/html/*
+COPY ./nginx.conf.prod /etc/nginx/nginx.conf
+CMD [ "nginx", "-g", "daemon off;" ]
