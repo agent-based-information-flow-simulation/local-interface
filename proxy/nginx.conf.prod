@@ -14,13 +14,13 @@ http {
     resolver 127.0.0.11 ipv6=off valid=5s;
 
     location /api {
-      set $sre_entrypoint http://sre_entrypoint:80;
+      set $sre_entrypoint http://spade-instance:8000;
       rewrite /api/(.*) /$1 break;
       proxy_pass $sre_entrypoint;
     }
 
     location / {
-      set $user_interface http://li_user-interface:80;
+      set $user_interface http://user-interface:80;
       proxy_pass $user_interface;
     }
   }

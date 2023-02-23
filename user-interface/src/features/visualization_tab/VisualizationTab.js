@@ -71,6 +71,8 @@ export function VisualizationTab () {
 
   const startSimulationFromCode = async (code_lines) => {
     const url = 'http://localhost:8000/simulations/'
+    // LDE
+    // const url = "http://localhost/api/simulation";
 
     await fetch(url, {
       method: 'POST',
@@ -95,10 +97,17 @@ export function VisualizationTab () {
         }
       })
       .catch((error) => {
+<<<<<<< HEAD
         setError(true)
         setErrorText(`Unexpected error: ${error}`)
       })
   }
+=======
+        setError(true);
+        setErrorText(`Unexpected error: ${error.message}`);
+      });
+  };
+>>>>>>> main
 
   const loadSimulationPreset = (presetName) => {
     setCustom(false)

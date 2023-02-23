@@ -12,6 +12,9 @@ export const SimulationOptionsCell = (props) => {
 
   const deleteSimulation = async () => {
     const url = `http://localhost/api/simulations/${simulation.simulation_id}`
+    // LDE
+    // const url = `http://localhost/api/simulation/${simulation.simulation_id}`;
+    // await fetch(url, { method: "DELETE" })
     await fetch(url, { method: 'DELETE' })
       .then((response) => {
         if (response.status === 200) {
@@ -26,8 +29,13 @@ export const SimulationOptionsCell = (props) => {
   }
 
   const restartSimulation = async () => {
+<<<<<<< HEAD
     const url = `http://localhost/api/simulations/${simulation.simulation_id}`
     await fetch(url, { method: 'POST' })
+=======
+    const url = `http://localhost/api/simulation/${simulation.simulation_id}`;
+    await fetch(url, { method: "POST" })
+>>>>>>> main
       .then((response) => {
         if (response.status === 201) {
           restartCallback(simulation.simulation_id, 'success', '')
@@ -59,8 +67,13 @@ export const SimulationOptionsCell = (props) => {
   }
 
   const downloadTimeseries = async (simulationId) => {
+<<<<<<< HEAD
     const url = `http://localhost/api/simulations/${simulationId}/timeseries`
     const response = await fetch(url)
+=======
+    const url = `http://localhost/api/simulation/${simulationId}/timeseries`;
+    const response = await fetch(url);
+>>>>>>> main
 
     if (response.status === 400) {
       const body = await response.json()

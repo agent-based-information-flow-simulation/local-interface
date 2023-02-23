@@ -52,6 +52,14 @@ export const SimulationDisplay = (props) => {
   const getStatus = async () => {
     const url = 'http://localhost/api/simulations'
     // GET method here
+  // LDE
+  //   const url = `http://localhost/api/simulation/${sim_id}`;
+  //   await fetch(url, { method: "DELETE" });
+  // };
+
+  // const getStatus = async () => {
+  //   const url = `http://localhost/api/simulation`;
+  //   //GET method here
     const response = await fetch(url, {
       method: 'GET'
     })

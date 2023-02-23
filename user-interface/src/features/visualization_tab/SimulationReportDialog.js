@@ -53,6 +53,8 @@ export const SimulationReportDialog = (props) => {
     setQueryError(false)
     const url =
       `http://localhost/api/simulations/${simId}/statistics/` + searchString
+      //LDE
+      //`http://localhost/api/simulation/${simId}/statistics/` + searchString;
 
     await fetch(url, {
       method: 'GET'
