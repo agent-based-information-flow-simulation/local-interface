@@ -97,17 +97,10 @@ export function VisualizationTab () {
         }
       })
       .catch((error) => {
-<<<<<<< HEAD
-        setError(true)
-        setErrorText(`Unexpected error: ${error}`)
-      })
-  }
-=======
         setError(true);
         setErrorText(`Unexpected error: ${error.message}`);
       });
   };
->>>>>>> main
 
   const loadSimulationPreset = (presetName) => {
     setCustom(false)

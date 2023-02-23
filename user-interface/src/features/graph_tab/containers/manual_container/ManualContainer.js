@@ -123,7 +123,7 @@ export const ManualContainer = () => {
           AASM_Code={graph_instance.get_AASM()}
         />
         <Stack style={{width: '100%'}} direction='row'>
-          <div ref={visJsRef} style={{ width: '100%', height: '800px', display: nodeType !== "" ? 'block' : 'none' }}></div>
+          <div ref={visJsRef} style={{ width: '800px', height: '800px', display: nodeType !== "" ? 'block' : 'none' }}></div>
           <table className='matrix' id='matrix_tab' style={{width: '800px', height: '800px', margin: '25px', font_size: '20px'}}>
         {
           graph_instance.matrix.map((row, i) => {

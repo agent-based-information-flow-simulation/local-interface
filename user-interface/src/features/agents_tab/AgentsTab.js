@@ -136,14 +136,14 @@ export function AgentsTab (props) {
       setNameErrorText(error.info)
       setNameError(true)
     }
-    if (behavs.length === 0) {
-      err_flag = true
-      setBehavError(true)
-    }
-    if (params.length === 0) {
-      err_flag = true
-      setParamError(true)
-    }
+    //if (behavs.length === 0) {
+    //  err_flag = true
+    //  setBehavError(true)
+    //}
+    //if (params.length === 0) {
+    //  err_flag = true
+    //  setParamError(true)
+    //}
     if (!err_flag) {
       let code = 'AGENT ' + agentName + '\n'
       params.forEach((el) => (code += generatePRM(el)))
