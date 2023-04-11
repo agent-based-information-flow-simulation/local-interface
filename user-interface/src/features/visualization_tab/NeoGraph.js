@@ -19,7 +19,7 @@ export const NeoGraph = (props) => {
       },
       edges: {
         arrows: {
-          to: { enabled: false }
+          to: { enabled: true }
         }
       },
       layout: {
