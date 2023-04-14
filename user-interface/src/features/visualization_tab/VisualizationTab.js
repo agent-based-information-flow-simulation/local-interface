@@ -1,97 +1,99 @@
-import React, { useEffect } from "react";
-import Stack from "@mui/material/Stack";
-import { Button, TextField, Alert } from "@mui/material";
-import { useSelector } from "react-redux";
+import React, { useEffect } from 'react'
+import Stack from '@mui/material/Stack'
+import { Button, TextField, Alert } from '@mui/material'
+import { useSelector } from 'react-redux'
 import {
   selectAgents,
   selectMessageTypes,
-  selectGraph,
-} from "../simulationSlice";
+  selectGraph
+} from '../simulationSlice'
 
-import SimulationDisplay from "./SimulationDisplay";
+import SimulationDisplay from './SimulationDisplay'
 
-import { pingpong, benchmark } from "./assm_presets";
+import { pingpong, benchmark } from './assm_presets'
 
 const presetMap = {
-  pingpong: pingpong,
-  benchmark: benchmark,
-};
+  pingpong,
+  benchmark
+}
 
-export function VisualizationTab() {
-  const [simId, setSimId] = React.useState("");
+export function VisualizationTab () {
+  const [simId, setSimId] = React.useState('')
 
-  const messages = useSelector(selectMessageTypes);
-  const agents = useSelector(selectAgents);
-  const graph = useSelector(selectGraph);
+  const messages = useSelector(selectMessageTypes)
+  const agents = useSelector(selectAgents)
+  const graph = useSelector(selectGraph)
 
-  const [code, setCode] = React.useState([]);
-  const [generatedCode, setGeneratedCode] = React.useState([]);
-  const [codeFilled, setCodeFilled] = React.useState(false);
-  const [codeGenerated, setCodeGenerated] = React.useState(false);
+  const [code, setCode] = React.useState([])
+  const [generatedCode, setGeneratedCode] = React.useState([])
+  const [codeFilled, setCodeFilled] = React.useState(false)
+  const [codeGenerated, setCodeGenerated] = React.useState(false)
 
-  const [custom, setCustom] = React.useState(false);
-  const [customCode, setCustomCode] = React.useState("");
+  const [custom, setCustom] = React.useState(false)
+  const [customCode, setCustomCode] = React.useState('')
 
-  const [error, setError] = React.useState(false);
-  const [errorText, setErrorText] = React.useState("");
+  const [error, setError] = React.useState(false)
+  const [errorText, setErrorText] = React.useState('')
 
-  const [success, setSuccess] = React.useState(false);
+  const [success, setSuccess] = React.useState(false)
 
   const generateCode = () => {
-    let tmp_code = [];
+    let tmp_code = []
     messages.forEach((el) => {
       if (el.code !== undefined) {
-        el.code.split("\n").forEach((line) => tmp_code.push(line));
+        el.code.split('\n').forEach((line) => tmp_code.push(line))
       }
-    });
+    })
     agents.forEach((el) => {
       if (el.code !== undefined) {
-        el.code.split("\n").forEach((line) => tmp_code.push(line));
+        el.code.split('\n').forEach((line) => tmp_code.push(line))
       }
-    });
+    })
 
     if (graph.code !== undefined) {
-      const graph_lines = graph.code.split("\n");
-      tmp_code = [...tmp_code, ...graph_lines];
-      setGeneratedCode(tmp_code);
-      setCode(tmp_code);
-      setCodeFilled(true);
-      setCodeGenerated(true);
+      const graph_lines = graph.code.split('\n')
+      tmp_code = [...tmp_code, ...graph_lines]
+      setGeneratedCode(tmp_code)
+      setCode(tmp_code)
+      setCodeFilled(true)
+      setCodeGenerated(true)
     } else {
-      setCode([]);
-      setCodeGenerated(false);
-      setCodeFilled(false);
+      setCode([])
+      setCodeGenerated(false)
+      setCodeFilled(false)
     }
-  };
+  }
 
   useEffect(() => {
-    generateCode();
+    generateCode()
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [])
 
   const startSimulationFromCode = async (code_lines) => {
     const url = "http://localhost/api/simulations";
+    // LDE
+    // const url = "http://localhost/api/simulation";
 
     await fetch(url, {
-      method: "POST",
+      method: 'POST',
       headers: {
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin': '*'
       },
-      body: JSON.stringify({ aasm_code_lines: code_lines }),
+      body: JSON.stringify({ aasm_code_lines: code_lines })
     })
       .then((response) => {
         if (response.status === 201) {
-          setSuccess(true);
-          return response.json();
+          setSuccess(true)
+          return response.json()
         } else {
-          setError(true);
-          setErrorText(`Encountered http error: ${response.status}`);
+          setError(true)
+          setErrorText(`Encountered http error: ${response.status}`)
         }
       })
       .then((data) => {
-        if (data["simulation_id"]) {
-          setSimId(data["simulation_id"]);
+        if (data.simulation_id) {
+          setSimId(data.simulation_id)
         }
       })
       .catch((error) => {
@@ -101,72 +103,77 @@ export function VisualizationTab() {
   };
 
   const loadSimulationPreset = (presetName) => {
-    setCustom(false);
-    setCode(presetMap[presetName]);
-    setCodeFilled(true);
-  };
+    setCustom(false)
+    setCode(presetMap[presetName])
+    setCodeFilled(true)
+  }
 
   const clearPreset = () => {
-    setCustom(false);
+    setCustom(false)
     if (codeGenerated) {
-      setCode(generatedCode);
-      setCodeFilled(true);
+      setCode(generatedCode)
+      setCodeFilled(true)
     } else {
-      setCode([]);
-      setCodeFilled(false);
+      setCode([])
+      setCodeFilled(false)
     }
-  };
+  }
 
   const startSimButtonClick = () => {
     if (custom) {
-      const custom_code_lines = customCode.split("\n");
-      startSimulationFromCode(custom_code_lines);
+      const custom_code_lines = customCode.split('\n')
+      startSimulationFromCode(custom_code_lines)
     } else if (codeFilled) {
-      startSimulationFromCode(code);
+      startSimulationFromCode(code)
     } else {
-      setError(true);
+      setError(true)
       setErrorText(
         "Couldn't start simulation with above code, check if everything is correct"
-      );
+      )
     }
-  };
+  }
 
   const clearError = () => {
-    setError(false);
-    setErrorText("");
-  };
+    setError(false)
+    setErrorText('')
+  }
 
   const clearSuccess = () => {
-    setSuccess(false);
-  };
+    setSuccess(false)
+  }
 
   return (
     <div>
       <Stack direction="row" spacing={2}>
         <Stack direction="column" spacing={2}>
           <h1> Simulation Settings</h1>
-          {codeFilled && !custom ? (
+          {codeFilled && !custom
+            ? (
             <>
               <h3> Code to be run: </h3>
               <Stack
                 sx={{
-                  textAlign: "left",
+                  textAlign: 'left',
                   p: 3,
-                  maxHeight: "50%",
-                  overflow: "auto",
+                  maxHeight: '50%',
+                  overflow: 'auto'
                 }}
               >
                 {code.map((el, index) => {
-                  return <div key={index}> {el} </div>;
+                  return <div key={index}> {el} </div>
                 })}
               </Stack>
             </>
-          ) : custom ? (
+              )
+            : custom
+              ? (
             <></>
-          ) : (
+                )
+              : (
             <p> Your code will show up here when you fill out the forms</p>
-          )}
-          {custom ? (
+                )}
+          {custom
+            ? (
             <TextField
               multiline
               rows="23"
@@ -175,68 +182,73 @@ export function VisualizationTab() {
               value={customCode}
               onChange={(e) => setCustomCode(e.target.value)}
             />
-          ) : (
+              )
+            : (
             <></>
-          )}
+              )}
           <h3> Simulation presets: </h3>
           <Stack direction="row" spacing={3}>
             <Button
               variant="contained"
               onClick={(e) => {
-                loadSimulationPreset("pingpong");
+                loadSimulationPreset('pingpong')
               }}
             >
-              {" "}
-              Ping-Pong{" "}
+              {' '}
+              Ping-Pong{' '}
             </Button>
             <Button
               variant="contained"
               onClick={(e) => {
-                loadSimulationPreset("benchmark");
+                loadSimulationPreset('benchmark')
               }}
             >
-              {" "}
-              Benchmark{" "}
+              {' '}
+              Benchmark{' '}
             </Button>
             <Button
               variant="contained"
               onClick={(e) => {
-                setCustom(true);
+                setCustom(true)
               }}
             >
-              {" "}
-              Custom{" "}
+              {' '}
+              Custom{' '}
             </Button>
             <Button variant="contained" onClick={clearPreset}>
-              {" "}
-              Clear{" "}
+              {' '}
+              Clear{' '}
             </Button>
           </Stack>
           <Button onClick={startSimButtonClick}>
-            {" "}
-            Start simulation with the code above{" "}
+            {' '}
+            Start simulation with the code above{' '}
           </Button>
-          {error ? (
+          {error
+            ? (
             <Alert severity="error" onClose={clearError}>
-              {" "}
-              {errorText}{" "}
+              {' '}
+              {errorText}{' '}
             </Alert>
-          ) : (
+              )
+            : (
             <></>
-          )}
-          {success ? (
+              )}
+          {success
+            ? (
             <Alert severity="success" onClose={clearSuccess}>
               Correctly created simulation. Get status to see the state.
             </Alert>
-          ) : (
+              )
+            : (
             <></>
-          )}
+              )}
         </Stack>
-        <Stack direction="column" spacing={2} sx={{ width: "100%" }}>
+        <Stack direction="column" spacing={2} sx={{ width: '100%' }}>
           <h1> Simulation Management </h1>
           <SimulationDisplay simId={simId} />
         </Stack>
       </Stack>
     </div>
-  );
+  )
 }

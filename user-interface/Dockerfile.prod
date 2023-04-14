@@ -1,10 +1,12 @@
-FROM node:16.3.0-alpine3.13 as build-env
+FROM node:16.19.0-alpine3.17 as build-env
 WORKDIR /app
+COPY package* .
+RUN npm ci
 COPY . .
-RUN npm ci && npm run build
+RUN npm run build
 
-FROM node:16.3.0-alpine3.13
+FROM node:16.19.0-alpine3.17
 WORKDIR /app
 COPY --from=build-env /app/build /app/build
-RUN npm install -g serve@13.0.2
+RUN npm install -g serve@14.1.2
 CMD [ "sh", "-c", "serve build --single --listen ${PORT}" ]

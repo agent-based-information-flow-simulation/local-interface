@@ -1,0 +1,57 @@
+.vis-manipulation {
+  height: 35px;
+}
+
+.vis-button {
+  background-color: #1976d2;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  color: #DFDFDF;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: bold;
+  line-height: 1;
+  margin: 0;
+  padding: 0 12px;
+  text-align: center;
+  vertical-align: middle;
+  white-space: nowrap;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+
+  height: 34px;
+}
+
+.vis-connect {
+  background-image: url("../../../../../resources/connect_icon.png");
+  background-size: 32px;
+  background-repeat: no-repeat;
+  margin-left: 10px;
+}
+
+.vis-add {
+  background-image: url("../../../../../resources/add_icon.png");
+  background-size: 32px;
+  background-repeat: no-repeat;
+  margin-left: 10px;
+}
+
+.matrix {
+  border: 2px solid #000000;
+  font-weight: bold;
+  display: none;
+}
+
+.code-display {
+  overflow-y: scroll;
+  padding: 30px;
+  margin: 10px;
+  height: 100%;
+  width: 100%;
+  align: left;
+  white-space: pre;
+  font-family: monospace;
+  font-size: 21px;
+}

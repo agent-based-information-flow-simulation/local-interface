@@ -1,8 +1,8 @@
-import React from "react";
-import Box from "@mui/material/Box";
-import TextField from "@mui/material/TextField";
-import Stack from "@mui/material/Stack";
-import Divider from "@mui/material/Divider";
+import React from 'react'
+import Box from '@mui/material/Box'
+import TextField from '@mui/material/TextField'
+import Stack from '@mui/material/Stack'
+import Divider from '@mui/material/Divider'
 import {
   DialogActions,
   DialogTitle,
@@ -10,157 +10,157 @@ import {
   Dialog,
   DialogContent,
   DialogContentText,
-  Alert,
-} from "@mui/material";
-import ParamsDialog from "../components/ParamsDialog";
-import BehavDialog from "./BehavDialog";
-import SelectList from "../components/SelectList";
-import DisplayList from "../components/DisplayList";
-import { useSelector, useDispatch } from "react-redux";
-import { validateAgentName, errorCodes } from "../../app/utils";
+  Alert
+} from '@mui/material'
+import ParamsDialog from '../components/ParamsDialog'
+import BehavDialog from './BehavDialog'
+import SelectList from '../components/SelectList'
+import DisplayList from '../components/DisplayList'
+import { useSelector, useDispatch } from 'react-redux'
+import { validateAgentName, errorCodes } from '../../app/utils'
 
 import {
   selectParameters,
   addParam,
   selectBehaviours,
-  reset,
-} from "./agentsTabSlice";
-import { addAgent, selectAgents, addName } from "../simulationSlice";
+  reset
+} from './agentsTabSlice'
+import { addAgent, selectAgents, addName } from '../simulationSlice'
 
-export function AgentsTab(props) {
-  const dispatch = useDispatch();
+export function AgentsTab (props) {
+  const dispatch = useDispatch()
 
   const paramListOptions = [
-    { value: "float", display: "Float" },
-    { value: "enum", display: "Enumerable" },
-    { value: "list", display: "Connections/Messages" },
-  ];
+    { value: 'float', display: 'Float' },
+    { value: 'enum', display: 'Enumerable' },
+    { value: 'list', display: 'Connections/Messages' }
+  ]
 
   const behavListOptions = [
-    { value: "onSetup", display: "Setup" },
-    { value: "oneTime", display: "One Time" },
-    { value: "cyclic", display: "Cyclic" },
-    { value: "onMessageReceive", display: "On Message Receive" },
-  ];
+    { value: 'onSetup', display: 'Setup' },
+    { value: 'oneTime', display: 'One Time' },
+    { value: 'cyclic', display: 'Cyclic' },
+    { value: 'onMessageReceive', display: 'On Message Receive' }
+  ]
 
-  const [paramDialogOpen, setParamDialogOpen] = React.useState(false);
-  const [behavDialogOpen, setBehavDialogOpen] = React.useState(false);
-  const [paramDialogType, setParamDialogType] = React.useState("");
-  const [behavDialogType, setBehavDialogType] = React.useState("");
-  const [notifyError, setNotifyError] = React.useState(false);
+  const [paramDialogOpen, setParamDialogOpen] = React.useState(false)
+  const [behavDialogOpen, setBehavDialogOpen] = React.useState(false)
+  const [paramDialogType, setParamDialogType] = React.useState('')
+  const [behavDialogType, setBehavDialogType] = React.useState('')
+  const [notifyError, setNotifyError] = React.useState(false)
 
-  const [agentName, setAgentName] = React.useState("");
-  const [nameError, setNameError] = React.useState(false);
-  const [nameErrorText, setNameErrorText] = React.useState("");
-  const [behavError, setBehavError] = React.useState(false);
-  const [paramError, setParamError] = React.useState(false);
+  const [agentName, setAgentName] = React.useState('')
+  const [nameError, setNameError] = React.useState(false)
+  const [nameErrorText, setNameErrorText] = React.useState('')
+  const [behavError, setBehavError] = React.useState(false)
+  const [paramError, setParamError] = React.useState(false)
 
-  const params = useSelector(selectParameters);
-  const behavs = useSelector(selectBehaviours);
-  const agents = useSelector(selectAgents);
-  //const messages = useSelector(selectMessageTypes);
+  const params = useSelector(selectParameters)
+  const behavs = useSelector(selectBehaviours)
+  const agents = useSelector(selectAgents)
+  // const messages = useSelector(selectMessageTypes);
 
   const handleNameChange = (name) => {
-    setNameError(false);
-    setAgentName(name);
-  };
+    setNameError(false)
+    setAgentName(name)
+  }
 
   const handleParamTypeChange = (e) => {
-    setParamDialogType(e.target.dataset.value);
-    setParamDialogOpen(true);
-  };
+    setParamDialogType(e.target.dataset.value)
+    setParamDialogOpen(true)
+  }
 
   const handleBehavTypeChange = (e) => {
-    setBehavDialogType(e.target.dataset.value);
-    setBehavDialogOpen(true);
-  };
+    setBehavDialogType(e.target.dataset.value)
+    setBehavDialogOpen(true)
+  }
 
   const handleBehavClose = (error) => {
-    setNotifyError(error);
-    setBehavDialogOpen(false);
-  };
+    setNotifyError(error)
+    setBehavDialogOpen(false)
+  }
 
   const handleParamClose = (error) => {
-    setNotifyError(error);
-    setParamDialogOpen(false);
-  };
+    setNotifyError(error)
+    setParamDialogOpen(false)
+  }
 
   const handleNotifyClose = () => {
-    setNotifyError(false);
-  };
+    setNotifyError(false)
+  }
 
   const generatePRM = (param) => {
-    let code = "PRM " + param.name + ",";
+    let code = 'PRM ' + param.name + ','
     switch (param.type) {
-      case "float":
-        code += "float,";
+      case 'float':
+        code += 'float,'
         switch (param.mode) {
-          case "init":
-            code += "init," + param.value + "\n";
-            return code;
-          case "distribution":
-            code += "dist," + param.distribution + ",";
-            param.distribution_args.forEach((el) => (code += el + ","));
-            code = code.slice(0, -1) + "\n";
-            return code;
+          case 'init':
+            code += 'init,' + param.value + '\n'
+            return code
+          case 'distribution':
+            code += 'dist,' + param.distribution + ','
+            param.distribution_args.forEach((el) => (code += el + ','))
+            code = code.slice(0, -1) + '\n'
+            return code
           default:
-            return "";
+            return ''
         }
-      case "enum":
-        code += "enum";
+      case 'enum':
+        code += 'enum'
         param.values.forEach(
-          (val) => (code += "," + val.name + "," + val.percentage)
-        );
-        return code + "\n";
-      case "list":
-        code += "list,";
+          (val) => (code += ',' + val.name + ',' + val.percentage)
+        )
+        return code + '\n'
+      case 'list':
+        code += 'list,'
         switch (param.mode) {
-          case "conn":
-            return code + "conn\n";
-          case "msg":
-            return code + "msg\n";
+          case 'conn':
+            return code + 'conn\n'
+          case 'msg':
+            return code + 'msg\n'
           default:
-            return "";
+            return ''
         }
       default:
-        return "";
+        return ''
     }
-  };
+  }
 
   const saveAgent = () => {
-    let err_flag = false;
+    let err_flag = false
     if (validateAgentName(agentName) !== 0) {
-      err_flag = true;
-      let err_code = validateAgentName(agentName);
-      let error = errorCodes.find((el) => el.code === err_code);
-      setNameErrorText(error.info);
-      setNameError(true);
+      err_flag = true
+      const err_code = validateAgentName(agentName)
+      const error = errorCodes.find((el) => el.code === err_code)
+      setNameErrorText(error.info)
+      setNameError(true)
     }
-    if (behavs.length === 0) {
-      err_flag = true;
-      setBehavError(true);
-    }
-    if (params.length === 0) {
-      err_flag = true;
-      setParamError(true);
-    }
+    //if (behavs.length === 0) {
+    //  err_flag = true
+    //  setBehavError(true)
+    //}
+    //if (params.length === 0) {
+    //  err_flag = true
+    //  setParamError(true)
+    //}
     if (!err_flag) {
-      let code = "AGENT " + agentName + "\n";
-      params.forEach((el) => (code += generatePRM(el)));
-      behavs.forEach((el) => (code += el.code));
-      code += "EAGENT\n";
-      let agent = {
+      let code = 'AGENT ' + agentName + '\n'
+      params.forEach((el) => (code += generatePRM(el)))
+      behavs.forEach((el) => (code += el.code))
+      code += 'EAGENT\n'
+      const agent = {
         name: agentName,
         params: [...params],
         behavs: [...behavs],
-        code: code,
-      };
-      dispatch(addAgent(agent));
-      dispatch(addName(agentName));
-      setAgentName("");
-      dispatch(reset());
+        code
+      }
+      dispatch(addAgent(agent))
+      dispatch(addName(agentName))
+      setAgentName('')
+      dispatch(reset())
     }
-  };
+  }
 
   return (
     <>
@@ -194,7 +194,7 @@ export function AgentsTab(props) {
           <Divider
             orientation="vertical"
             flexItem
-            sx={{ color: "black", borderColor: "black", borderWidth: 1 }}
+            sx={{ color: 'black', borderColor: 'black', borderWidth: 1 }}
           />
         }
         spacing={2}
@@ -205,17 +205,17 @@ export function AgentsTab(props) {
         />
         <Box
           sx={{
-            width: "100%",
+            width: '100%',
             height: 700,
             maxWidth: 720,
-            bgcolor: "background.paper",
-            display: "inline-block",
+            bgcolor: 'background.paper',
+            display: 'inline-block',
             paddingTop: 9,
-            marginLeft: 10,
+            marginLeft: 10
           }}
         >
           <Stack>
-            <Box sx={{ textAlign: "left" }}>
+            <Box sx={{ textAlign: 'left' }}>
               <TextField
                 variant="outlined"
                 label="Agent Type Name"
@@ -229,7 +229,7 @@ export function AgentsTab(props) {
                 name="Parameters"
                 collection={params}
                 collectionDisplayFunction={(item) =>
-                  item.name + " (" + item.type + ")"
+                  item.name + ' (' + item.type + ')'
                 }
                 options={paramListOptions}
                 handleParamTypeChange={handleParamTypeChange}
@@ -243,34 +243,40 @@ export function AgentsTab(props) {
                 collectionItemClick={() => {}}
               />
             </Stack>
-            {behavError ? (
+            {behavError
+              ? (
               <Alert severity="error" onClose={(e) => setBehavError(false)}>
                 Error saving! Please add some behaviours
               </Alert>
-            ) : (
+                )
+              : (
               <></>
-            )}
-            {paramError ? (
+                )}
+            {paramError
+              ? (
               <Alert severity="error" onClose={(e) => setParamError(false)}>
                 Error saving! Please add some parameters
               </Alert>
-            ) : (
+                )
+              : (
               <></>
-            )}
-            {nameError ? (
+                )}
+            {nameError
+              ? (
               <Alert severity="error" onClose={(e) => setNameError(false)}>
                 Name Error: {nameErrorText}
               </Alert>
-            ) : (
+                )
+              : (
               <></>
-            )}
+                )}
             <Button variant="contained" onClick={saveAgent}>
-              {" "}
-              Add Agent{" "}
+              {' '}
+              Add Agent{' '}
             </Button>
           </Stack>
         </Box>
       </Stack>
     </>
-  );
+  )
 }

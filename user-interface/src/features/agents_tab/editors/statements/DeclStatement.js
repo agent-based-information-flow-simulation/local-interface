@@ -1,80 +1,78 @@
-import React, { useState } from "react";
-import PropTypes from "prop-types"
+import React, { useState } from 'react'
+import PropTypes from 'prop-types'
 import {
   Stack,
   Autocomplete,
   TextField,
-  IconButton,
-} from "@mui/material"
+  IconButton
+} from '@mui/material'
 
-import { useDispatch } from "react-redux";
-import { addScopeVar } from "../editorSlice";
+import { useDispatch } from 'react-redux'
+import { addScopeVar } from '../editorSlice'
 
-import AddCircleIcon from "@mui/icons-material/AddCircle";
-import InlineText from "../InlineText";
+import AddCircleIcon from '@mui/icons-material/AddCircle'
+import InlineText from '../InlineText'
 
 export const DeclStatement = (props) => {
+  const { save, setEditOn, variables } = props
 
-  const { save, setEditOn, variables } = props;
+  const dispatch = useDispatch()
 
-  const dispatch = useDispatch();
-
-  const typeLookup = ( name ) => {
-    let variable = variables.find(el => el.name === name);
-    if(variable){
-      return variable.type;
-    }else{
-      return "";
+  const typeLookup = (name) => {
+    const variable = variables.find(el => el.name === name)
+    if (variable) {
+      return variable.type
+    } else {
+      return ''
     }
   }
 
   const handleLhsChange = (value) => {
-    setCurLhs(value);
-  };
+    setCurLhs(value)
+  }
 
   const handleRhsChange = (value) => {
-    setCurRhs(value);
-  };
+    setCurRhs(value)
+  }
 
-  const [curLhs, setCurLhs] = useState("");
-  const [lhsError, setLhsError] = useState(false);
-  const [curRhs, setCurRhs] = useState("");
-  const [rhsError, setRhsError] = useState(false);
+  const [curLhs, setCurLhs] = useState('')
+  const [lhsError, setLhsError] = useState(false)
+  const [curRhs, setCurRhs] = useState('')
+  const [rhsError, setRhsError] = useState(false)
 
   const addDeclStatement = () => {
-    //validate LHS
-    let err_flag = false;
+    // validate LHS
+    let err_flag = false
     if (variables.findIndex((el) => el.name === curLhs) !== -1) {
-      setLhsError(true);
-      err_flag = true;
+      setLhsError(true)
+      err_flag = true
     }
-    //validate RHS
+    // validate RHS
     if (
       variables.findIndex((el) => el.name === curRhs) === -1 &&
       isNaN(parseFloat(curRhs))
     ) {
-      setRhsError(true);
-      err_flag = true;
+      setRhsError(true)
+      err_flag = true
     }
     if (!err_flag) {
-      if(isNaN(parseFloat(curRhs))){
+      if (isNaN(parseFloat(curRhs))) {
         dispatch(addScopeVar({
           name: curLhs,
           type: typeLookup(curRhs)
         }))
-      }else{
+      } else {
         dispatch(addScopeVar({
           name: curLhs,
-          type: "float"
+          type: 'float'
         }))
-
       }
-      let statement = "let " + curLhs + " = " + curRhs;
-      let operation = "DECL    " + curLhs + "," + curRhs;
-      save(statement, operation);
-      setEditOn(false);
+      const statement = 'let ' + curLhs + ' = ' + curRhs
+      const operation = 'DECL    ' + curLhs + ',' + curRhs
+      save(statement, operation)
+      setEditOn(false)
     }
-  };
+  }
 
   return (
     <Stack direction="row">
@@ -90,7 +88,7 @@ export const DeclStatement = (props) => {
         freeSolo
         options={variables.map((key, index) => key.name)}
         renderInput={(params) => <TextField {...params} />}
-        sx={{ width: "200px" }}
+        sx={{ width: '200px' }}
         error={rhsError}
         value={curRhs}
         inputValue={curRhs}
@@ -98,12 +96,12 @@ export const DeclStatement = (props) => {
         helperText="RHS must be a valid property or a number"
       />
 
-      <IconButton sx={{ p: "10px" }} color="primary" onClick={addDeclStatement}>
-        <AddCircleIcon sx={{ fontSize: "30px" }} />
+      <IconButton sx={{ p: '10px' }} color="primary" onClick={addDeclStatement}>
+        <AddCircleIcon sx={{ fontSize: '30px' }} />
       </IconButton>
     </Stack>
-  );
-};
+  )
+}
 
 DeclStatement.propTypes = {
   save: PropTypes.func.isRequired,
@@ -111,7 +109,7 @@ DeclStatement.propTypes = {
   variables: PropTypes.arrayOf(PropTypes.shape({
     name: PropTypes.string,
     type: PropTypes.string
-  })).isRequired,
+  })).isRequired
 }
 
-export default DeclStatement;
+export default DeclStatement
