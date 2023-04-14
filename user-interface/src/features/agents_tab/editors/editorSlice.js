@@ -1,35 +1,35 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice } from '@reduxjs/toolkit'
 
 const initialState = {
   scopeVars: [],
   openBlocks: 0,
-  actions: [],
-};
+  actions: []
+}
 
 export const editorSlice = createSlice({
-  name: "editor",
+  name: 'editor',
   initialState,
   reducers: {
     addScopeVar: (state, action) => {
-      state.scopeVars.push(action.payload);
+      state.scopeVars.push(action.payload)
     },
     resetScope: (state, action) => {
-      state.scopeVars = [];
+      state.scopeVars = []
     },
     resetActions: (state, action) => {
-      state.actions = [];
+      state.actions = []
     },
     openBlock: (state, action) => {
-      state.openBlocks += 1;
+      state.openBlocks += 1
     },
     closeBlock: (state, action) => {
-      state.openBlocks -= 1;
+      state.openBlocks -= 1
     },
     addAction: (state, action) => {
-      state.actions.push(action.payload);
-    },
-  },
-});
+      state.actions.push(action.payload)
+    }
+  }
+})
 
 export const {
   addScopeVar,
@@ -37,15 +37,15 @@ export const {
   openBlock,
   closeBlock,
   addAction,
-  resetActions,
-} = editorSlice.actions;
+  resetActions
+} = editorSlice.actions
 
-export const selectScopeVars = (state) => state.editor.scopeVars;
+export const selectScopeVars = (state) => state.editor.scopeVars
 
-export const selectActions = (state) => state.editor.actions;
+export const selectActions = (state) => state.editor.actions
 
 export const selectBlockLvl = (state) => {
-  return state.editor.openBlocks;
-};
+  return state.editor.openBlocks
+}
 
-export default editorSlice.reducer;
+export default editorSlice.reducer

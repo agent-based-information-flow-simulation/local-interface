@@ -1,24 +1,23 @@
-import React, { useState, useEffect } from "react";
-import { FormControl, TextField, Button } from "@mui/material";
+import React, { useState, useEffect } from 'react'
+import { FormControl, TextField, Button } from '@mui/material'
 
 export const MessageFloatParam = (props) => {
-  const {save} = props;
+  const { save } = props
 
-  const [paramName, setParamName] = useState("");
-  const [paramData, setParamData] = useState({});
+  const [paramName, setParamName] = useState('')
+  const [paramData, setParamData] = useState({})
 
   const updateParamData = () => {
-    let newParamData = {};
-    newParamData.name = paramName;
-    newParamData.type = "float";
-    setParamData(newParamData);
-  };
+    const newParamData = {}
+    newParamData.name = paramName
+    newParamData.type = 'float'
+    setParamData(newParamData)
+  }
   // I have no idea why this works
-  useEffect(()=>{
+  useEffect(() => {
     updateParamData()
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [paramName]);
-
+  }, [paramName])
 
   return (
     <>
@@ -34,7 +33,7 @@ export const MessageFloatParam = (props) => {
       <Button onClick={(e) => save(paramData)}> Add parameter </Button>
     </>
 
-  );
+  )
 }
 
-export default MessageFloatParam;
+export default MessageFloatParam

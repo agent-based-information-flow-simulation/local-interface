@@ -1,48 +1,46 @@
-import React, { useState } from "react"
-import PropTypes from "prop-types"
+import React, { useState } from 'react'
+import PropTypes from 'prop-types'
 import {
   Stack,
   Select,
   MenuItem,
   Autocomplete,
   TextField,
-  IconButton,
-} from "@mui/material"
+  IconButton
+} from '@mui/material'
 
-import InlineText from "../InlineText"
-import AddCircleIcon from "@mui/icons-material/AddCircle";
-
+import InlineText from '../InlineText'
+import AddCircleIcon from '@mui/icons-material/AddCircle'
 
 export const AssignFloatStatement = (props) => {
+  const { lhsCandidates, rhsCandidates, save, setEditOn } = props
 
-  const { lhsCandidates, rhsCandidates, save, setEditOn } = props;
+  const [curLhs, setCurLhs] = useState(lhsCandidates[0] === undefined ? '' : lhsCandidates[0].name)
+  const [curRhs, setCurRhs] = useState('')
 
-  const [curLhs, setCurLhs] = useState(lhsCandidates[0] === undefined ? "" : lhsCandidates[0].name);
-  const [curRhs, setCurRhs] = useState("");
-
-  const [rhsError, setRhsError] = useState(false);
+  const [rhsError, setRhsError] = useState(false)
 
   const handleRhsChange = (value) => {
-    setCurRhs(value);
-  };
+    setCurRhs(value)
+  }
 
   const addAssignStatement = () => {
-    //LHS is select no need to validate
-    //validate RHS
-    let err_flag = false;
+    // LHS is select no need to validate
+    // validate RHS
+    let err_flag = false
     if (
       rhsCandidates.findIndex((el) => el.name === curRhs) === -1 &&
       isNaN(parseFloat(curRhs))
-    ){
-      setRhsError(true);
-      err_flag = true;
+    ) {
+      setRhsError(true)
+      err_flag = true
     }
-    if(!err_flag){
-      let statement = curLhs + " = " + curRhs;
-      let operation = "SET     " + curLhs + "," + curRhs;
-      save(statement, operation);
-      setEditOn(false);
-      setRhsError(false);
+    if (!err_flag) {
+      const statement = curLhs + ' = ' + curRhs
+      const operation = 'SET     ' + curLhs + ',' + curRhs
+      save(statement, operation)
+      setEditOn(false)
+      setRhsError(false)
     }
   }
 
@@ -53,9 +51,9 @@ export const AssignFloatStatement = (props) => {
         onChange = {(e) => setCurLhs(e.target.value)}
       >
         {
-          lhsCandidates.map((el, index)=>{
-            if(el === undefined) return <></>;
-            return <MenuItem value={el.name}> {el.name} ({el.type}) </MenuItem>;
+          lhsCandidates.map((el, index) => {
+            if (el === undefined) return <></>
+            return <MenuItem value={el.name}> {el.name} ({el.type}) </MenuItem>
           })
         }
 
@@ -63,20 +61,20 @@ export const AssignFloatStatement = (props) => {
       <InlineText text="="/>
       <Autocomplete
         freeSolo
-        options={rhsCandidates.map((el,index)=>el.name)}
+        options={rhsCandidates.map((el, index) => el.name)}
         renderInput={(params) => <TextField {...params} />}
-        sx={{width: "200px"}}
+        sx={{ width: '200px' }}
         value={curRhs}
         inputValue = {curRhs}
         onInputChange = {(event, value) => handleRhsChange(value)}
         error={rhsError}
       />
-      <IconButton sx={{ p: "10px" }} color="primary" onClick={addAssignStatement}>
-        <AddCircleIcon sx={{ fontSize: "30px" }} />
+      <IconButton sx={{ p: '10px' }} color="primary" onClick={addAssignStatement}>
+        <AddCircleIcon sx={{ fontSize: '30px' }} />
       </IconButton>
 
     </Stack>
-  );
+  )
 }
 
 AssignFloatStatement.propTypes = {
@@ -89,7 +87,7 @@ AssignFloatStatement.propTypes = {
   rhsCandidates: PropTypes.arrayOf(PropTypes.shape({
     name: PropTypes.string,
     type: PropTypes.string
-  })).isRequired,
+  })).isRequired
 }
 
-export default AssignFloatStatement;
+export default AssignFloatStatement

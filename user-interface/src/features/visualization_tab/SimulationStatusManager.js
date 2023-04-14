@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState } from 'react'
 import {
   TableContainer,
   Paper,
@@ -6,26 +6,26 @@ import {
   TableHead,
   TableRow,
   TableCell,
-  TableBody,
-} from "@mui/material";
-import SimulationOptionsCell from "./SimulationOptionsCell";
-import SimulationReportDialog from "./SimulationReportDialog";
-import streamSaver from 'streamsaver';
+  TableBody
+} from '@mui/material'
+import SimulationOptionsCell from './SimulationOptionsCell'
+import SimulationReportDialog from './SimulationReportDialog'
+import streamSaver from 'streamsaver'
 
 export const SimulationStatusManager = (props) => {
-  const { simulationData, deleteCallback, restartCallback } = props;
+  const { simulationData, deleteCallback, restartCallback } = props
 
-  const [reportOpen, setReportOpen] = useState(false);
-  const [reportSimId, setSimId] = useState("");
+  const [reportOpen, setReportOpen] = useState(false)
+  const [reportSimId, setSimId] = useState('')
 
   const handleReportClose = () => {
-    setReportOpen(false);
-  };
+    setReportOpen(false)
+  }
 
   const reportCallback = (sim_id) => {
-    setSimId(sim_id);
-    setReportOpen(true);
-  };
+    setSimId(sim_id)
+    setReportOpen(true)
+  }
 
   return (
     <>
@@ -56,7 +56,7 @@ export const SimulationStatusManager = (props) => {
                     restartCallback={restartCallback}
                   />
                 </TableRow>
-              );
+              )
             })}
           </TableBody>
         </Table>
@@ -67,7 +67,7 @@ export const SimulationStatusManager = (props) => {
         simId={reportSimId}
       />
     </>
-  );
-};
+  )
+}
 
-export default SimulationStatusManager;
+export default SimulationStatusManager

@@ -1,28 +1,28 @@
-import {createSlice } from "@reduxjs/toolkit";
+import { createSlice } from '@reduxjs/toolkit'
 
 const initialState = {
   enum_count: 0,
-  enums: [],
+  enums: []
 }
 
 export const enumSlice = createSlice({
-  name: "enumState",
+  name: 'enumState',
   initialState,
   reducers: {
     addEnum: (state, action) => {
-      let name = action.payload.name;
-      if (state.enums.find(el => el.name === name) !== -1){
-        state.enum_count += 1;
-        state.enums.push(action.payload);
+      const name = action.payload.name
+      if (state.enums.find(el => el.name === name) !== -1) {
+        state.enum_count += 1
+        state.enums.push(action.payload)
       }
     }
   }
 })
 
-export const {addEnum} = enumSlice.actions;
+export const { addEnum } = enumSlice.actions
 
 export const selectEnums = (state) => {
-  return state.enumSlice.enums;
+  return state.enumSlice.enums
 }
 
-export default enumSlice.reducer;
+export default enumSlice.reducer

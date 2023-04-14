@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState } from 'react'
 import {
   Stack,
   Select,
@@ -7,48 +7,48 @@ import {
   Box,
   Switch,
   FormControlLabel,
-  IconButton,
-} from "@mui/material";
-import PlayArrowIcon from "@mui/icons-material/PlayArrow";
+  IconButton
+} from '@mui/material'
+import PlayArrowIcon from '@mui/icons-material/PlayArrow'
 
 export const QueryCreator = (props) => {
-  const { queryCallback } = props;
+  const { queryCallback } = props
 
-  const [queryType, setQueryType] = useState("agent");
-  const [advancedMode, setAdvancedMode] = useState(false);
+  const [queryType, setQueryType] = useState('agent')
+  const [advancedMode, setAdvancedMode] = useState(false)
 
-  const [type, setType] = useState("");
-  const [param, setParam] = useState("");
-  const [msgList, setMsgList] = useState("");
-  const [msgType, setMsgType] = useState("");
-  const [connList, setConnList] = useState("");
+  const [type, setType] = useState('')
+  const [param, setParam] = useState('')
+  const [msgList, setMsgList] = useState('')
+  const [msgType, setMsgType] = useState('')
+  const [connList, setConnList] = useState('')
 
   const handleQueryTypeChange = (value) => {
-    setQueryType(value);
-  };
+    setQueryType(value)
+  }
 
   const runQuery = () => {
-    let searchParamString = "";
+    let searchParamString = ''
     switch (queryType) {
-      case "agent":
-        searchParamString += "agents/";
-        break;
-      case "message":
-        searchParamString += "messages/";
-        break;
+      case 'agent':
+        searchParamString += 'agents/'
+        break
+      case 'message':
+        searchParamString += 'messages/'
+        break
       default:
-        return; // just don't run the query
+        return // just don't run the query
     }
-    searchParamString += type + "?";
-    searchParamString += `property=${param}&`;
+    searchParamString += type + '?'
+    searchParamString += `property=${param}&`
     if (advancedMode) {
-      searchParamString += "&";
-      searchParamString += `message_list=${msgList}&`;
-      searchParamString += `message_type=${msgType}&`;
-      searchParamString += `connection_list=${connList}`;
+      searchParamString += '&'
+      searchParamString += `message_list=${msgList}&`
+      searchParamString += `message_type=${msgType}&`
+      searchParamString += `connection_list=${connList}`
     }
-    queryCallback(searchParamString, `${type} data`);
-  };
+    queryCallback(searchParamString, `${type} data`)
+  }
 
   return (
     <Box>
@@ -65,14 +65,15 @@ export const QueryCreator = (props) => {
       />
       <Stack direction="row" spacing={1}>
         <Select
-          sx={{ width: "10em" }}
+          sx={{ width: '10em' }}
           value={queryType}
           onChange={(e) => handleQueryTypeChange(e.target.value)}
         >
           <MenuItem value="agent">Agent</MenuItem>
           <MenuItem value="message">Message</MenuItem>
         </Select>
-        {advancedMode ? (
+        {advancedMode
+          ? (
           <>
             <TextField
               value={type}
@@ -100,7 +101,8 @@ export const QueryCreator = (props) => {
               label="Connection List"
             />
           </>
-        ) : (
+            )
+          : (
           <>
             <TextField
               value={type}
@@ -113,13 +115,13 @@ export const QueryCreator = (props) => {
               label="Parameter name"
             />
           </>
-        )}
-        <IconButton sx={{ p: "10px" }} color="primary" onClick={runQuery}>
-          <PlayArrowIcon sx={{ fontSize: "30px" }} />
+            )}
+        <IconButton sx={{ p: '10px' }} color="primary" onClick={runQuery}>
+          <PlayArrowIcon sx={{ fontSize: '30px' }} />
         </IconButton>
       </Stack>
     </Box>
-  );
-};
+  )
+}
 
-export default QueryCreator;
+export default QueryCreator

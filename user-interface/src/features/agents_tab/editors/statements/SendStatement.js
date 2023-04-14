@@ -1,20 +1,20 @@
-import React, { useState } from "react";
+import React, { useState } from 'react'
 
-import { Stack, Select, MenuItem, IconButton } from "@mui/material";
+import { Stack, Select, MenuItem, IconButton } from '@mui/material'
 
-import AddCircleIcon from "@mui/icons-material/AddCircle";
-import InlineText from "../InlineText";
+import AddCircleIcon from '@mui/icons-material/AddCircle'
+import InlineText from '../InlineText'
 
 export const SendStatement = (props) => {
-  const { save, setEditOn, connLists } = props;
-  const [receiver, setReceiver] = useState("");
+  const { save, setEditOn, connLists } = props
+  const [receiver, setReceiver] = useState('')
 
   const addSendStatement = () => {
-    let statement = "Send to " + receiver;
-    let operation = "SEND    " + receiver;
-    save(statement, operation);
-    setEditOn(false);
-  };
+    const statement = 'Send to ' + receiver
+    const operation = 'SEND    ' + receiver
+    save(statement, operation)
+    setEditOn(false)
+  }
 
   return (
     <Stack direction="row">
@@ -23,17 +23,17 @@ export const SendStatement = (props) => {
         {connLists.map((el, index) => {
           return (
             <MenuItem value={el.name}>
-              {" "}
-              {el.name} ({el.type}){" "}
+              {' '}
+              {el.name} ({el.type}){' '}
             </MenuItem>
-          );
+          )
         })}
       </Select>
-      <IconButton sx={{ p: "10px" }} color="primary" onClick={addSendStatement}>
-        <AddCircleIcon sx={{ fontSize: "30px" }} />
+      <IconButton sx={{ p: '10px' }} color="primary" onClick={addSendStatement}>
+        <AddCircleIcon sx={{ fontSize: '30px' }} />
       </IconButton>
     </Stack>
-  );
-};
+  )
+}
 
-export default SendStatement;
+export default SendStatement

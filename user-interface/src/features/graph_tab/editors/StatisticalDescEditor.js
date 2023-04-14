@@ -1,103 +1,103 @@
-import React, { useState, useEffect } from "react";
-import { useSelector } from "react-redux";
-import { Grid, Divider, Box, Alert } from "@mui/material";
-import { selectAgents } from "../../simulationSlice";
-import StatisticalRow from "./StatisticalRow";
+import React, { useState, useEffect } from 'react'
+import { useSelector } from 'react-redux'
+import { Grid, Divider, Box, Alert } from '@mui/material'
+import { selectAgents } from '../../simulationSlice'
+import StatisticalRow from './StatisticalRow'
 
 const errorAlerts = {
-  1: "Amount of agents need to be a number!",
-  2: "Invalid environment description mode. Contact developers.",
-  3: "Amount of connections must be an integer or drawn from distribution!",
-  4: "Invalid arguments for the distribution!",
-};
+  1: 'Amount of agents need to be a number!',
+  2: 'Invalid environment description mode. Contact developers.',
+  3: 'Amount of connections must be an integer or drawn from distribution!',
+  4: 'Invalid arguments for the distribution!'
+}
 
 export const StatisticalDescEditor = (props) => {
-  const agents = useSelector(selectAgents);
-  const [agentData, setAgentData] = useState([]);
-  const [errorData, setErrorData] = useState([]);
+  const agents = useSelector(selectAgents)
+  const [agentData, setAgentData] = useState([])
+  const [errorData, setErrorData] = useState([])
 
-  const { codeCallback, displayError } = props;
+  const { codeCallback, displayError } = props
 
   const generateDEFG = (agent) => {
-    let code = "DEFG ";
-    code += agent.name + ", " + agent.amount + ", ";
+    let code = 'DEFG '
+    code += agent.name + ', ' + agent.amount + ', '
     if (agent.draw_from_distribution) {
-      code += "dist_" + agent.distribution + ", ";
-      code += agent.dist_args.join(", ");
+      code += 'dist_' + agent.distribution + ', '
+      code += agent.dist_args.join(', ')
     } else {
-      code += agent.conn_amount;
+      code += agent.conn_amount
     }
-    return code;
-  };
+    return code
+  }
 
   useEffect(() => {
     if (
       agentData.findIndex((ad, index) => {
-        return ad.err_flag > 0;
+        return ad.err_flag > 0
       }) !== -1
     ) {
-      codeCallback("ERROR", "Fill out the form correctly!", {});
+      codeCallback('ERROR', 'Fill out the form correctly!', {})
     } else if (
       agentData.reduce((prevRes, ad) => {
-        if (ad.amount === undefined) return prevRes;
-        if (ad.amount.slice(-1) === "%") {
-          return prevRes + parseFloat(ad.amount);
+        if (ad.amount === undefined) return prevRes
+        if (ad.amount.slice(-1) === '%') {
+          return prevRes + parseFloat(ad.amount)
         } else {
-          return prevRes;
+          return prevRes
         }
       }, 0) !== 100
     ) {
-      codeCallback("ERROR", "Sum of percentages of population must be 100", {});
+      codeCallback('ERROR', 'Sum of percentages of population must be 100', {})
     } else {
-      let code = "";
+      let code = ''
       agentData.forEach((ad, index) => {
-        code += generateDEFG(ad) + "\n";
-      });
-      codeCallback(code, "generated statistical description", {
-        agentData: agentData,
-      });
+        code += generateDEFG(ad) + '\n'
+      })
+      codeCallback(code, 'generated statistical description', {
+        agentData
+      })
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [agentData]);
+  }, [agentData])
 
   const setRowError = (index, value) => {
-    let tmpArr = [...errorData];
-    tmpArr[index] = value;
-    setErrorData(tmpArr);
-  };
+    const tmpArr = [...errorData]
+    tmpArr[index] = value
+    setErrorData(tmpArr)
+  }
 
   useEffect(() => {
-    let tmpArr = [];
-    let agent = {
-      name: "",
-      amount: "0",
+    const tmpArr = []
+    const agent = {
+      name: '',
+      amount: '0',
       conn_amount: 0,
       draw_from_distribution: false,
-      distribution: "",
+      distribution: '',
       dist_args: [],
-      err_flag: 0,
-    };
+      err_flag: 0
+    }
     agents.forEach((el) => {
-      agent.name = el.name;
-      tmpArr.push({ ...agent });
-    });
-    setAgentData(tmpArr);
-    let errArr = [];
-    errArr.length = agents.length;
-    errArr.fill(false);
-    setErrorData(errArr);
-  }, [agents]);
+      agent.name = el.name
+      tmpArr.push({ ...agent })
+    })
+    setAgentData(tmpArr)
+    const errArr = []
+    errArr.length = agents.length
+    errArr.fill(false)
+    setErrorData(errArr)
+  }, [agents])
 
   const handleAgentDataChange = (new_data, index) => {
-    let tmpArr = [...agentData];
-    tmpArr[index] = new_data;
-    setRowError(index, true);
-    setAgentData(tmpArr);
-  };
+    const tmpArr = [...agentData]
+    tmpArr[index] = new_data
+    setRowError(index, true)
+    setAgentData(tmpArr)
+  }
 
   return (
-    <Box sx={{ maxHeight: 600, overflow: "auto" }}>
+    <Box sx={{ maxHeight: 600, overflow: 'auto' }}>
       <Grid container spacing={2}>
         {/* Headers of columns */}
         <Grid item xs={4}>
@@ -120,24 +120,26 @@ export const StatisticalDescEditor = (props) => {
                   index={index}
                   handleChange={handleAgentDataChange}
                 />
-                {el.err_flag > 0 && errorData[index] && displayError ? (
+                {el.err_flag > 0 && errorData[index] && displayError
+                  ? (
                   <Alert
                     severity="error"
                     onClose={(e) => setRowError(index, false)}
                   >
                     {errorAlerts[el.err_flag]}
                   </Alert>
-                ) : (
+                    )
+                  : (
                   <></>
-                )}
+                    )}
                 <Divider />
               </Grid>
-            );
+            )
           })
         }
       </Grid>
     </Box>
-  );
-};
+  )
+}
 
-export default StatisticalDescEditor;
+export default StatisticalDescEditor

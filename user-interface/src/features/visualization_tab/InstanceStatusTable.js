@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react'
 import {
   TableContainer,
   Paper,
@@ -6,11 +6,11 @@ import {
   TableHead,
   TableRow,
   TableCell,
-  TableBody,
-} from "@mui/material";
+  TableBody
+} from '@mui/material'
 
 export const InstanceStatusTable = (props) => {
-  const { instanceData } = props;
+  const { instanceData } = props
 
   return (
     <>
@@ -40,13 +40,13 @@ export const InstanceStatusTable = (props) => {
                   <TableCell>{el.num_agents}</TableCell>
                   <TableCell>{el.simulation_memory_usage_MiB}</TableCell>
                 </TableRow>
-              );
+              )
             })}
           </TableBody>
         </Table>
       </TableContainer>
     </>
-  );
-};
+  )
+}
 
-export default InstanceStatusTable;
+export default InstanceStatusTable
