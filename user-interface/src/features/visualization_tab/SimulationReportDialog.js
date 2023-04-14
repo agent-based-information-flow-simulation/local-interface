@@ -52,7 +52,7 @@ export const SimulationReportDialog = (props) => {
   const queryCallback = async (searchString, label) => {
     setQueryError(false);
     const url =
-      `http://localhost/api/simulation/${simId}/statistics/` + searchString;
+      `http://localhost/api/simulations/${simId}/statistics/` + searchString;
 
     await fetch(url, {
       method: "GET",

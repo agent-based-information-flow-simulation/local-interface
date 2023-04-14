@@ -11,7 +11,7 @@ export const SimulationOptionsCell = (props) => {
   const { simulation, deleteCallback, reportCallback, restartCallback } = props;
 
   const deleteSimulation = async () => {
-    const url = `http://localhost/api/simulation/${simulation.simulation_id}`;
+    const url = `http://localhost/api/simulations/${simulation.simulation_id}`;
     await fetch(url, { method: "DELETE" })
       .then((response) => {
         if (response.status === 200) {
@@ -26,7 +26,7 @@ export const SimulationOptionsCell = (props) => {
   };
 
   const restartSimulation = async () => {
-    const url = `http://localhost/api/simulation/${simulation.simulation_id}`;
+    const url = `http://localhost/api/simulations/${simulation.simulation_id}`;
     await fetch(url, { method: "POST" })
       .then((response) => {
         if (response.status === 201) {
@@ -59,7 +59,7 @@ export const SimulationOptionsCell = (props) => {
   }
 
   const downloadTimeseries = async (simulationId) => {
-    const url = `http://localhost/api/simulation/${simulationId}/timeseries`;
+    const url = `http://localhost/api/simulations/${simulationId}/timeseries`;
     const response = await fetch(url);
 
     if (response.status === 400) {

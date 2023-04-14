@@ -70,7 +70,7 @@ export function VisualizationTab() {
   }, []);
 
   const startSimulationFromCode = async (code_lines) => {
-    const url = "http://localhost/api/simulation";
+    const url = "http://localhost/api/simulations";
 
     await fetch(url, {
       method: "POST",
