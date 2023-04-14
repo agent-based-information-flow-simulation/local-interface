@@ -45,7 +45,6 @@ export const SimulationDisplay = (props) => {
   const simulationReportCallback = (sim_id) => {}
 
   const deleteSimulation = async (sim_id) => {
-<<<<<<< HEAD
     const url = `http://localhost/api/simulations/${sim_id}`;
     await fetch(url, { method: "DELETE" });
   };
