@@ -13,7 +13,7 @@ import SimulationReportDialog from "./SimulationReportDialog";
 import streamSaver from 'streamsaver';
 
 export const SimulationStatusManager = (props) => {
-  const { simulationData, deleteCallback, restartCallback } = props;
+  const { simulationData, deleteCallback, restartCallback, isLDE } = props;
 
   const [reportOpen, setReportOpen] = useState(false);
   const [reportSimId, setSimId] = useState("");
@@ -54,6 +54,7 @@ export const SimulationStatusManager = (props) => {
                     deleteCallback={deleteCallback}
                     reportCallback={reportCallback}
                     restartCallback={restartCallback}
+                    isLDE={isLDE}
                   />
                 </TableRow>
               );
