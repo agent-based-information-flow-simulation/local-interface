@@ -96,22 +96,27 @@ export function VisualizationTab() {
       body: JSON.stringify(data),
     })
       .then((response) => {
-        if (response.status === 201) {
-          setSuccess(true);
-          return response.json();
-        } else {
-          setError(true);
-          setErrorText(`Encountered http error: ${response.status}`);
-        }
-      })
-      .then((data) => {
-        if (data["simulation_id"]) {
-          setSimId(data["simulation_id"]);
-        }
+        response.json().then((data) => {
+          if (response.status === 201) {
+            setSuccess(true);
+            if (data["simulation_id"]) {
+              setSimId(data["simulation_id"]);
+            }
+          } else {
+            setError(true);
+            if (data["translator_version"] !== undefined) {
+              setErrorText(`Error: ${data["place"]}: ${data["reason"]}`);
+              return;
+            }
+            setErrorText(`System Error: ${response.status}`);
+            return;
+          }
+        });
       })
       .catch((error) => {
+        console.log(error);
         setError(true);
-        setErrorText(`Unexpected error: ${error.message}`);
+        setErrorText(`Unexpected error: ${error}`);
       });
   };
 

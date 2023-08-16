@@ -43,13 +43,6 @@ export const SimulationDisplay = (props) => {
     setSnackOpen(true);
   };
 
-  const simulationReportCallback = (sim_id) => {};
-
-  const deleteSimulation = async (sim_id) => {
-    const url = `http://localhost/api/simulation/${sim_id}`;
-    await fetch(url, { method: "DELETE" });
-  };
-
   const getStatus = async () => {
     const url = `http://localhost/api/simulation`;
     //GET method here

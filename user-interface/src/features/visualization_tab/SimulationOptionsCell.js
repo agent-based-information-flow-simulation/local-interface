@@ -8,11 +8,21 @@ import RestartAltIcon from "@mui/icons-material/RestartAlt";
 import streamSaver from 'streamsaver'
 
 export const SimulationOptionsCell = (props) => {
-  const { simulation, deleteCallback, reportCallback, restartCallback, isLDE } = props;
+  const { simulation, deleteCallback, reportCallback, restartCallback, isSLB } = props;
 
   const deleteSimulation = async () => {
-    const url = `http://localhost/api/simulation/${simulation.simulation_id}`;
-    await fetch(url, { method: "DELETE" })
+    let url = '';
+    if(!isSLB){
+      url = 'http://localhost/api/simulation';
+    }else{
+      url = `http://localhost/api/simulation/${simulation.simulation_id}`;
+    }
+    await fetch(url, {
+      method: "DELETE",
+      headers: {
+        "Access-Control-Allow-Origin": "*",
+      },
+    })
       .then((response) => {
         if (response.status === 200) {
           deleteCallback(simulation.simulation_id, "success", "");
@@ -79,7 +89,7 @@ export const SimulationOptionsCell = (props) => {
 
   return (
     <TableCell>
-      {simulation.status !== "ACTIVE" ? (
+      {simulation.status !== "ACTIVE" && isSLB ? (
         <IconButton
           sx={{ p: "10px" }}
           color="primary"
@@ -97,7 +107,7 @@ export const SimulationOptionsCell = (props) => {
         </IconButton>
       )}
       {
-        isLDE &&
+        isSLB &&
         <>
         <IconButton
           sx={{ p: "10px" }}
