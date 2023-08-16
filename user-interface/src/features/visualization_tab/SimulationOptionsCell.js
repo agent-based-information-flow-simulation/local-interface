@@ -8,11 +8,21 @@ import RestartAltIcon from "@mui/icons-material/RestartAlt";
 import streamSaver from 'streamsaver'
 
 export const SimulationOptionsCell = (props) => {
-  const { simulation, deleteCallback, reportCallback, restartCallback } = props;
+  const { simulation, deleteCallback, reportCallback, restartCallback, isSLB } = props;
 
   const deleteSimulation = async () => {
-    const url = `http://localhost/api/simulations/${simulation.simulation_id}`;
-    await fetch(url, { method: "DELETE" })
+    let url = '';
+    if(!isSLB){
+      url = 'http://localhost/api/simulation';
+    }else{
+      url = `http://localhost/api/simulation/${simulation.simulation_id}`;
+    }
+    await fetch(url, {
+      method: "DELETE",
+      headers: {
+        "Access-Control-Allow-Origin": "*",
+      },
+    })
       .then((response) => {
         if (response.status === 200) {
           deleteCallback(simulation.simulation_id, "success", "");
@@ -26,7 +36,7 @@ export const SimulationOptionsCell = (props) => {
   };
 
   const restartSimulation = async () => {
-    const url = `http://localhost/api/simulations/${simulation.simulation_id}`;
+    const url = `http://localhost/api/simulation/${simulation.simulation_id}`;
     await fetch(url, { method: "POST" })
       .then((response) => {
         if (response.status === 201) {
@@ -59,7 +69,7 @@ export const SimulationOptionsCell = (props) => {
   }
 
   const downloadTimeseries = async (simulationId) => {
-    const url = `http://localhost/api/simulations/${simulationId}/timeseries`;
+    const url = `http://localhost/api/simulation/${simulationId}/timeseries`;
     const response = await fetch(url);
 
     if (response.status === 400) {
@@ -79,7 +89,7 @@ export const SimulationOptionsCell = (props) => {
 
   return (
     <TableCell>
-      {simulation.status !== "ACTIVE" ? (
+      {simulation.status !== "ACTIVE" && isSLB ? (
         <IconButton
           sx={{ p: "10px" }}
           color="primary"
@@ -96,20 +106,25 @@ export const SimulationOptionsCell = (props) => {
           <RemoveCircleIcon sx={{ fontSize: "30px" }} />
         </IconButton>
       )}
-      <IconButton
-        sx={{ p: "10px" }}
-        color="primary"
-        onClick={openSimulationReport}
-      >
-        <AssessmentOutlinedIcon sx={{ fontSize: "30px" }} />
-      </IconButton>
-      <IconButton
-        sx={{ p: "10px" }}
-        color="primary"
-        onClick={() => downloadTimeseries(simulation.simulation_id)}
-      >
-        <DownloadIcon sx={{ fontSize: "30px" }} />
-      </IconButton>
+      {
+        isSLB &&
+        <>
+        <IconButton
+          sx={{ p: "10px" }}
+          color="primary"
+          onClick={openSimulationReport}
+        >
+          <AssessmentOutlinedIcon sx={{ fontSize: "30px" }} />
+        </IconButton>
+        <IconButton
+          sx={{ p: "10px" }}
+          color="primary"
+          onClick={() => downloadTimeseries(simulation.simulation_id)}
+        >
+          <DownloadIcon sx={{ fontSize: "30px" }} />
+        </IconButton>
+        </>
+      }
     </TableCell>
   );
 };

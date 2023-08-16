@@ -32,10 +32,19 @@ export function VisualizationTab() {
   const [custom, setCustom] = React.useState(false);
   const [customCode, setCustomCode] = React.useState("");
 
+  const [useFiles, setUseFiles] = React.useState(false);
+  const [sourceFile, setSourceFile] = React.useState([]);
+  const [moduleFiles, setModuleFiles] = React.useState([])
+
   const [error, setError] = React.useState(false);
   const [errorText, setErrorText] = React.useState("");
 
   const [success, setSuccess] = React.useState(false);
+
+  const activateUseFiles = () => {
+    setUseFiles(true);
+    clearPreset();
+  }
 
   const generateCode = () => {
     let tmp_code = [];
@@ -69,8 +78,14 @@ export function VisualizationTab() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const startSimulationFromCode = async (code_lines) => {
-    const url = "http://localhost/api/simulations";
+  const startSimulationFromCode = async (code_lines, module_code_lines) => {
+    const url = "http://localhost/api/simulation";
+    let data = {
+      aasm_code_lines: code_lines,
+      module_code_lines: module_code_lines,
+    }
+
+    console.log(data)
 
     await fetch(url, {
       method: "POST",
@@ -78,25 +93,30 @@ export function VisualizationTab() {
         "Content-Type": "application/json",
         "Access-Control-Allow-Origin": "*",
       },
-      body: JSON.stringify({ aasm_code_lines: code_lines }),
+      body: JSON.stringify(data),
     })
       .then((response) => {
-        if (response.status === 201) {
-          setSuccess(true);
-          return response.json();
-        } else {
-          setError(true);
-          setErrorText(`Encountered http error: ${response.status}`);
-        }
-      })
-      .then((data) => {
-        if (data["simulation_id"]) {
-          setSimId(data["simulation_id"]);
-        }
+        response.json().then((data) => {
+          if (response.status === 201) {
+            setSuccess(true);
+            if (data["simulation_id"]) {
+              setSimId(data["simulation_id"]);
+            }
+          } else {
+            setError(true);
+            if (data["translator_version"] !== undefined) {
+              setErrorText(`Error: ${data["place"]}: ${data["reason"]}`);
+              return;
+            }
+            setErrorText(`System Error: ${response.status}`);
+            return;
+          }
+        });
       })
       .catch((error) => {
+        console.log(error);
         setError(true);
-        setErrorText(`Unexpected error: ${error.message}`);
+        setErrorText(`Unexpected error: ${error}`);
       });
   };
 
@@ -117,13 +137,60 @@ export function VisualizationTab() {
     }
   };
 
+  const getFileLines = (file) => {
+    let reader = new FileReader();
+    reader.readAsText(file);
+    let text = ""
+    reader.onload = () => {
+      console.log(reader.result)
+      text = reader.result;
+    };
+    return text.split("\n");
+  };
+
+  const addSourceFile = (e) => {
+    let file = e.target.files[0];
+    let reader = new FileReader();
+    reader.readAsText(file);
+    reader.onload = () => {
+      console.log(reader.result);
+      setSourceFile(reader.result.split("\n"));
+    }
+  }
+
+  const addModuleFiles = (e) => {
+    let files = e.target.files;
+    let contents = [];
+    // create an array of 0 of the length of the files
+    let flags = Array(files.length).fill(0);
+    for (let i = 0; i < files.length; i++) {
+      let reader = new FileReader();
+      reader.readAsText(files[i]);
+      reader.onload = () => {
+        console.log(reader.result);
+        contents.push(reader.result.split("\n"));
+        flags[i] = 1;
+        if (flags.reduce((a, b) => a + b, 0) === files.length) {
+          setModuleFiles(contents);
+        }
+      }
+      // let content = getFileLines(files[i]);
+      // console.log(content)
+      // contents.push(content);
+    }
+    setModuleFiles(contents);
+  }
+
   const startSimButtonClick = () => {
     if (custom) {
       const custom_code_lines = customCode.split("\n");
-      startSimulationFromCode(custom_code_lines);
+      startSimulationFromCode(custom_code_lines, []);
     } else if (codeFilled) {
-      startSimulationFromCode(code);
-    } else {
+      startSimulationFromCode(code, []);
+    } else if (useFiles && sourceFile.length > 0 ) {
+      startSimulationFromCode(sourceFile, moduleFiles);
+    } 
+    else {
       setError(true);
       setErrorText(
         "Couldn't start simulation with above code, check if everything is correct"
@@ -161,7 +228,7 @@ export function VisualizationTab() {
                 })}
               </Stack>
             </>
-          ) : custom ? (
+          ) : (custom || useFiles) ? (
             <></>
           ) : (
             <p> Your code will show up here when you fill out the forms</p>
@@ -178,6 +245,17 @@ export function VisualizationTab() {
           ) : (
             <></>
           )}
+          {useFiles ? (
+            <div>
+            <i> Source file: </i> <br/>
+            <input type="file" accept=".aasm" onChange={addSourceFile}/> <br/>
+            <i> Module files: </i> <br/>
+            <input type="file" accept=".aasm.mod" multiple onChange={addModuleFiles}/> <br/>
+            </div>
+          ): (
+            <></>
+          )
+          }
           <h3> Simulation presets: </h3>
           <Stack direction="row" spacing={3}>
             <Button
@@ -210,6 +288,10 @@ export function VisualizationTab() {
             <Button variant="contained" onClick={clearPreset}>
               {" "}
               Clear{" "}
+            </Button>
+            <Button variant="contained" onClick={activateUseFiles}>
+              {" "}
+              From file{" "}
             </Button>
           </Stack>
           <Button onClick={startSimButtonClick}>

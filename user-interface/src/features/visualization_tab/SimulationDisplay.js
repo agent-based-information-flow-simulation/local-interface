@@ -9,6 +9,7 @@ export const SimulationDisplay = (props) => {
 
   const [instances, setInstances] = useState([]);
   const [simulations, setSimulations] = useState([]);
+  const [isLDE, setIsLDE] = useState(false);
 
   const [snackText, setSnackText] = useState("");
   const [snackSeverity, setSnackSeverity] = useState("success");
@@ -42,24 +43,37 @@ export const SimulationDisplay = (props) => {
     setSnackOpen(true);
   };
 
-  const simulationReportCallback = (sim_id) => {};
-
-  const deleteSimulation = async (sim_id) => {
-    const url = `http://localhost/api/simulations/${sim_id}`;
-    await fetch(url, { method: "DELETE" });
-  };
-
   const getStatus = async () => {
-    const url = `http://localhost/api/simulations`;
+    const url = `http://localhost/api/simulation`;
     //GET method here
     const response = await fetch(url, {
       method: "GET",
     });
     const data = await response.json();
-    if (response.status !== 200) {
-    } else {
-      setInstances(data["instances"]);
-      setSimulations(data["simulations"]);
+    if(response.status === 200){
+      if (data["environment"] === "simulation-run"){
+        setInstances(data["instances"]);
+        setSimulations(data["simulations"]);
+      }else{
+        if (data["environment"] === "local-development") {
+          let instance_data = data["instance_info"];
+          let instance = {
+            key: "LDE Instance",
+            status: instance_data["status"],
+            simulation_id: instance_data["simulation_id"],
+            num_agents: instance_data["num_agents"],
+            simulation_memory_usage_MiB: instance_data["simulation_memory_usage_MiB"],
+          }
+          setInstances([instance]);
+          let simulation = {
+            key: "LDE Simulation",
+            simulation_id: instance_data["simulation_id"],
+            status: instance_data["status"],
+          }
+          setSimulations([simulation]);
+          setIsLDE(true);
+        }
+      }
     }
   };
 
@@ -72,6 +86,7 @@ export const SimulationDisplay = (props) => {
           simulationData={simulations}
           deleteCallback={simulationDeleteCallback}
           restartCallback={simulationRestartCallback}
+          isLde={isLDE}
         />
       </Stack>
       <Snackbar open={snackOpen} autoHideDuration={6000} onClose={snackClose}>
