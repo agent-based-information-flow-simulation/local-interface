@@ -83,7 +83,7 @@ export function VisualizationTab() {
 
   const startSimulationFromCode = async (code_lines, module_code_lines) => {
     const url = "http://localhost/api/simulation";
-    const seed = isInteger(simulationSeed) ? parseInt(simulationSeed) : 0;
+    const seed = isInteger(simulationSeed) ? parseInt(simulationSeed) : -1;
     let data = {
       aasm_code_lines: code_lines,
       module_code_lines: module_code_lines,
