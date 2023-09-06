@@ -91,8 +91,6 @@ export function VisualizationTab() {
       simulation_seed: seed,
     }
 
-    console.log(data)
-
     await fetch(url, {
       method: "POST",
       headers: {
@@ -181,10 +179,6 @@ export function VisualizationTab() {
   }
 
   const startSimButtonClick = () => {
-    console.log("Starting simulation");
-    console.log("Simulation ID:", simulationId);
-    console.log("Simulation Seed:", simulationSeed);
-    clearError();
     if (!isInteger(simulationSeed) && !(simulationSeed === "")) {
       setError(true);
       setErrorText("Simulation seed must be an integer");
