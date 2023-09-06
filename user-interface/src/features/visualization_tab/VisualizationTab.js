@@ -29,6 +29,9 @@ export function VisualizationTab() {
   const [codeFilled, setCodeFilled] = React.useState(false);
   const [codeGenerated, setCodeGenerated] = React.useState(false);
 
+  const [simulationId, setSimulationId] = React.useState("");
+  const [simulationSeed, setSimulationSeed] = React.useState("");
+
   const [custom, setCustom] = React.useState(false);
   const [customCode, setCustomCode] = React.useState("");
 
@@ -80,12 +83,13 @@ export function VisualizationTab() {
 
   const startSimulationFromCode = async (code_lines, module_code_lines) => {
     const url = "http://localhost/api/simulation";
+    const seed = isInteger(simulationSeed) ? parseInt(simulationSeed) : -1;
     let data = {
       aasm_code_lines: code_lines,
       module_code_lines: module_code_lines,
+      simulation_id: simulationId,
+      simulation_seed: seed,
     }
-
-    console.log(data)
 
     await fetch(url, {
       method: "POST",
@@ -137,16 +141,9 @@ export function VisualizationTab() {
     }
   };
 
-  const getFileLines = (file) => {
-    let reader = new FileReader();
-    reader.readAsText(file);
-    let text = ""
-    reader.onload = () => {
-      console.log(reader.result)
-      text = reader.result;
-    };
-    return text.split("\n");
-  };
+  function isInteger(str) {
+    return /^[+-]?\d+$/.test(str);
+  }
 
   const addSourceFile = (e) => {
     let file = e.target.files[0];
@@ -182,19 +179,25 @@ export function VisualizationTab() {
   }
 
   const startSimButtonClick = () => {
-    if (custom) {
-      const custom_code_lines = customCode.split("\n");
-      startSimulationFromCode(custom_code_lines, []);
-    } else if (codeFilled) {
-      startSimulationFromCode(code, []);
-    } else if (useFiles && sourceFile.length > 0 ) {
-      startSimulationFromCode(sourceFile, moduleFiles);
-    } 
-    else {
+    if (!isInteger(simulationSeed) && !(simulationSeed === "")) {
       setError(true);
-      setErrorText(
-        "Couldn't start simulation with above code, check if everything is correct"
-      );
+      setErrorText("Simulation seed must be an integer");
+    }else{
+      if (custom) {
+        const custom_code_lines = customCode.split("\n");
+        startSimulationFromCode(custom_code_lines, []);
+      } else if (codeFilled) {
+        startSimulationFromCode(code, []);
+      } else if (useFiles && sourceFile.length > 0 ) {
+        startSimulationFromCode(sourceFile, moduleFiles);
+      } 
+      else {
+        setError(true);
+        setErrorText(
+          "Couldn't start simulation with above code, check if everything is correct"
+        );
+      }
+
     }
   };
 
@@ -257,7 +260,7 @@ export function VisualizationTab() {
           )
           }
           <h3> Simulation presets: </h3>
-          <Stack direction="row" spacing={3}>
+          <Stack direction="row" spacing={2}>
             <Button
               variant="contained"
               onClick={(e) => {
@@ -293,6 +296,22 @@ export function VisualizationTab() {
               {" "}
               From file{" "}
             </Button>
+          </Stack>
+          <Stack spacing={1}>
+            <TextField
+              id="simulation-id"
+              label="Simulation ID"
+              type="text"
+              value={simulationId}
+              onChange={(e) => setSimulationId(e.target.value)}
+            />
+            <TextField
+              id="seed"
+              label="Seed"
+              type="number"
+              value={simulationSeed}
+              onChange={(e) => setSimulationSeed(e.target.value)}
+            />
           </Stack>
           <Button onClick={startSimButtonClick}>
             {" "}
